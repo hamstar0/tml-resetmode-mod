@@ -1,0 +1,23 @@
+Future
+-	Implement batch file maker for server to auto-rehost worlds?
+v1
+-	Implement mode end command
+
+-	Implement player locking
+-	Prompt new players to reset their gear
+-	@Implement modal prompts (dialogs)
+-	Prevent switching worlds until timer expires
+-	Auto-re-engage timer for next world in sequence
+-	Implement world locking
+-	Create custom timer command
+-	Alert to command to begin and end reset mode
+-	Setup project
+
+
+Plan
+-	When installed, a message is given to instruct on activation (via. command)
+-	Once activated, a timer is started to run a custom reset command
+-	When the timer ends
+	-	Player is reset completely (inventory, banks, lives, stamina)
+	-	Server/world closes to desktop/menu
+	-	World is rendered inaccessible
