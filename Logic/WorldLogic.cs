@@ -1,7 +1,6 @@
-﻿using HamstarHelpers.DebugHelpers;
-using ResetMode.NetProtocol;
-using System;
-using System.IO;
+﻿using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader.IO;
 using TimeLimit;
 
@@ -15,19 +14,23 @@ namespace ResetMode.Logic {
 
 
 
-	class WorldLogic {
+	partial class WorldLogic {
 		internal ResetModeStatus WorldStatus = ResetModeStatus.Normal;
+
+		public bool IsExiting { get; private set; }
 
 
 		////////////////
-		
+
+		public WorldLogic() {
+			this.IsExiting = false;
+		}
+
+		////////////////
+
 		internal void Load( ResetModeMod mymod, TagCompound tags ) {
 			if( tags.ContainsKey("status") ) {
 				this.WorldStatus = (ResetModeStatus)tags.GetInt( "status" );
-			}
-
-			if( mymod.Config.AwaitingNextWorld ) {
-				this.Start( mymod );
 			}
 		}
 
@@ -35,45 +38,62 @@ namespace ResetMode.Logic {
 			return new TagCompound { { "status", (int)this.WorldStatus } };
 		}
 
-		////////////////
-
-		public void NetReceive( BinaryReader reader ) {
-			try {
-				this.WorldStatus = (ResetModeStatus)reader.ReadInt32();
-			} catch( Exception e ) { LogHelpers.Log( e.Message ); }
-		}
-
-		public void NetSend( BinaryWriter writer ) {
-			try {
-				writer.Write( (int)this.WorldStatus );
-			} catch( Exception e ) { LogHelpers.Log( e.Message ); }
-		}
-
 
 
 		////////////////
 
-		public void Start( ResetModeMod mymod ) {
-			int time = mymod.Config.AwaitingNextWorld ? mymod.Config.SecondsUntilResetSubsequently : mymod.Config.SecondsUntilResetInitially;
-			
-			mymod.Config.AwaitingNextWorld = false;
-			mymod.JsonConfig.SaveFile();
+		public void Update( ResetModeMod mymod ) {
+			switch( this.WorldStatus ) {
+			case ResetModeStatus.Normal:
+				if( mymod.Logic.IsSessionStarted( mymod ) ) {
+					if( mymod.Session.AwaitingNextWorld ) {
+						this.EngageWorldForCurrentSession( mymod );
+					} else {
+						this.BadExit();
+					}
+				}
+				break;
 
-			TimeLimitAPI.TimerStart( "reset", time, false );
-
-			this.WorldStatus = ResetModeStatus.Active;
-			ServerPackets.SendWorldStatus( mymod );
+			case ResetModeStatus.Expired:
+				if( mymod.Logic.IsSessionStarted( mymod ) ) {
+					this.GoodExit();
+				}
+				break;
+			}
 		}
 
 
-		public void ResetToNextWorld( ResetModeMod mymod ) {
-			this.WorldStatus = ResetModeStatus.Expired;
-			ServerPackets.SendWorldStatus( mymod );
+		////////////////
 
-			mymod.Config.AwaitingNextWorld = true;
-			mymod.JsonConfig.SaveFile();
+		public void GoodExit() {
+			if( this.IsExiting ) { return; }
+			this.IsExiting = true;
 
-			TimeLimitAPI.TimerStart( "exit", 5, false );
+			if( Main.netMode == 0 ) {
+				Main.NewText( "Time's up. Please switch to the next world to continue.", Color.Red );
+			} else if( Main.netMode == 2 ) {
+				NetMessage.BroadcastChatMessage( NetworkText.FromLiteral( "Time's up. Please switch to the next new world to continue." ), Color.Red, -1 );
+
+				TimeLimitAPI.TimerStart( "serverclose", 8, false );
+			}
+
+			TimeLimitAPI.TimerStart( "exit", 6, false );
+		}
+
+
+		public void BadExit() {
+			if( this.IsExiting ) { return; }
+			this.IsExiting = true;
+
+			if( Main.netMode == 0 ) {
+				//TmlHelpers.ExitToMenu( false );
+				TimeLimitAPI.TimerStart( "exit", 4, false );
+				Main.NewText( "World not valid for reset mode. Exiting...", Color.Red );
+			} else {
+				//TmlHelpers.ExitToDesktop( false );
+				TimeLimitAPI.TimerStart( "serverclose", 4, false );
+				NetMessage.BroadcastChatMessage( NetworkText.FromLiteral( "World not valid for reset mode. Exiting..." ), Color.Red );
+			}
 		}
 	}
 }

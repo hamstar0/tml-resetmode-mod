@@ -1,81 +1,69 @@
-﻿using HamstarHelpers.PlayerHelpers;
-using HamstarHelpers.TmlHelpers;
-using HamstarHelpers.UIHelpers.Elements.Dialogs;
-using HamstarHelpers.WorldHelpers;
-using Microsoft.Xna.Framework;
-using System;
+﻿using Microsoft.Xna.Framework;
+using Rewards;
+using System.IO;
 using Terraria;
 using Terraria.ModLoader.IO;
 
 
 namespace ResetMode.Logic {
-	class PlayerLogic {
+	partial class PlayerLogic {
 		public string ActiveForWorldUid { get; private set; }
-		private bool IsPrompting = false;
+		public bool IsPrompting { get; private set; }
+		public bool IsValidating { get; private set; }
+		public bool IsValid { get; private set; }
+
+		private bool HasShownWelcome = false;
 
 
 		////////////////
 
 		public PlayerLogic() {
 			this.ActiveForWorldUid = "";
+			this.IsPrompting = false;
+			this.IsValidating = false;
+			this.IsValid = false;
 		}
 
 		public void Load( Player player, TagCompound tags ) {
 			if( tags.ContainsKey( "active_world_uid" ) ) {
 				this.ActiveForWorldUid = tags.GetString( "active_world_uid" );
 			}
-
-			if( tags.ContainsKey( "me_hash" ) ) {
-				int hash = tags.GetInt( "me_hash" );
-
-				if( hash != PlayerHelpers.GetVanillaSnapshotHash( player, true, false ) ) {
-					this.ActiveForWorldUid = "";
-				}
-			}
 		}
 
-		public TagCompound Save( Player player ) {
+		public TagCompound Save( ResetModeMod mymod, Player player ) {
+			mymod.Logic.SavePlayerSnapshot( mymod, player );
+
 			return new TagCompound {
-				{ "active_world_uid", this.ActiveForWorldUid },
-				{ "me_hash", PlayerHelpers.GetVanillaSnapshotHash(player, true, false) }
+				{ "active_world_uid", this.ActiveForWorldUid }
 			};
 		}
 
-
 		////////////////
 
-		public void Welcome( ResetModeMod mymod, Player player ) {
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
+		public void NetSend( ResetModeMod mymod, Player player, BinaryWriter writer ) {
+			writer.Write( this.ActiveForWorldUid );
+			writer.Write( RewardsAPI.GetPoints( player ) );
+			mymod.Logic.NetSendPlayerData( player, writer );
+		}
 
-			switch( myworld.Logic.WorldStatus ) {
-			case ResetModeStatus.Normal:
-				if( Main.netMode == 0 ) {
-					Main.NewText( "Type /resetmodebegin to start Reset Mode. Type /help for a list of other available commands.", Color.LightGray );
-				} else {
-					Main.NewText( "Type resetmodebegin in the server console to start Reset Mode.", Color.LightGray );
-				}
-				break;
-			case ResetModeStatus.Active:
-				Main.NewText( "Welcome to Reset Mode. This world will reset into a new one after the timer expires. Only your Progress Points remain between worlds.", Color.LightYellow );
-				break;
-			}
+		public void NetReceive( ResetModeMod mymod, Player player, BinaryReader reader ) {
+			this.ActiveForWorldUid = reader.ReadString();
+			mymod.Logic.NetReceivePlayerData( player, reader );
 		}
 
 
 		////////////////
-
+		
 		public void Update( ResetModeMod mymod, Player player ) {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 			
-			switch( myworld.Logic.WorldStatus ) {
-			case ResetModeStatus.Active:
-				if( !this.IsPlaying( mymod ) && !this.IsPrompting ) {
-					this.PromptToBeginPlaying( player );
-				}
-				break;
-			case ResetModeStatus.Expired:
-				TmlHelpers.ExitToMenu( false );
-				break;
+			if( !this.HasShownWelcome ) {
+				this.HasShownWelcome = true;
+				this.Welcome( mymod, player );
+			}
+
+			if( myworld.Logic.WorldStatus == ResetModeStatus.Active ) {
+				this.ValidatePlayer( mymod, player );
 			}
 
 			if( this.IsPrompting ) {
@@ -89,39 +77,22 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public void PromptToBeginPlaying( Player player ) {
-			this.IsPrompting = true;
-
-			string text = "Play reset mode? Your character will be reset (except Progress Points)."+
-				"\nNote: Playing this character on another world will force it to reset here.";
-
-			Action confirm_action = delegate () {
-				this.IsPrompting = false;
-				this.BeginResetMode( player );
-			};
-			Action cancel_action = delegate () {
-				this.IsPrompting = false;
-				TmlHelpers.ExitToMenu( false );
-			};
-
-			var prompt = new UIPromptDialog( new UIPromptTheme(), 600, 112, text, confirm_action, cancel_action );
-			prompt.Open();
-		}
-
-
-		////////////////
-
-		public bool IsPlaying( ResetModeMod mymod ) {
+		public void Welcome( ResetModeMod mymod, Player player ) {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			return !string.IsNullOrEmpty(this.ActiveForWorldUid) && myworld.Logic.WorldStatus != ResetModeStatus.Normal;
-		}
+			switch( myworld.Logic.WorldStatus ) {
+			case ResetModeStatus.Normal:
+				if( Main.netMode == 0 ) {
+					Main.NewText( "Type /resetmodestart to start Reset Mode. Type /help for a list of other available commands.", Color.LightGray );
+				} else {
+					Main.NewText( "Type resetmodestart in the server console to start Reset Mode.", Color.LightGray );
+				}
+				break;
 
-
-		public void BeginResetMode( Player player ) {
-			this.ActiveForWorldUid = WorldHelpers.GetUniqueId();
-
-			PlayerHelpers.FullVanillaReset( player );
+			case ResetModeStatus.Active:
+				Main.NewText( "Welcome to Reset Mode. After the timer, you and this world reset. Only your Progress Points (PP) are kept for the next.", Color.Cyan );
+				break;
+			}
 		}
 	}
 }

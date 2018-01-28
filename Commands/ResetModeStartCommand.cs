@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using ResetMode.Logic;
 using Terraria;
 using Terraria.ModLoader;
 
 
 namespace ResetMode.Commands {
-	class ResetModeBeginCommand : ModCommand {
+	class ResetModeStartCommand : ModCommand {
 		public override CommandType Type {
 			get {
 				if( Main.netMode == 0 ) {
@@ -14,8 +13,8 @@ namespace ResetMode.Commands {
 				return CommandType.Console;
 			}
 		}
-		public override string Command { get { return "resetmodebegin"; } }
-		public override string Usage { get { return "/resetmodebegin"; } }
+		public override string Command { get { return "resetmodestart"; } }
+		public override string Usage { get { return "/resetmodestart"; } }
 		public override string Description { get { return "Begins reset mode."; } }
 		
 
@@ -25,12 +24,15 @@ namespace ResetMode.Commands {
 			var mymod = (ResetModeMod)this.mod;
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			if( myworld.Logic.WorldStatus == ResetModeStatus.Normal ) {
-				myworld.Logic.Start( mymod );
-				caller.Reply( "Reset mode begun! This will continue until for each new world /resetmodeend is called.", Color.YellowGreen );
-			} else {
-				caller.Reply( "Reset mode is already in session for this world.", Color.Red );
+			if( mymod.Logic.IsSessionStarted(mymod) ) {
+				caller.Reply( "Reset mode is already in session.", Color.Red );
+				return;
 			}
+
+			mymod.Logic.StartSession( mymod );
+			myworld.Logic.EngageWorldForCurrentSession( mymod );
+
+			caller.Reply( "Reset mode begun! This will continue until for each new world /resetmodeend is called.", Color.YellowGreen );
 		}
 	}
 }

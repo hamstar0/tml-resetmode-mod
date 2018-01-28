@@ -1,4 +1,6 @@
 using HamstarHelpers.Utilities.Config;
+using ResetMode.Data;
+using ResetMode.Logic;
 using ResetMode.NetProtocol;
 using System;
 using System.IO;
@@ -22,8 +24,8 @@ namespace ResetMode {
 				throw new Exception( "Cannot reload configs outside of single player." );
 			}
 			if( ResetModeMod.Instance != null ) {
-				if( !ResetModeMod.Instance.JsonConfig.LoadFile() ) {
-					ResetModeMod.Instance.JsonConfig.SaveFile();
+				if( !ResetModeMod.Instance.ConfigJson.LoadFile() ) {
+					ResetModeMod.Instance.ConfigJson.SaveFile();
 				}
 			}
 		}
@@ -33,8 +35,14 @@ namespace ResetMode {
 		////////////////
 
 		public bool IsContentSetup { get; private set; }
-		internal JsonConfig<ResetModeConfigData> JsonConfig;
-		public ResetModeConfigData Config { get { return JsonConfig.Data; } }
+
+		internal JsonConfig<ResetModeConfigData> ConfigJson;
+		public ResetModeConfigData Config { get { return ConfigJson.Data; } }
+
+		internal JsonConfig<ResetModeSessionData> SessionJson;
+		public ResetModeSessionData Session { get { return SessionJson.Data; } }
+
+		public ModLogic Logic { get; private set; }
 
 
 		////////////////
@@ -47,8 +55,11 @@ namespace ResetMode {
 				AutoloadSounds = true
 			};
 
-			this.JsonConfig = new JsonConfig<ResetModeConfigData>( ResetModeConfigData.ConfigFileName,
+			this.ConfigJson = new JsonConfig<ResetModeConfigData>( ResetModeConfigData.ConfigFileName,
 				ConfigurationDataBase.RelativePath, new ResetModeConfigData() );
+			this.SessionJson = new JsonConfig<ResetModeSessionData>( ResetModeSessionData.DataFileName,
+				ResetModeSessionData.RelativePath, new ResetModeSessionData() );
+			this.Logic = new ModLogic();
 		}
 
 		public override void Load() {
@@ -58,13 +69,16 @@ namespace ResetMode {
 		}
 
 		private void LoadConfigs() {
-			if( !this.JsonConfig.LoadFile() ) {
-				this.JsonConfig.SaveFile();
+			if( !this.ConfigJson.LoadFile() ) {
+				this.ConfigJson.SaveFile();
+			}
+			if( !this.SessionJson.LoadFile() ) {
+				this.SessionJson.SaveFile();
 			}
 
 			if( this.Config.UpdateToLatestVersion() ) {
 				ErrorLogger.Log( "Reset Mode updated to " + ResetModeConfigData.ConfigVersion.ToString() );
-				this.JsonConfig.SaveFile();
+				this.ConfigJson.SaveFile();
 			}
 		}
 		
@@ -80,7 +94,8 @@ namespace ResetMode {
 			var hook = new CustomTimerAction( delegate () {
 				var mymod = ResetModeMod.Instance;
 				var myworld = mymod.GetModWorld<ResetModeWorld>();
-				myworld.Logic.ResetToNextWorld( mymod );
+
+				myworld.Logic.CloseWorldForCurrentSession( mymod );
 			} );
 
 			TimeLimitAPI.AddCustomAction( "reset", hook );
@@ -90,10 +105,16 @@ namespace ResetMode {
 		////////////////
 
 		public override void HandlePacket( BinaryReader reader, int player_who ) {
+			ResetModeProtocolTypes protocol = (ResetModeProtocolTypes)reader.ReadByte();
+
+			if( SharedPackets.HandlePacket( this, protocol, reader, player_who ) ) {
+				return;
+			}
+
 			if( Main.netMode == 1 ) {   // Client
-				ClientPackets.HandlePacket( this, reader );
+				ClientPackets.HandlePacket( this, protocol, reader );
 			} else if( Main.netMode == 2 ) {    // Server
-				ServerPackets.HandlePacket( this, reader, player_who );
+				ServerPackets.HandlePacket( this, protocol, reader, player_who );
 			}
 		}
 

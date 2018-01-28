@@ -34,15 +34,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="API.cs" />
-    <Compile Include="Commands\ResetModeEndCommand.cs" />
-    <Compile Include="Config.cs" />
-    <Compile Include="Items\TimeCapsuleItem.cs" />
+    <Compile Include="Commands\ResetModeStopCommand.cs" />
+    <Compile Include="Data\Config.cs" />
+    <Compile Include="Data\Sessions.cs" />
+    <Compile Include="Items\_TimeCapsuleItem.cs" />
+    <Compile Include="Logic\ModLogic.cs" />
+    <Compile Include="Logic\PlayerLogic_Session.cs" />
     <Compile Include="Logic\PlayerLogic.cs" />
+    <Compile Include="Logic\WorldLogic_Session.cs" />
     <Compile Include="Logic\WorldLogic.cs" />
     <Compile Include="NetProtocol\ClientPackets.cs" />
     <Compile Include="NetProtocol\NetProtocolTypes.cs" />
     <Compile Include="NetProtocol\ServerPackets.cs" />
-    <Compile Include="Commands\ResetModeBeginCommand.cs" />
+    <Compile Include="Commands\ResetModeStartCommand.cs" />
+    <Compile Include="NetProtocol\SharedPackets.cs" />
     <Compile Include="ResetModeMod.cs" />
     <Compile Include="ResetModePlayer.cs" />
     <Compile Include="ResetModeWorld.cs" />

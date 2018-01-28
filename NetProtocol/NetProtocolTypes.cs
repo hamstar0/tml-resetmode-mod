@@ -2,6 +2,11 @@
 	public enum ResetModeProtocolTypes : byte {
 		RequestModSettings,
 		ModSettings,
-		WorldStatus
+		RequestWorldData,
+		WorldData,
+		PlayerData,
+		PromptForReset,
+		RequestPlayerSessionJoinAck,
+		PlayerSessionJoinAck
 	}
 }

@@ -1,8 +1,17 @@
 Future
 -	Implement batch file maker for server to auto-rehost worlds?
 v1
--	Implement mode end command
+-	Add icon
+-	Add PP checking
+-	Add hash checking
+	-	Add PP to hash
 
+	-	On player exit, store hash from client to server
+	-	On player enter, check hash on server (SyncPlayer?)
+	-	Store player hashes and world data
+	-	Create session data storage folder and file
+-	@Test reset
+-	Implement mode end command
 -	Implement player locking
 -	Prompt new players to reset their gear
 -	@Implement modal prompts (dialogs)

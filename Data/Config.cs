@@ -2,7 +2,7 @@
 using System;
 
 
-namespace ResetMode {
+namespace ResetMode.Data {
 	public class ResetModeConfigData : ConfigurationDataBase {
 		public static Version ConfigVersion { get { return new Version(1, 0, 0); } }
 		public static string ConfigFileName { get { return "ResetMode Config.json"; } }
@@ -12,12 +12,8 @@ namespace ResetMode {
 
 		public string VersionSinceUpdate = ResetModeConfigData.ConfigVersion.ToString();
 
-		public int SecondsUntilResetInitially = 60 * 60 * 45;
+		public int SecondsUntilResetInitially = 30;//60 * 60 * 45;
 		public int SecondsUntilResetSubsequently = 60 * 60 * 30;
-
-		public string IGNORE_SETTINGS_BENEATH_THIS_LINE = "";
-		
-		public bool AwaitingNextWorld = false;
 
 
 

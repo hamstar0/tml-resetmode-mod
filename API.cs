@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ResetMode.Data;
+using System;
 
 
 namespace ResetMode {
@@ -9,6 +10,12 @@ namespace ResetMode {
 				return ResetModeAPI.GetModSettings();
 			case "SaveModSettingsChanges":
 				ResetModeAPI.SaveModSettingsChanges();
+				return null;
+			case "StartSession":
+				ResetModeAPI.StartSession();
+				return null;
+			case "StopSession":
+				ResetModeAPI.StopSession();
 				return null;
 			}
 			
@@ -24,7 +31,36 @@ namespace ResetMode {
 		}
 		
 		public static void SaveModSettingsChanges() {
-			ResetModeMod.Instance.JsonConfig.SaveFile();
+			ResetModeMod.Instance.ConfigJson.SaveFile();
+		}
+
+		public static ResetModeSessionData GetSessionData() {
+			return ResetModeMod.Instance.Session;
+		}
+
+		public static void SaveSessionDataChanges() {
+			ResetModeMod.Instance.SessionJson.SaveFile();
+		}
+
+		////////////////
+
+		public static void StartSession() {
+			var mymod = ResetModeMod.Instance;
+
+			if( !mymod.Logic.IsSessionStarted( mymod ) ) {
+				var myworld = mymod.GetModWorld<ResetModeWorld>();
+
+				mymod.Logic.StartSession( mymod );
+				myworld.Logic.EngageWorldForCurrentSession( mymod );
+			}
+		}
+
+		public static void StopSession() {
+			var mymod = ResetModeMod.Instance;
+			var myworld = mymod.GetModWorld<ResetModeWorld>();
+
+			mymod.Logic.StopSession( mymod );
+			myworld.Logic.ClearSessionWorlds( mymod );
 		}
 	}
 }

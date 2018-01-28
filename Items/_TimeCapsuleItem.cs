@@ -1,9 +1,9 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace ResetMode.Items
-{
-	public class TimeCapsuleItem : ModItem
+
+namespace ResetMode.Items {
+	/*public class TimeCapsuleItem : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -34,5 +34,5 @@ namespace ResetMode.Items
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}
-	}
+	}*/
 }

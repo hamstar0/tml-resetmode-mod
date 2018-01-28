@@ -1,5 +1,7 @@
-﻿using ResetMode.Logic;
+﻿using ResetMode.Data;
+using ResetMode.Logic;
 using ResetMode.NetProtocol;
+using System.IO;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -7,10 +9,10 @@ using Terraria.ModLoader.IO;
 
 namespace ResetMode {
 	class ResetModePlayer : ModPlayer {
-		private PlayerLogic Logic;
+		public PlayerLogic Logic;
 
 		private bool HasSyncedModSettings = false;
-		private bool HasShownWelcome = false;
+		private bool HasSyncedWorldData = false;
 
 
 		////////////////
@@ -25,7 +27,16 @@ namespace ResetMode {
 		}
 
 		public override TagCompound Save() {
-			return this.Logic.Save( this.player );
+			return this.Logic.Save( (ResetModeMod)this.mod, this.player );
+		}
+
+
+		public void NetSend( BinaryWriter writer ) {
+			this.Logic.NetSend( (ResetModeMod)this.mod, this.player, writer );
+		}
+
+		public void NetReceive( BinaryReader reader ) {
+			this.Logic.NetReceive( (ResetModeMod)this.mod, this.player, reader );
 		}
 
 
@@ -35,7 +46,19 @@ namespace ResetMode {
 			var clone = (ResetModePlayer)client_clone;
 			clone.Logic = this.Logic;
 			clone.HasSyncedModSettings = this.HasSyncedModSettings;
-			clone.HasShownWelcome = this.HasShownWelcome;
+			clone.HasSyncedWorldData = this.HasSyncedWorldData;
+		}
+
+
+		public override void SyncPlayer( int to_who, int from_who, bool new_player ) {
+			var mymod = (ResetModeMod)this.mod;
+
+			if( new_player ) {
+				if( Main.netMode == 1 ) {
+					SharedPackets.SendPlayerData( mymod, this.player );
+					return;
+				}
+			}
 		}
 
 
@@ -43,24 +66,33 @@ namespace ResetMode {
 			var mymod = (ResetModeMod)this.mod;
 
 			if( player.whoAmI == this.player.whoAmI ) {
-				if( Main.netMode == 0 ) {   // Not server
-					if( !mymod.JsonConfig.LoadFile() ) {
-						mymod.JsonConfig.SaveFile();
+				if( Main.netMode == 0 ) {	// Not server
+					if( !mymod.ConfigJson.LoadFile() ) {
+						mymod.ConfigJson.SaveFile();
 						ErrorLogger.Log( "Reset Mode config " + ResetModeConfigData.ConfigVersion.ToString() + " created (ModPlayer.OnEnterWorld())." );
 					}
 				}
 
 				if( Main.netMode == 1 ) {
 					ClientPackets.RequestModSettings( mymod );
+					ClientPackets.RequestWorldData( mymod );
 				}
-				if( Main.netMode != 1 ) {   // NOT client
+				if( Main.netMode != 1 ) {	// NOT client
 					this.HasSyncedModSettings = true;
+					this.HasSyncedWorldData = true;
 				}
 			}
 		}
 
+		public bool IsSynced() {
+			return this.HasSyncedModSettings && this.HasSyncedWorldData;
+		}
+
 		public void FinishModSettingsSync() {
 			this.HasSyncedModSettings = true;
+		}
+		public void FinishWorldDataSync() {
+			this.HasSyncedWorldData = true;
 		}
 
 
@@ -68,14 +100,11 @@ namespace ResetMode {
 
 		public override void PreUpdate() {
 			if( this.player.whoAmI == Main.myPlayer ) {
-				var mymod = (ResetModeMod)this.mod;
-
-				if( this.HasSyncedModSettings && !this.HasShownWelcome ) {
-					this.HasShownWelcome = true;
-					this.Logic.Welcome( mymod, this.player );
+				if( this.IsSynced() ) {
+					var mymod = (ResetModeMod)this.mod;
+					
+					this.Logic.Update( mymod, this.player );
 				}
-
-				this.Logic.Update( mymod, this.player );
 			}
 		}
 	}
