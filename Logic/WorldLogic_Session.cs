@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.WorldHelpers;
+﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.WorldHelpers;
 using ResetMode.NetProtocol;
 
 
@@ -12,6 +13,10 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void EngageWorldForCurrentSession( ResetModeMod mymod ) {
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "WorldLogic.EngageWorldForCurrentSession "+WorldHelpers.GetUniqueId() );
+			}
+
 			mymod.Session.AllPlayedWorlds.Add( WorldHelpers.GetUniqueId() );
 			mymod.Session.AwaitingNextWorld = false;
 
@@ -27,6 +32,10 @@ namespace ResetMode.Logic {
 		}
 
 		public void CloseWorldForCurrentSession( ResetModeMod mymod ) {
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "WorldLogic.CloseWorldForCurrentSession" );
+			}
+
 			this.WorldStatus = ResetModeStatus.Expired;
 
 			if( mymod.Logic.NetMode == 2 ) {
@@ -45,6 +54,10 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void ClearAllSessionWorlds( ResetModeMod mymod ) {
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "WorldLogic.ClearAllSessionWorlds" );
+			}
+
 			if( !mymod.Logic.IsSessionStarted( mymod ) ) { return; }
 
 			mymod.Session.AllPlayedWorlds.Clear();

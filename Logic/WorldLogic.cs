@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.WorldHelpers;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader.IO;
@@ -36,9 +38,17 @@ namespace ResetMode.Logic {
 			if( mymod.Logic.NetMode != 1 ) {
 				mymod.SessionJson.LoadFile();
 			}
+
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "WorldLogic.Load uid: "+WorldHelpers.GetUniqueId()+", this.WorldStatus: "+ this.WorldStatus );
+			}
 		}
 
-		internal TagCompound Save() {
+		internal TagCompound Save( ResetModeMod mymod ) {
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "WorldLogic.Save uid: " + WorldHelpers.GetUniqueId() + ", this.WorldStatus: " + this.WorldStatus );
+			}
+
 			return new TagCompound { { "status", (int)this.WorldStatus } };
 		}
 
@@ -71,6 +81,10 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void GoodExit( ResetModeMod mymod ) {
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "WorldLogic.GoodExit "+ this.IsExiting );
+			}
+
 			if( this.IsExiting ) { return; }
 			this.IsExiting = true;
 
@@ -87,6 +101,10 @@ namespace ResetMode.Logic {
 
 
 		public void BadExit( ResetModeMod mymod ) {
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "WorldLogic.BadExit " + this.IsExiting );
+			}
+
 			if( this.IsExiting ) { return; }
 			this.IsExiting = true;
 

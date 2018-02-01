@@ -25,7 +25,7 @@ namespace ResetMode {
 		}
 
 		public override TagCompound Save() {
-			return this.Logic.Save();
+			return this.Logic.Save( (ResetModeMod)this.mod );
 		}
 
 
