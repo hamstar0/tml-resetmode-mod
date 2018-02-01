@@ -55,11 +55,11 @@ namespace ResetMode {
 				AutoloadSounds = true
 			};
 
+			this.Logic = new ModLogic();
 			this.ConfigJson = new JsonConfig<ResetModeConfigData>( ResetModeConfigData.ConfigFileName,
 				ConfigurationDataBase.RelativePath, new ResetModeConfigData() );
 			this.SessionJson = new JsonConfig<ResetModeSessionData>( ResetModeSessionData.DataFileName,
 				ResetModeSessionData.RelativePath, new ResetModeSessionData() );
-			this.Logic = new ModLogic();
 		}
 
 		public override void Load() {
@@ -71,9 +71,6 @@ namespace ResetMode {
 		private void LoadConfigs() {
 			if( !this.ConfigJson.LoadFile() ) {
 				this.ConfigJson.SaveFile();
-			}
-			if( !this.SessionJson.LoadFile() ) {
-				this.SessionJson.SaveFile();
 			}
 
 			if( this.Config.UpdateToLatestVersion() ) {
@@ -95,6 +92,10 @@ namespace ResetMode {
 				var mymod = ResetModeMod.Instance;
 				var myworld = mymod.GetModWorld<ResetModeWorld>();
 
+				if( mymod.Logic.NetMode == 1 ) {
+					SharedPackets.SendPlayerData( mymod, Main.LocalPlayer );
+				}
+
 				myworld.Logic.CloseWorldForCurrentSession( mymod );
 			} );
 
@@ -111,9 +112,9 @@ namespace ResetMode {
 				return;
 			}
 
-			if( Main.netMode == 1 ) {   // Client
+			if( this.Logic.NetMode == 1 ) {   // Client
 				ClientPackets.HandlePacket( this, protocol, reader );
-			} else if( Main.netMode == 2 ) {    // Server
+			} else if( this.Logic.NetMode == 2 ) {    // Server
 				ServerPackets.HandlePacket( this, protocol, reader, player_who );
 			}
 		}

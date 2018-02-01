@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HamstarHelpers.DebugHelpers;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
@@ -22,6 +23,8 @@ namespace ResetMode.NetProtocol {
 		////////////////
 
 		public static void SendPlayerData( ResetModeMod mymod, Player player, int to_who=-1, int ignore_who=-1 ) {
+			if( mymod.Logic.NetMode == 0 ) { throw new Exception( "Not single player mode." ); }
+
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 			ModPacket packet = mymod.GetPacket();
 
@@ -30,6 +33,10 @@ namespace ResetMode.NetProtocol {
 			myplayer.NetSend( packet );
 
 			packet.Send( to_who, ignore_who );
+
+			if( mymod.Config.DebugModeNetwork ) {
+				LogHelpers.Log( ">Send PlayerData" );
+			}
 		}
 
 
@@ -39,10 +46,15 @@ namespace ResetMode.NetProtocol {
 		////////////////
 		
 		private static void ReceivePlayerData( ResetModeMod mymod, BinaryReader reader, int player_who ) {
-			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
+			if( mymod.Logic.NetMode == 0 ) { throw new Exception("Not single player mode."); }
+
+			if( mymod.Config.DebugModeNetwork ) {
+				LogHelpers.Log( "<Receive ReceivePlayerData" );
+			}
 
 			int data_of_who = reader.ReadInt32();
-			var myplayer = Main.player[data_of_who].GetModPlayer<ResetModePlayer>();
+			Player player = Main.player[ data_of_who ];
+			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
 			myplayer.NetReceive( reader );
 		}

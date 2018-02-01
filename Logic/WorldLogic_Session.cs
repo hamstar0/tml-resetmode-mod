@@ -1,6 +1,5 @@
 ﻿using HamstarHelpers.WorldHelpers;
 using ResetMode.NetProtocol;
-using Terraria;
 
 
 namespace ResetMode.Logic {
@@ -14,40 +13,52 @@ namespace ResetMode.Logic {
 
 		public void EngageWorldForCurrentSession( ResetModeMod mymod ) {
 			mymod.Session.AllPlayedWorlds.Add( WorldHelpers.GetUniqueId() );
-
 			mymod.Session.AwaitingNextWorld = false;
-			mymod.SessionJson.SaveFile();
+
+			if( mymod.Logic.NetMode != 1 ) {
+				mymod.SessionJson.SaveFile();
+			}
 
 			this.WorldStatus = ResetModeStatus.Active;
-			ServerPackets.SendWorldData( mymod, -1 );
+
+			if( mymod.Logic.NetMode == 2 ) {
+				ServerPackets.SendWorldData( mymod, -1 );
+			}
 		}
 
 		public void CloseWorldForCurrentSession( ResetModeMod mymod ) {
-			this.IsExiting = true;
-
 			this.WorldStatus = ResetModeStatus.Expired;
-			if( Main.netMode == 2 ) {
+
+			if( mymod.Logic.NetMode == 2 ) {
 				ServerPackets.SendWorldData( mymod, -1 );
 			}
 
 			mymod.Session.AwaitingNextWorld = true;
-			mymod.SessionJson.SaveFile();
 
-			this.GoodExit();
+			if( mymod.Logic.NetMode != 1 ) {
+				mymod.SessionJson.SaveFile();
+			}
+
+			this.GoodExit( mymod );
 		}
 
 		////////////////
 
-		public void ClearSessionWorlds( ResetModeMod mymod ) {
+		public void ClearAllSessionWorlds( ResetModeMod mymod ) {
 			if( !mymod.Logic.IsSessionStarted( mymod ) ) { return; }
 
 			mymod.Session.AllPlayedWorlds.Clear();
-
 			mymod.Session.AwaitingNextWorld = false;
-			mymod.SessionJson.SaveFile();
+
+			if( mymod.Logic.NetMode != 1 ) {
+				mymod.SessionJson.SaveFile();
+			}
 
 			this.WorldStatus = ResetModeStatus.Normal;
-			ServerPackets.SendWorldData( mymod, -1 );
+
+			if( mymod.Logic.NetMode == 2 ) {
+				ServerPackets.SendWorldData( mymod, -1 );
+			}
 		}
 	}
 }

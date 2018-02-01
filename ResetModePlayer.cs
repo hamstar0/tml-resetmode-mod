@@ -13,6 +13,7 @@ namespace ResetMode {
 
 		private bool HasSyncedModSettings = false;
 		private bool HasSyncedWorldData = false;
+		private bool HasSyncedSessionData = false;
 
 
 		////////////////
@@ -23,11 +24,11 @@ namespace ResetMode {
 
 
 		public override void Load( TagCompound tags ) {
-			this.Logic.Load( this.player, tags );
+			this.Logic.LoadLocal( (ResetModeMod)this.mod, this.player, tags );
 		}
 
 		public override TagCompound Save() {
-			return this.Logic.Save( (ResetModeMod)this.mod, this.player );
+			return this.Logic.SaveLocal( (ResetModeMod)this.mod, this.player );
 		}
 
 
@@ -49,43 +50,65 @@ namespace ResetMode {
 			clone.HasSyncedWorldData = this.HasSyncedWorldData;
 		}
 
-
 		public override void SyncPlayer( int to_who, int from_who, bool new_player ) {
 			var mymod = (ResetModeMod)this.mod;
 
-			if( new_player ) {
-				if( Main.netMode == 1 ) {
-					SharedPackets.SendPlayerData( mymod, this.player );
+			if( Main.netMode == 1 ) {
+				if( new_player ) {
+					this.OnClientConnect();
 					return;
+				}
+			} else {
+				if( to_who == -1 && from_who == this.player.whoAmI ) {
+					this.OnServerConnect();
 				}
 			}
 		}
 
+		private void OnClientConnect() {
+			var mymod = (ResetModeMod)this.mod;
+
+			mymod.Logic.OnEnterGame();
+			mymod.Session.EndSession();
+		}
+
+		private void OnServerConnect() { }
+
+
+		////////////////
 
 		public override void OnEnterWorld( Player player ) {
 			var mymod = (ResetModeMod)this.mod;
 
 			if( player.whoAmI == this.player.whoAmI ) {
-				if( Main.netMode == 0 ) {	// Not server
+				if( Main.netMode == 0 ) {
 					if( !mymod.ConfigJson.LoadFile() ) {
 						mymod.ConfigJson.SaveFile();
 						ErrorLogger.Log( "Reset Mode config " + ResetModeConfigData.ConfigVersion.ToString() + " created (ModPlayer.OnEnterWorld())." );
 					}
+
+					mymod.Logic.OnEnterGame();
+					mymod.Logic.LoadPlayerData( mymod, player );
 				}
 
-				if( Main.netMode == 1 ) {
+				if( mymod.Logic.NetMode == 1 ) {
+					this.Logic.SyncClient( mymod, this.player );
 					ClientPackets.RequestModSettings( mymod );
 					ClientPackets.RequestWorldData( mymod );
+					ClientPackets.RequestSessionData( mymod );
 				}
-				if( Main.netMode != 1 ) {	// NOT client
+				if( mymod.Logic.NetMode != 1 ) {	// NOT client
 					this.HasSyncedModSettings = true;
 					this.HasSyncedWorldData = true;
+					this.HasSyncedSessionData = true;
 				}
 			}
 		}
 
+		////////////////
+
 		public bool IsSynced() {
-			return this.HasSyncedModSettings && this.HasSyncedWorldData;
+			return this.HasSyncedModSettings && this.HasSyncedWorldData && this.HasSyncedSessionData;
 		}
 
 		public void FinishModSettingsSync() {
@@ -94,17 +117,19 @@ namespace ResetMode {
 		public void FinishWorldDataSync() {
 			this.HasSyncedWorldData = true;
 		}
+		public void FinishSessionDataSync() {
+			this.HasSyncedSessionData = true;
+		}
 
 
 		////////////////
 
 		public override void PreUpdate() {
-			if( this.player.whoAmI == Main.myPlayer ) {
-				if( this.IsSynced() ) {
-					var mymod = (ResetModeMod)this.mod;
-					
-					this.Logic.Update( mymod, this.player );
-				}
+			var mymod = (ResetModeMod)this.mod;
+			bool is_me = this.player.whoAmI == Main.myPlayer;
+
+			if( (is_me && this.IsSynced()) || mymod.Logic.NetMode == 2 ) {
+				this.Logic.Update( (ResetModeMod)this.mod, this.player );
 			}
 		}
 	}

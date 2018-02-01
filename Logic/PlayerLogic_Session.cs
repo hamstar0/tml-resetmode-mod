@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.PlayerHelpers;
-using HamstarHelpers.TmlHelpers;
+﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.PlayerHelpers;
 using HamstarHelpers.UIHelpers.Elements.Dialogs;
 using HamstarHelpers.WorldHelpers;
 using ResetMode.NetProtocol;
@@ -10,28 +10,39 @@ using Terraria;
 namespace ResetMode.Logic {
 	partial class PlayerLogic {
 		public void ValidatePlayer( ResetModeMod mymod, Player player ) {
-			if( this.IsValidating ) { return; }
 			this.IsValidating = true;
 
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
-			var player_world = this.ActiveForWorldUid;
-			bool is_prompting = false;
 
-			if( player_world != WorldHelpers.GetUniqueId() ) {
-				bool not_playing = string.IsNullOrEmpty( player_world );
-				bool was_playing = myworld.Logic.IsWorldUidInSession( mymod, player_world );
+			if( this.ActiveForWorldUid != WorldHelpers.GetUniqueId() ) {
+				bool not_playing = string.IsNullOrEmpty( this.ActiveForWorldUid );
+				bool was_playing = myworld.Logic.IsWorldUidInSession( mymod, this.ActiveForWorldUid );
 
 				if( not_playing || was_playing ) {
-					is_prompting = true;
-					this.PromptToBeginPlaying( mymod, player );
+					if( !this.IsPrompting ) {
+LogHelpers.Log( "ValidatePlayer not_playing: "+ not_playing+ ", was_playing: "+ was_playing+", wuid: "+ this.ActiveForWorldUid );
+						this.PromptToBeginPlaying( mymod, player );
+					}
 				} else {
-					this.Boot( player );
+					this.Boot( mymod, player, "already playing another session" );
 				}
 			}
 
-			if( !is_prompting ) {
-				if( !mymod.Logic.IsPlayerSessionSynced( mymod, player ) ) {
-					this.PromptToBeginPlaying( mymod, player );
+			if( mymod.Logic.NetMode != 1 ) {
+				bool has_pp_changed;
+				bool is_synced = mymod.Logic.IsPlayerSessionSynced( mymod, player, out has_pp_changed );
+
+				// PP changes warrant a boot?
+				if( has_pp_changed ) {
+					this.Boot( mymod, player, "already using Rewards elsewhere" );
+					return;
+				}
+
+				if( !is_synced ) {
+					if( !this.IsPrompting ) {
+LogHelpers.Log( "ValidatePlayer not synced" );
+						this.PromptToBeginPlaying( mymod, player );
+					}
 				}
 			}
 		}
@@ -40,10 +51,9 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void PromptToBeginPlaying( ResetModeMod mymod, Player player ) {
-			if( this.IsPrompting ) { return; }
 			this.IsPrompting = true;
 
-			if( Main.netMode == 2 ) {
+			if( mymod.Logic.NetMode == 2 ) {
 				ServerPackets.SendPromptForReset( mymod, player.whoAmI );
 				return;
 			}
@@ -56,7 +66,7 @@ namespace ResetMode.Logic {
 				this.BeginSession( mymod, player );
 			};
 			Action cancel_action = delegate () {
-				this.Boot( player );
+				this.Boot( mymod, player, "choose not to play" );
 			};
 
 			var prompt = new UIPromptDialog( new UIPromptTheme(), 600, 112, text, confirm_action, cancel_action );
@@ -67,22 +77,30 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void BeginSession( ResetModeMod mymod, Player player ) {
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "PlayerLogic.BeginSession player: " + player.whoAmI );
+			}
+
 			this.ActiveForWorldUid = WorldHelpers.GetUniqueId();
 
-			this.AddPlayerToSession( mymod, player );
-		}
+			if( mymod.Logic.NetMode == 1 ) {
+				this.SyncClient( mymod, player );
+			}
 
-		public void Boot( Player player ) {
-			TmlHelpers.ExitToMenu( true );
+			this.AddPlayerToSession( mymod, player );
 		}
 
 
 		////////////////
 
 		public void AddPlayerToSession( ResetModeMod mymod, Player player ) {
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "PlayerLogic.AddPlayerToSession player: " + player.whoAmI );
+			}
+
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
-			if( Main.netMode != 1 ) {
+			if( mymod.Logic.NetMode != 1 ) {
 				this.FinishPlayerSessionJoin( mymod, player );
 			} else {
 				ClientPackets.RequestPlayerSessionJoinAcknowledge( mymod );
@@ -91,6 +109,10 @@ namespace ResetMode.Logic {
 
 
 		public void FinishPlayerSessionJoin( ResetModeMod mymod, Player player ) {
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "PlayerLogic.FinishPlayerSessionJoin player: " + player.whoAmI );
+			}
+
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 			
 			this.IsPrompting = false;

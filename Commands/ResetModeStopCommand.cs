@@ -30,7 +30,7 @@ namespace ResetMode.Commands {
 			}
 
 			mymod.Logic.StopSession( mymod );
-			myworld.Logic.ClearSessionWorlds( mymod );
+			myworld.Logic.ClearAllSessionWorlds( mymod );
 
 			caller.Reply( "Reset mode ended!.", Color.YellowGreen );
 		}

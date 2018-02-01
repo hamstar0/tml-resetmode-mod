@@ -7,6 +7,8 @@
 		PlayerData,
 		PromptForReset,
 		RequestPlayerSessionJoinAck,
-		PlayerSessionJoinAck
+		PlayerSessionJoinAck,
+		RequestSessionData,
+		SessionData
 	}
 }

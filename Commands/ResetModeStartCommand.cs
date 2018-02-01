@@ -28,7 +28,7 @@ namespace ResetMode.Commands {
 				caller.Reply( "Reset mode is already in session.", Color.Red );
 				return;
 			}
-
+			
 			mymod.Logic.StartSession( mymod );
 			myworld.Logic.EngageWorldForCurrentSession( mymod );
 

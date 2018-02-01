@@ -38,7 +38,9 @@
     <Compile Include="Data\Config.cs" />
     <Compile Include="Data\Sessions.cs" />
     <Compile Include="Items\_TimeCapsuleItem.cs" />
+    <Compile Include="Logic\ModLogic_Player.cs" />
     <Compile Include="Logic\ModLogic.cs" />
+    <Compile Include="Logic\PlayerLogic_Data.cs" />
     <Compile Include="Logic\PlayerLogic_Session.cs" />
     <Compile Include="Logic\PlayerLogic.cs" />
     <Compile Include="Logic\WorldLogic_Session.cs" />

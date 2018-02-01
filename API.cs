@@ -44,23 +44,33 @@ namespace ResetMode {
 
 		////////////////
 
-		public static void StartSession() {
+		public static bool StartSession() {
 			var mymod = ResetModeMod.Instance;
 
 			if( !mymod.Logic.IsSessionStarted( mymod ) ) {
-				var myworld = mymod.GetModWorld<ResetModeWorld>();
-
-				mymod.Logic.StartSession( mymod );
-				myworld.Logic.EngageWorldForCurrentSession( mymod );
+				return false;
 			}
+
+			var myworld = mymod.GetModWorld<ResetModeWorld>();
+
+			mymod.Logic.StartSession( mymod );
+			myworld.Logic.EngageWorldForCurrentSession( mymod );
+
+			return true;
 		}
 
-		public static void StopSession() {
+		public static bool StopSession() {
 			var mymod = ResetModeMod.Instance;
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
+			if( !mymod.Logic.IsSessionStarted( mymod ) ) {
+				return false;
+			}
+
 			mymod.Logic.StopSession( mymod );
-			myworld.Logic.ClearSessionWorlds( mymod );
+			myworld.Logic.ClearAllSessionWorlds( mymod );
+
+			return true;
 		}
 	}
 }
