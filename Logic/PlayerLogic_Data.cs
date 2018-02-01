@@ -25,7 +25,7 @@ namespace ResetMode.Logic {
 
 		public void LoadLocal( ResetModeMod mymod, Player player, TagCompound tags ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "Loading player " + player.name + " (" + player.whoAmI + ")" );
+				LogHelpers.Log( "PlayerLogic.LoadLocal Loading player " + player.name + " (" + player.whoAmI + ")" );
 			}
 
 			if( tags.ContainsKey( "active_world_uid" ) ) {
@@ -41,7 +41,7 @@ namespace ResetMode.Logic {
 
 		public TagCompound SaveLocal( ResetModeMod mymod, Player player ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "Saving player " + player.name + " ("+player.whoAmI+")" );
+				LogHelpers.Log( "PlayerLogic.SaveLocal Saving player " + player.name + " ("+player.whoAmI+")" );
 			}
 
 			return new TagCompound {

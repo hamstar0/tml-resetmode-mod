@@ -12,11 +12,11 @@ namespace ResetMode.Data {
 
 		public string VersionSinceUpdate = ResetModeConfigData.ConfigVersion.ToString();
 
-		public bool DebugModeNetwork = true;//false;
-		public bool DebugModeInfo = true;//false;
+		public bool DebugModeNetwork = false;
+		public bool DebugModeInfo = false;
 
-		public int SecondsUntilResetInitially = 30;//60 * 60 * 45;
-		public int SecondsUntilResetSubsequently = 30;//60 * 60 * 30;
+		public int SecondsUntilResetInitially = 60 * 60 * 45;
+		public int SecondsUntilResetSubsequently = 60 * 60 * 30;
 
 
 

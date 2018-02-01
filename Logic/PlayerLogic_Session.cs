@@ -20,7 +20,6 @@ namespace ResetMode.Logic {
 
 				if( not_playing || was_playing ) {
 					if( !this.IsPrompting ) {
-LogHelpers.Log( "ValidatePlayer not_playing: "+ not_playing+ ", was_playing: "+ was_playing+", wuid: "+ this.ActiveForWorldUid );
 						this.PromptToBeginPlaying( mymod, player );
 					}
 				} else {
@@ -40,7 +39,6 @@ LogHelpers.Log( "ValidatePlayer not_playing: "+ not_playing+ ", was_playing: "+ 
 
 				if( !is_synced ) {
 					if( !this.IsPrompting ) {
-LogHelpers.Log( "ValidatePlayer not synced" );
 						this.PromptToBeginPlaying( mymod, player );
 					}
 				}
