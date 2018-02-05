@@ -1,7 +1,5 @@
 using HamstarHelpers.Utilities.Config;
 using ResetMode.Data;
-using ResetMode.Logic;
-using ResetMode.NetProtocol;
 using System;
 using System.IO;
 using Terraria;
@@ -42,8 +40,6 @@ namespace ResetMode {
 		internal JsonConfig<ResetModeSessionData> SessionJson;
 		public ResetModeSessionData Session { get { return SessionJson.Data; } }
 
-		public ModLogic Logic { get; private set; }
-
 
 		////////////////
 
@@ -54,8 +50,7 @@ namespace ResetMode {
 				AutoloadGores = true,
 				AutoloadSounds = true
 			};
-
-			this.Logic = new ModLogic();
+			
 			this.ConfigJson = new JsonConfig<ResetModeConfigData>( ResetModeConfigData.ConfigFileName,
 				ConfigurationDataBase.RelativePath, new ResetModeConfigData() );
 			this.SessionJson = new JsonConfig<ResetModeSessionData>( ResetModeSessionData.DataFileName,
@@ -92,31 +87,10 @@ namespace ResetMode {
 				var mymod = ResetModeMod.Instance;
 				var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-				if( mymod.Logic.NetMode == 1 ) {
-					SharedPackets.SendPlayerData( mymod, Main.LocalPlayer );
-				}
-
-				myworld.Logic.CloseWorldForCurrentSession( mymod );
+				myworld.Logic.ExpireWorldForCurrentSession( mymod );
 			} );
 
 			TimeLimitAPI.AddCustomAction( "reset", hook );
-		}
-
-
-		////////////////
-
-		public override void HandlePacket( BinaryReader reader, int player_who ) {
-			ResetModeProtocolTypes protocol = (ResetModeProtocolTypes)reader.ReadByte();
-
-			if( SharedPackets.HandlePacket( this, protocol, reader, player_who ) ) {
-				return;
-			}
-
-			if( this.Logic.NetMode == 1 ) {   // Client
-				ClientPackets.HandlePacket( this, protocol, reader );
-			} else if( this.Logic.NetMode == 2 ) {    // Server
-				ServerPackets.HandlePacket( this, protocol, reader, player_who );
-			}
 		}
 
 

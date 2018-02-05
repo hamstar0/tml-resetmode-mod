@@ -31,16 +31,12 @@ namespace ResetMode.Logic {
 		////////////////
 
 		internal void Load( ResetModeMod mymod, TagCompound tags ) {
-			if( tags.ContainsKey("status") ) {
+			if( tags.ContainsKey( "status" ) ) {
 				this.WorldStatus = (ResetModeStatus)tags.GetInt( "status" );
 			}
 
-			if( mymod.Logic.NetMode != 1 ) {
-				mymod.SessionJson.LoadFile();
-			}
-
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.Load uid: "+WorldHelpers.GetUniqueId()+", this.WorldStatus: "+ this.WorldStatus );
+				LogHelpers.Log( "WorldLogic.Load uid: " + WorldHelpers.GetUniqueId() + ", this.WorldStatus: " + this.WorldStatus );
 			}
 		}
 
@@ -53,24 +49,25 @@ namespace ResetMode.Logic {
 		}
 
 
+		public void OnWorldStart( ResetModeMod mymod ) {
+			if( this.WorldStatus == ResetModeStatus.Normal ) {
+				if( mymod.Session.AwaitingNextWorld ) {
+					this.EngageWorldForCurrentSession( mymod );
+				}
+			}
+		}
+
+
 
 		////////////////
 
 		public void Update( ResetModeMod mymod ) {
 			switch( this.WorldStatus ) {
 			case ResetModeStatus.Normal:
-				if( mymod.Logic.IsSessionStarted( mymod ) ) {
-					if( mymod.Session.AwaitingNextWorld ) {
-						mymod.Logic.ResumeSession( mymod );
-						this.EngageWorldForCurrentSession( mymod );
-					} else {
-						//this.BadExit();
-					}
-				}
 				break;
 
 			case ResetModeStatus.Expired:
-				if( mymod.Logic.IsSessionStarted( mymod ) ) {
+				if( !this.IsExiting ) {
 					this.GoodExit( mymod );
 				}
 				break;
@@ -82,17 +79,16 @@ namespace ResetMode.Logic {
 
 		public void GoodExit( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.GoodExit "+ this.IsExiting );
+				LogHelpers.Log( "WorldLogic.GoodExit " + this.IsExiting );
 			}
 
-			if( this.IsExiting ) { return; }
 			this.IsExiting = true;
 
-			if( mymod.Logic.NetMode == 0 ) {
+			if( Main.netMode == 0 ) {
 				Main.NewText( "Time's up. Please switch to the next world to continue.", Color.Red );
 
 				TimeLimitAPI.TimerStart( "exit", 5, false );
-			} else if( mymod.Logic.NetMode == 2 ) {
+			} else if( Main.netMode == 2 ) {
 				NetMessage.BroadcastChatMessage( NetworkText.FromLiteral( "Time's up. Please switch to the next new world to continue." ), Color.Red, -1 );
 
 				TimeLimitAPI.TimerStart( "serverclose", 7, false );
@@ -108,7 +104,7 @@ namespace ResetMode.Logic {
 			if( this.IsExiting ) { return; }
 			this.IsExiting = true;
 
-			if( mymod.Logic.NetMode == 0 ) {
+			if( Main.netMode == 0 ) {
 				//TmlHelpers.ExitToMenu( false );
 				TimeLimitAPI.TimerStart( "exit", 4, false );
 				Main.NewText( "World not valid for reset mode. Exiting...", Color.Red );

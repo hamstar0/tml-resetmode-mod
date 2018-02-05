@@ -1,6 +1,7 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.WorldHelpers;
-using ResetMode.NetProtocol;
+using Terraria;
+using TimeLimit;
 
 
 namespace ResetMode.Logic {
@@ -14,39 +15,38 @@ namespace ResetMode.Logic {
 
 		public void EngageWorldForCurrentSession( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.EngageWorldForCurrentSession "+WorldHelpers.GetUniqueId() );
+				LogHelpers.Log( "WorldLogic.EngageWorldForCurrentSession " + WorldHelpers.GetUniqueId() );
+			}
+
+			if( !mymod.Session.AwaitingNextWorld ) {
+				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetInitially, false );
+			} else {
+				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetSubsequently, false );
 			}
 
 			mymod.Session.AllPlayedWorlds.Add( WorldHelpers.GetUniqueId() );
 			mymod.Session.AwaitingNextWorld = false;
+			mymod.Session.IsRunning = true;
 
-			if( mymod.Logic.NetMode != 1 ) {
+			if( Main.netMode != 1 ) {
 				mymod.SessionJson.SaveFile();
 			}
 
 			this.WorldStatus = ResetModeStatus.Active;
-
-			if( mymod.Logic.NetMode == 2 ) {
-				ServerPackets.SendWorldData( mymod, -1 );
-			}
 		}
 
-		public void CloseWorldForCurrentSession( ResetModeMod mymod ) {
+		public void ExpireWorldForCurrentSession( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Log( "WorldLogic.CloseWorldForCurrentSession" );
 			}
 
-			this.WorldStatus = ResetModeStatus.Expired;
-
-			if( mymod.Logic.NetMode == 2 ) {
-				ServerPackets.SendWorldData( mymod, -1 );
-			}
-
 			mymod.Session.AwaitingNextWorld = true;
 
-			if( mymod.Logic.NetMode != 1 ) {
+			if( Main.netMode != 1 ) {
 				mymod.SessionJson.SaveFile();
 			}
+
+			this.WorldStatus = ResetModeStatus.Expired;
 
 			this.GoodExit( mymod );
 		}
@@ -57,21 +57,15 @@ namespace ResetMode.Logic {
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Log( "WorldLogic.ClearAllSessionWorlds" );
 			}
-
-			if( !mymod.Logic.IsSessionStarted( mymod ) ) { return; }
-
+			
 			mymod.Session.AllPlayedWorlds.Clear();
 			mymod.Session.AwaitingNextWorld = false;
 
-			if( mymod.Logic.NetMode != 1 ) {
+			if( Main.netMode != 1 ) {
 				mymod.SessionJson.SaveFile();
 			}
 
 			this.WorldStatus = ResetModeStatus.Normal;
-
-			if( mymod.Logic.NetMode == 2 ) {
-				ServerPackets.SendWorldData( mymod, -1 );
-			}
 		}
 	}
 }

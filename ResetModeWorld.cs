@@ -1,4 +1,5 @@
 ﻿using ResetMode.Logic;
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -6,22 +7,32 @@ using Terraria.ModLoader.IO;
 namespace ResetMode {
 	class ResetModeWorld : ModWorld {
 		public WorldLogic Logic { get; private set; }
-
-		private bool IsLoaded = false;
+		
+		private bool IsworldStarted = false;
 
 
 		////////////////
 
 		public override void Initialize() {
 			this.Logic = new WorldLogic();
-			this.IsLoaded = false;
+
+			if( Main.netMode != 1 ) {
+				var mymod = (ResetModeMod)this.mod;
+				mymod.SessionJson.LoadFile();
+			}
 		}
 
 		////////////////
 
 		public override void Load( TagCompound tags ) {
-			this.Logic.Load( (ResetModeMod)this.mod, tags );
-			this.IsLoaded = true;
+			var mymod = (ResetModeMod)this.mod;
+
+			this.Logic.Load( mymod, tags );
+
+			if( !this.IsworldStarted ) {
+				this.IsworldStarted = true;
+				this.Logic.OnWorldStart( mymod );
+			}
 		}
 
 		public override TagCompound Save() {
@@ -32,9 +43,14 @@ namespace ResetMode {
 		////////////////
 
 		public override void PreUpdate() {
-			if( this.IsLoaded ) {
-				this.Logic.Update( (ResetModeMod)this.mod );
+			var mymod = (ResetModeMod)this.mod;
+			
+			if( !this.IsworldStarted ) {
+				this.IsworldStarted = true;
+				this.Logic.OnWorldStart( mymod );
 			}
+
+			this.Logic.Update( mymod );
 		}
 	}
 }

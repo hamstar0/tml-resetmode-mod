@@ -22,17 +22,12 @@ namespace ResetMode.Commands {
 
 		public override void Action( CommandCaller caller, string input, string[] args ) {
 			var mymod = (ResetModeMod)this.mod;
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			if( mymod.Logic.IsSessionStarted(mymod) ) {
+			if( ResetModeAPI.StartSession() ) {
+				caller.Reply( "Reset mode begun! This will continue until for each new world /resetmodeend is called.", Color.YellowGreen );
+			} else {
 				caller.Reply( "Reset mode is already in session.", Color.Red );
-				return;
 			}
-			
-			mymod.Logic.StartSession( mymod );
-			myworld.Logic.EngageWorldForCurrentSession( mymod );
-
-			caller.Reply( "Reset mode begun! This will continue until for each new world /resetmodeend is called.", Color.YellowGreen );
 		}
 	}
 }

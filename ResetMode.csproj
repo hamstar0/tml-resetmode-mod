@@ -38,18 +38,11 @@
     <Compile Include="Data\Config.cs" />
     <Compile Include="Data\Sessions.cs" />
     <Compile Include="Items\_TimeCapsuleItem.cs" />
-    <Compile Include="Logic\ModLogic_Player.cs" />
-    <Compile Include="Logic\ModLogic.cs" />
-    <Compile Include="Logic\PlayerLogic_Data.cs" />
-    <Compile Include="Logic\PlayerLogic_Session.cs" />
     <Compile Include="Logic\PlayerLogic.cs" />
-    <Compile Include="Logic\WorldLogic_Session.cs" />
     <Compile Include="Logic\WorldLogic.cs" />
-    <Compile Include="NetProtocol\ClientPackets.cs" />
-    <Compile Include="NetProtocol\NetProtocolTypes.cs" />
-    <Compile Include="NetProtocol\ServerPackets.cs" />
+    <Compile Include="Logic\WorldLogic_Session.cs" />
+    <Compile Include="NetProtocols.cs" />
     <Compile Include="Commands\ResetModeStartCommand.cs" />
-    <Compile Include="NetProtocol\SharedPackets.cs" />
     <Compile Include="ResetModeMod.cs" />
     <Compile Include="ResetModePlayer.cs" />
     <Compile Include="ResetModeWorld.cs" />
@@ -94,6 +87,7 @@
     <Content Include="build.txt" />
     <Content Include="description.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"C:\Program Files (x86)\Steam\steamapps\common\terraria\Terraria.exe" -build "$(ProjectDir)\" -eac "$(TargetPath)"</PostBuildEvent>

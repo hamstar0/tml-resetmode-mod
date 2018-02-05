@@ -5,14 +5,13 @@ using System;
 namespace ResetMode.Data {
 	public class ResetModeConfigData : ConfigurationDataBase {
 		public static Version ConfigVersion { get { return new Version(1, 0, 0); } }
-		public static string ConfigFileName { get { return "ResetMode Config.json"; } }
+		public static string ConfigFileName { get { return "Reset Mode Config.json"; } }
 
 
 		////////////////
 
 		public string VersionSinceUpdate = ResetModeConfigData.ConfigVersion.ToString();
-
-		public bool DebugModeNetwork = false;
+		
 		public bool DebugModeInfo = false;
 
 		public int SecondsUntilResetInitially = 60 * 60 * 45;

@@ -1,4 +1,5 @@
 ﻿using ResetMode.Data;
+using ResetMode.Logic;
 using System;
 
 
@@ -46,14 +47,12 @@ namespace ResetMode {
 
 		public static bool StartSession() {
 			var mymod = ResetModeMod.Instance;
+			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			if( !mymod.Logic.IsSessionStarted( mymod ) ) {
+			if( myworld.Logic.WorldStatus != ResetModeStatus.Normal ) {
 				return false;
 			}
 
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-
-			mymod.Logic.StartSession( mymod );
 			myworld.Logic.EngageWorldForCurrentSession( mymod );
 
 			return true;
@@ -63,11 +62,10 @@ namespace ResetMode {
 			var mymod = ResetModeMod.Instance;
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			if( !mymod.Logic.IsSessionStarted( mymod ) ) {
+			if( myworld.Logic.WorldStatus == ResetModeStatus.Normal ) {
 				return false;
 			}
-
-			mymod.Logic.StopSession( mymod );
+			
 			myworld.Logic.ClearAllSessionWorlds( mymod );
 
 			return true;

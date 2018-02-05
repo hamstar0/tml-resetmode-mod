@@ -1,10 +1,27 @@
 Future
 -	Implement batch file maker for server to auto-rehost worlds?
+
+
+
+v1.2
+-	Add player state validating (boot only)
+v1.1
+-	Add player PP validating (boot only; all players must be 0 to start mode)
+
+v1
+-	Add player resets between worlds (track players by UID)
+
+v0.9 (v1 redo)
+-	Implement mode auto-resume after world expire
+-	F&T
+	-	Show correct welcome
+	-	Start timer
+-	Implement world reset functionality
+-	Clear mod of logic
 v1
 -	Add icon
 -	Set boot to show text in game menu
 -	Add PP checking
-debug HH new alert failing
 -	Add hash checking
 	-	On player exit, store hash from client to server
 	-	On player enter, check hash on server (SyncPlayer?)
