@@ -63,6 +63,8 @@ namespace ResetMode.Logic {
 				} else if( Main.netMode == 0 ) {
 					this.BeginSession( mymod, replayer );
 				}
+
+				this.IsPromptingForReset = false;
 			};
 			Action cancel_action = delegate () {
 				this.Boot( mymod, player, "choose not to play" );

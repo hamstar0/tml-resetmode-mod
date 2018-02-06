@@ -103,7 +103,7 @@ namespace ResetMode {
 			bool is_me = this.player.whoAmI == Main.myPlayer;
 
 			if( is_me && this.IsSynced() ) {
-				//this.Logic.Update( (ResetModeMod)this.mod, this.player );
+				this.Logic.Update( mymod, this.player );
 			}
 		}
 	}
