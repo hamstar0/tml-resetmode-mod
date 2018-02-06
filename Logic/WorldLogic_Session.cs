@@ -33,7 +33,31 @@ namespace ResetMode.Logic {
 			}
 
 			this.WorldStatus = ResetModeStatus.Active;
+
+			PlayerLogic.ValidateAll( mymod );
 		}
+
+
+		public void EndCurrentSession( ResetModeMod mymod ) {
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "WorldLogic.EndCurrentSession " + WorldHelpers.GetUniqueId() );
+			}
+
+			mymod.Session.AllPlayedWorlds.Clear();
+			mymod.Session.AwaitingNextWorld = false;
+			mymod.Session.IsRunning = false;
+
+			if( Main.netMode != 1 ) {
+				mymod.SessionJson.SaveFile();
+			}
+
+			this.WorldStatus = ResetModeStatus.Normal;
+
+			TimeLimitAPI.TimerStop( "reset" );
+		}
+
+
+		////////////////
 
 		public void ExpireWorldForCurrentSession( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
@@ -49,23 +73,6 @@ namespace ResetMode.Logic {
 			this.WorldStatus = ResetModeStatus.Expired;
 
 			this.GoodExit( mymod );
-		}
-
-		////////////////
-
-		public void ClearAllSessionWorlds( ResetModeMod mymod ) {
-			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.ClearAllSessionWorlds" );
-			}
-			
-			mymod.Session.AllPlayedWorlds.Clear();
-			mymod.Session.AwaitingNextWorld = false;
-
-			if( Main.netMode != 1 ) {
-				mymod.SessionJson.SaveFile();
-			}
-
-			this.WorldStatus = ResetModeStatus.Normal;
 		}
 	}
 }

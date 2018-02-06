@@ -43,7 +43,16 @@ namespace ResetMode {
 
 		private void OnClientConnect() { }
 
-		private void OnServerConnect() { }
+		private void OnServerConnect() {
+			var mymod = (ResetModeMod)this.mod;
+			var myworld = mymod.GetModWorld<ResetModeWorld>();
+
+			if( mymod.Session.IsRunning ) {
+				if( myworld.Logic.WorldStatus != ResetModeStatus.Normal ) {
+					this.Logic.ValidatePlayer( mymod, this.player );
+				}
+			}
+		}
 
 
 		////////////////

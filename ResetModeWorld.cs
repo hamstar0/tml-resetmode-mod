@@ -29,9 +29,11 @@ namespace ResetMode {
 
 			this.Logic.Load( mymod, tags );
 
-			if( !this.IsworldStarted ) {
-				this.IsworldStarted = true;
-				this.Logic.OnWorldStart( mymod );
+			if( Main.netMode != 1 ) {	// Just in case?
+				if( !this.IsworldStarted ) {
+					this.IsworldStarted = true;
+					this.Logic.OnWorldStart( mymod );
+				}
 			}
 		}
 
@@ -43,6 +45,8 @@ namespace ResetMode {
 		////////////////
 
 		public override void PreUpdate() {
+			if( Main.netMode == 1 ) { return; }	// Just in case?
+
 			var mymod = (ResetModeMod)this.mod;
 			
 			if( !this.IsworldStarted ) {

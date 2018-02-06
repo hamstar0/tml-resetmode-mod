@@ -15,7 +15,13 @@ namespace ResetMode.Logic {
 
 
 		////////////////
-		
+
+		private bool IsPromptingForReset = false;
+
+
+
+		////////////////
+
 		public void OnEnterWorld( ResetModeMod mymod, Player player ) {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
@@ -32,17 +38,17 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		/*public void Update( ResetModeMod mymod, Player player ) {
+		public void Update( ResetModeMod mymod, Player player ) {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			if( this.IsPrompting ) {
+			if( this.IsPromptingForReset ) {
 				player.noItems = true;
 				player.noBuilding = true;
 				player.stoned = true;
 				player.immune = true;
 				player.immuneTime = 2;
 			}
-		}*/
+		}
 
 
 		////////////////

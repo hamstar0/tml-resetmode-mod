@@ -1,6 +1,6 @@
 ﻿using ResetMode.Data;
-using ResetMode.Logic;
 using System;
+using Terraria;
 
 
 namespace ResetMode {
@@ -36,20 +36,26 @@ namespace ResetMode {
 		}
 
 		public static ResetModeSessionData GetSessionData() {
+			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
+
 			return ResetModeMod.Instance.Session;
 		}
 
 		public static void SaveSessionDataChanges() {
+			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
+
 			ResetModeMod.Instance.SessionJson.SaveFile();
 		}
 
 		////////////////
 
 		public static bool StartSession() {
+			if( Main.netMode == 1 ) { throw new Exception("Clients cannot call this."); }
+
 			var mymod = ResetModeMod.Instance;
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			if( myworld.Logic.WorldStatus != ResetModeStatus.Normal ) {
+			if( mymod.Session.IsRunning ) {
 				return false;
 			}
 
@@ -59,14 +65,16 @@ namespace ResetMode {
 		}
 
 		public static bool StopSession() {
+			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
+
 			var mymod = ResetModeMod.Instance;
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			if( myworld.Logic.WorldStatus == ResetModeStatus.Normal ) {
+			if( !mymod.Session.IsRunning ) {
 				return false;
 			}
 			
-			myworld.Logic.ClearAllSessionWorlds( mymod );
+			myworld.Logic.EndCurrentSession( mymod );
 
 			return true;
 		}

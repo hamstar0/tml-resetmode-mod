@@ -39,6 +39,8 @@
     <Compile Include="Data\Sessions.cs" />
     <Compile Include="Items\_TimeCapsuleItem.cs" />
     <Compile Include="Logic\PlayerLogic.cs" />
+    <Compile Include="Logic\PlayerLogic_Validate.cs" />
+    <Compile Include="Logic\WorldLogic_Player.cs" />
     <Compile Include="Logic\WorldLogic.cs" />
     <Compile Include="Logic\WorldLogic_Session.cs" />
     <Compile Include="NetProtocols.cs" />
