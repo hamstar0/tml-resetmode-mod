@@ -84,6 +84,8 @@ namespace ResetMode {
 			this.IsContentSetup = true;
 
 			var hook = new CustomTimerAction( delegate () {
+				if( Main.netMode == 1 ) { return; }
+
 				var mymod = ResetModeMod.Instance;
 				var myworld = mymod.GetModWorld<ResetModeWorld>();
 

@@ -1,12 +1,11 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.WorldHelpers;
-using Terraria;
 using TimeLimit;
 
 
 namespace ResetMode.Logic {
 	partial class WorldLogic {
-		public bool IsWorldUidInSession( ResetModeMod mymod, string world_uid ) {
+		public static bool IsWorldUidInSession( ResetModeMod mymod, string world_uid ) {
 			return mymod.Session.AllPlayedWorlds.Contains( world_uid );
 		}
 
@@ -27,10 +26,8 @@ namespace ResetMode.Logic {
 			mymod.Session.AllPlayedWorlds.Add( WorldHelpers.GetUniqueId() );
 			mymod.Session.AwaitingNextWorld = false;
 			mymod.Session.IsRunning = true;
-
-			if( Main.netMode != 1 ) {
-				mymod.SessionJson.SaveFile();
-			}
+			
+			mymod.SessionJson.SaveFile();
 
 			this.WorldStatus = ResetModeStatus.Active;
 
@@ -46,10 +43,8 @@ namespace ResetMode.Logic {
 			mymod.Session.AllPlayedWorlds.Clear();
 			mymod.Session.AwaitingNextWorld = false;
 			mymod.Session.IsRunning = false;
-
-			if( Main.netMode != 1 ) {
-				mymod.SessionJson.SaveFile();
-			}
+			
+			mymod.SessionJson.SaveFile();
 
 			this.WorldStatus = ResetModeStatus.Normal;
 
@@ -65,10 +60,8 @@ namespace ResetMode.Logic {
 			}
 
 			mymod.Session.AwaitingNextWorld = true;
-
-			if( Main.netMode != 1 ) {
-				mymod.SessionJson.SaveFile();
-			}
+			
+			mymod.SessionJson.SaveFile();
 
 			this.WorldStatus = ResetModeStatus.Expired;
 

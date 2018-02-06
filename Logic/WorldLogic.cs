@@ -38,8 +38,8 @@ namespace ResetMode.Logic {
 				this.WorldStatus = (ResetModeStatus)tags.GetInt( "status" );
 			}
 
-			if( tags.ContainsKey( "players_count") ) {
-				int count = tags.GetInt( "players_count" );
+			if( tags.ContainsKey( "player_count" ) ) {
+				int count = tags.GetInt( "player_count" );
 				for( int i=0; i<count; i++ ) {
 					this.WorldPlayers.Add( tags.GetString( "player_" + i ) );
 				}
