@@ -9,7 +9,7 @@ namespace ResetMode {
 
 		////////////////
 
-		public override void SetDefaults() {
+		public override void SetServerDefaults() {
 			this.Data = ResetModeMod.Instance.Config;
 		}
 
@@ -26,21 +26,25 @@ namespace ResetMode {
 
 
 	class ResetModePlayerResetProtocol : PacketProtocol {
-		public override void ReceiveRequestOnClient() {
+		public override bool ReceiveRequestOnClient() {
 			Player player = Main.LocalPlayer;
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
 			myplayer.Logic.PromptReset( ResetModeMod.Instance, Main.LocalPlayer );
+
+			return true;
 		}
 	}
 
 
 	class ResetModePlayerResetConfirmProtocol : PacketProtocol {
-		public override void ReceiveRequestOnServer( int from_who ) {
+		public override bool ReceiveRequestOnServer( int from_who ) {
 			Player player = Main.player[ from_who ];
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
 			myplayer.Logic.BeginSession( ResetModeMod.Instance, player );
+
+			return true;
 		}
 	}
 }

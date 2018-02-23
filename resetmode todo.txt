@@ -1,7 +1,6 @@
 Future
 -	Implement batch file maker for server to auto-rehost worlds?
 -	Add player state validating (boot only)
--	Add player PP validating (boot only; all players must be 0 to start mode)
 
 
 
