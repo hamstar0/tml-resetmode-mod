@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HamstarHelpers.DebugHelpers;
+using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -23,10 +25,15 @@ namespace ResetMode.Commands {
 		public override void Action( CommandCaller caller, string input, string[] args ) {
 			var mymod = (ResetModeMod)this.mod;
 
-			if( ResetModeAPI.StartSession() ) {
-				caller.Reply( "Reset mode begun! This will continue until for each new world /resetmodeend is called.", Color.YellowGreen );
-			} else {
-				caller.Reply( "Reset mode is already in session.", Color.Red );
+			try {
+				if( ResetModeAPI.StartSession() ) {
+					caller.Reply( "Reset mode begun! This will continue until for each new world /resetmodeend is called.", Color.YellowGreen );
+				} else {
+					caller.Reply( "Reset mode is already in session.", Color.Red );
+				}
+			} catch( Exception e ) {
+				LogHelpers.Log( e.ToString() );
+				caller.Reply( "Reset mode could not be started.", Color.Red );
 			}
 		}
 	}

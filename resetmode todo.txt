@@ -4,6 +4,9 @@ Future
 
 
 
+v1.1
+-	Fix Wing Slot mod compatibility
+
 v1
 -	Release
 -	Add player resets between worlds (track players by UID)

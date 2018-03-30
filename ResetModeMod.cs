@@ -1,3 +1,4 @@
+using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.Utilities.Config;
 using ResetMode.Data;
 using System;
@@ -61,6 +62,12 @@ namespace ResetMode {
 			ResetModeMod.Instance = this;
 
 			this.LoadConfigs();
+
+			TmlLoadHelpers.AddWorldLoadPromise( delegate {
+				if( this.Config.AutoStart ) {
+					ResetModeAPI.StartSession();
+				}
+			} );
 		}
 
 		private void LoadConfigs() {

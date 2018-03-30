@@ -4,7 +4,7 @@ using System;
 
 namespace ResetMode.Data {
 	public class ResetModeConfigData : ConfigurationDataBase {
-		public static Version ConfigVersion { get { return new Version(1, 0, 1); } }
+		public static Version ConfigVersion { get { return new Version(1, 0, 3); } }
 		public static string ConfigFileName { get { return "Reset Mode Config.json"; } }
 
 
@@ -16,6 +16,8 @@ namespace ResetMode.Data {
 
 		public int SecondsUntilResetInitially = 60 * 45;
 		public int SecondsUntilResetSubsequently = 60 * 30;
+
+		public bool AutoStart = false;
 
 
 

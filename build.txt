@@ -1,7 +1,7 @@
 author = hamstar
-version = 1.0.2
+version = 1.0.3
 displayName = Reset Mode
 modReferences = HamstarHelpers@1.3.3.1, TimeLimit@1.1.3
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
 includePDB = true
-homepage = https://forums.terraria.org/index.php?threads/rewards-receive-non-transferable-spendable-points-for-game-progress.65384/
+homepage = https://forums.terraria.org/index.php?threads/reset-mode-cycle-worlds-one-after-the-other.66944/
