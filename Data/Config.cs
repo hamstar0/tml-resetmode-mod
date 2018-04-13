@@ -4,7 +4,7 @@ using System;
 
 namespace ResetMode.Data {
 	public class ResetModeConfigData : ConfigurationDataBase {
-		public static Version ConfigVersion { get { return new Version(1, 0, 3); } }
+		public static Version ConfigVersion { get { return new Version(1, 0, 4); } }
 		public static string ConfigFileName { get { return "Reset Mode Config.json"; } }
 
 
@@ -19,10 +19,12 @@ namespace ResetMode.Data {
 
 		public bool AutoStart = false;
 
+		public bool ResetAllWorldsOnLoad = false;
+
 
 
 		////////////////
-		
+
 		public static readonly int _1_0_0_SecondsUntilResetInitially = 60 * 60 * 45;
 		public static readonly int _1_0_0_SecondsUntilResetSubsequently = 60 * 60 * 30;
 

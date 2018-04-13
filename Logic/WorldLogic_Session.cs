@@ -1,5 +1,5 @@
 ﻿using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.WorldHelpers;
+using Terraria;
 using TimeLimit;
 
 
@@ -13,8 +13,10 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void EngageWorldForCurrentSession( ResetModeMod mymod ) {
+			string world_id = Main.ActiveWorldFileData.UniqueId.ToString(); //WorldHelpers.GetUniqueId()
+
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.EngageWorldForCurrentSession " + WorldHelpers.GetUniqueId() );
+				LogHelpers.Log( "WorldLogic.EngageWorldForCurrentSession " + world_id );
 			}
 
 			if( !mymod.Session.AwaitingNextWorld ) {
@@ -23,9 +25,7 @@ namespace ResetMode.Logic {
 				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetSubsequently, false );
 			}
 
-			mymod.Session.AllPlayedWorlds.Add( WorldHelpers.GetUniqueId() );
-			mymod.Session.AwaitingNextWorld = false;
-			mymod.Session.IsRunning = true;
+			mymod.Session.AddActiveWorld( world_id );
 			
 			mymod.SessionJson.SaveFile();
 
@@ -36,13 +36,13 @@ namespace ResetMode.Logic {
 
 
 		public void EndCurrentSession( ResetModeMod mymod ) {
+			string world_id = Main.ActiveWorldFileData.UniqueId.ToString(); //WorldHelpers.GetUniqueId()
+
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.EndCurrentSession " + WorldHelpers.GetUniqueId() );
+				LogHelpers.Log( "WorldLogic.EndCurrentSession " + world_id );
 			}
 
-			mymod.Session.AllPlayedWorlds.Clear();
-			mymod.Session.AwaitingNextWorld = false;
-			mymod.Session.IsRunning = false;
+			mymod.Session.ClearSessionData();
 			
 			mymod.SessionJson.SaveFile();
 

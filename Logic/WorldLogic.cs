@@ -19,8 +19,7 @@ namespace ResetMode.Logic {
 
 
 	partial class WorldLogic {
-		internal ResetModeStatus WorldStatus = ResetModeStatus.Normal;
-
+		public ResetModeStatus WorldStatus { get; private set; }
 		private ISet<string> WorldPlayers = new HashSet<string>();
 
 		public bool IsExiting { get; private set; }
@@ -29,6 +28,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public WorldLogic() {
+			this.WorldStatus = ResetModeStatus.Normal;
 			this.IsExiting = false;
 		}
 

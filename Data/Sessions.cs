@@ -15,5 +15,25 @@ namespace ResetMode.Data {
 		public ISet<string> AllPlayedWorlds = new HashSet<string>();
 		public bool AwaitingNextWorld = false;
 		public bool IsRunning = false;
+
+
+
+		////////////////
+		
+		internal void AddActiveWorld( string world_id ) {
+			this.AllPlayedWorlds.Add( world_id );
+			this.AwaitingNextWorld = false;
+			this.IsRunning = true;
+		}
+
+		internal void ClearWorldHistory() {
+			this.AllPlayedWorlds.Clear();
+		}
+
+		internal void ClearSessionData() {
+			this.ClearWorldHistory();
+			this.AwaitingNextWorld = false;
+			this.IsRunning = false;
+		}
 	}
 }
