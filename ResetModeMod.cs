@@ -1,3 +1,4 @@
+using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.Utilities.Config;
 using HamstarHelpers.WorldHelpers;
@@ -5,6 +6,7 @@ using ResetMode.Data;
 using System;
 using System.IO;
 using Terraria;
+using Terraria.IO;
 using Terraria.ModLoader;
 using TimeLimit;
 
@@ -65,18 +67,25 @@ namespace ResetMode {
 			this.LoadConfigs();
 			
 			if( this.Config.ResetAllWorldsOnLoad ) {
-				Main.LoadWorlds();
+				try {
+					Main.LoadWorlds();
 
-				for( int i=0; i < Main.WorldList.Count; i++ ) {
-					/*WorldFileData world_data = Main.WorldList[i];
-					string world_id = world_data.UniqueId.ToString();
+					for( int i = 0; i < Main.WorldList.Count; i++ ) {
+						WorldFileData world_data = Main.WorldList[i];
+						if( !world_data.IsValid ) { continue; }
 
-					if( this.Session.AllPlayedWorlds.Contains( world_id ) ) {
+						/*string world_id = world_data.UniqueId.ToString();
+
+						if( this.Session.AllPlayedWorlds.Contains( world_id ) ) {
+							WorldFileHelpers.EraseWorld( i, false );
+						}*/
+
 						WorldFileHelpers.EraseWorld( i, false );
-					}*/
-					WorldFileHelpers.EraseWorld( i, false );
+					}
+					this.Session.ClearWorldHistory();
+				} catch( Exception e ) {
+					LogHelpers.Log( e.ToString() );
 				}
-				this.Session.ClearWorldHistory();
 			}
 
 			TmlLoadHelpers.AddWorldLoadPromise( delegate {
