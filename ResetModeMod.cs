@@ -67,12 +67,13 @@ namespace ResetMode {
 			
 			if( this.Config.ResetAllWorldsOnLoad ) {
 				for( int i=0; i < Main.WorldList.Count; i++ ) {
-					WorldFileData world_data = Main.WorldList[i];
+					/*WorldFileData world_data = Main.WorldList[i];
 					string world_id = world_data.UniqueId.ToString();
 
 					if( this.Session.AllPlayedWorlds.Contains( world_id ) ) {
 						WorldFileHelpers.EraseWorld( i, false );
-					}
+					}*/
+					WorldFileHelpers.EraseWorld( i, false );
 				}
 				this.Session.ClearWorldHistory();
 			}

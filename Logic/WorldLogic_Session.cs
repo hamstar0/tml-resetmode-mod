@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.WorldHelpers;
 using Terraria;
 using TimeLimit;
 
@@ -13,7 +14,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void EngageWorldForCurrentSession( ResetModeMod mymod ) {
-			string world_id = Main.ActiveWorldFileData.UniqueId.ToString(); //WorldHelpers.GetUniqueId()
+			string world_id = WorldHelpers.GetUniqueId();   //Main.ActiveWorldFileData.UniqueId.ToString();
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Log( "WorldLogic.EngageWorldForCurrentSession " + world_id );
@@ -36,7 +37,7 @@ namespace ResetMode.Logic {
 
 
 		public void EndCurrentSession( ResetModeMod mymod ) {
-			string world_id = Main.ActiveWorldFileData.UniqueId.ToString(); //WorldHelpers.GetUniqueId()
+			string world_id = WorldHelpers.GetUniqueId();   //Main.ActiveWorldFileData.UniqueId.ToString();
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Log( "WorldLogic.EndCurrentSession " + world_id );
