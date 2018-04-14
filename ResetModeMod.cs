@@ -5,7 +5,6 @@ using ResetMode.Data;
 using System;
 using System.IO;
 using Terraria;
-using Terraria.IO;
 using Terraria.ModLoader;
 using TimeLimit;
 
@@ -66,6 +65,8 @@ namespace ResetMode {
 			this.LoadConfigs();
 			
 			if( this.Config.ResetAllWorldsOnLoad ) {
+				Main.LoadWorlds();
+
 				for( int i=0; i < Main.WorldList.Count; i++ ) {
 					/*WorldFileData world_data = Main.WorldList[i];
 					string world_id = world_data.UniqueId.ToString();
