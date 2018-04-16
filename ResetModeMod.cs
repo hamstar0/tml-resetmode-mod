@@ -19,7 +19,7 @@ namespace ResetMode {
 		public static string GithubProjectName { get { return "tml-resetmode-mod"; } }
 
 		public static string ConfigFileRelativePath {
-			get { return JsonConfig<ResetModeConfigData>.RelativePath + Path.DirectorySeparatorChar + ResetModeConfigData.ConfigFileName; }
+			get { return JsonConfig<ResetModeConfigData>.ConfigSubfolder + Path.DirectorySeparatorChar + ResetModeConfigData.ConfigFileName; }
 		}
 		public static void ReloadConfigFromFile() {
 			if( Main.netMode != 0 ) {
@@ -80,7 +80,7 @@ namespace ResetMode {
 							WorldFileHelpers.EraseWorld( i, false );
 						}*/
 
-						WorldFileHelpers.EraseWorld( 0, false );
+						WorldFileHelpers.EraseWorld( world_data, false );
 					}
 
 					this.Session.ClearWorldHistory();
