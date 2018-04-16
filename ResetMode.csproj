@@ -43,7 +43,9 @@
     <Compile Include="Logic\WorldLogic_Player.cs" />
     <Compile Include="Logic\WorldLogic.cs" />
     <Compile Include="Logic\WorldLogic_Session.cs" />
-    <Compile Include="NetProtocols.cs" />
+    <Compile Include="NetProtocols\PlayerResetConfirmProtocol.cs" />
+    <Compile Include="NetProtocols\PlayerResetProtocol.cs" />
+    <Compile Include="NetProtocols\ModSettingsProtocol.cs" />
     <Compile Include="Commands\ResetModeStartCommand.cs" />
     <Compile Include="ResetModeMod.cs" />
     <Compile Include="ResetModePlayer.cs" />

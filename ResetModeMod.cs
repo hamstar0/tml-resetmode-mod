@@ -70,9 +70,9 @@ namespace ResetMode {
 				try {
 					Main.LoadWorlds();
 
-					for( int i = 0; i < Main.WorldList.Count; i++ ) {
-						WorldFileData world_data = Main.WorldList[i];
-						if( !world_data.IsValid ) { continue; }
+					while( Main.WorldList.Count > 0 ) {
+						WorldFileData world_data = Main.WorldList[0];
+						//if( !world_data.IsValid ) { continue; }
 
 						/*string world_id = world_data.UniqueId.ToString();
 
@@ -80,8 +80,9 @@ namespace ResetMode {
 							WorldFileHelpers.EraseWorld( i, false );
 						}*/
 
-						WorldFileHelpers.EraseWorld( i, false );
+						WorldFileHelpers.EraseWorld( 0, false );
 					}
+
 					this.Session.ClearWorldHistory();
 				} catch( Exception e ) {
 					LogHelpers.Log( e.ToString() );

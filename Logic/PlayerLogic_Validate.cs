@@ -3,6 +3,7 @@ using HamstarHelpers.PlayerHelpers;
 using HamstarHelpers.UIHelpers.Elements.Dialogs;
 using HamstarHelpers.Utilities.Errors;
 using HamstarHelpers.Utilities.Network;
+using ResetMode.NetProtocols;
 using System;
 using Terraria;
 
