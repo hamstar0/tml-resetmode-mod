@@ -3,6 +3,7 @@ using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.Utilities.Config;
 using HamstarHelpers.WorldHelpers;
 using ResetMode.Data;
+using ResetMode.Logic;
 using System;
 using System.IO;
 using Terraria;
@@ -67,26 +68,7 @@ namespace ResetMode {
 			this.LoadConfigs();
 			
 			if( this.Config.ResetAllWorldsOnLoad ) {
-				try {
-					Main.LoadWorlds();
-
-					while( Main.WorldList.Count > 0 ) {
-						WorldFileData world_data = Main.WorldList[0];
-						//if( !world_data.IsValid ) { continue; }
-
-						/*string world_id = world_data.UniqueId.ToString();
-
-						if( this.Session.AllPlayedWorlds.Contains( world_id ) ) {
-							WorldFileHelpers.EraseWorld( i, false );
-						}*/
-
-						WorldFileHelpers.EraseWorld( world_data, false );
-					}
-
-					this.Session.ClearWorldHistory();
-				} catch( Exception e ) {
-					LogHelpers.Log( e.ToString() );
-				}
+				WorldLogic.ResetAllWorlds();
 			}
 
 			TmlLoadHelpers.AddWorldLoadPromise( delegate {

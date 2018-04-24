@@ -1,12 +1,13 @@
 Future
 -	Implement batch file maker for server to auto-rehost worlds?
 -	Add player state validating (boot only)
-
-
-
-v1.1
 -	Fix Wing Slot mod compatibility
 
+
+
+v1.0.4.2
+-	Prevent reloading mods from resetting worlds on non-dedicated servers
+-	Set 'next world' flag after resetting all worlds
 v1
 -	Release
 -	Add player resets between worlds (track players by UID)

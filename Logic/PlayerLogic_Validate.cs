@@ -35,7 +35,7 @@ namespace ResetMode.Logic {
 
 			if( !myworld.Logic.IsPlaying(mymod, player) ) {
 				if( Main.netMode == 2 ) {
-					PacketProtocol.QuickSendRequest<ResetModePlayerResetProtocol>( player.whoAmI, -1 );
+					PacketProtocol.QuickRequestFromClient<ResetModePlayerResetProtocol>( player.whoAmI, -1 );
 				} else if( Main.netMode == 0 ) {
 					this.PromptReset( mymod, player );
 				}
@@ -60,7 +60,7 @@ namespace ResetMode.Logic {
 				PlayerHelpers.FullVanillaReset( replayer );
 
 				if( Main.netMode == 1 ) {
-					PacketProtocol.QuickSendRequest<ResetModePlayerResetConfirmProtocol>( -1, -1 );
+					PacketProtocol.QuickRequestFromServer<ResetModePlayerResetConfirmProtocol>();
 				} else if( Main.netMode == 0 ) {
 					this.BeginSession( mymod, replayer );
 				}

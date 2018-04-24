@@ -1,10 +1,12 @@
 ﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.WorldHelpers;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.IO;
 using Terraria.Localization;
-using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using TimeLimit;
 
@@ -19,6 +21,41 @@ namespace ResetMode.Logic {
 
 
 	partial class WorldLogic {
+		public static void ResetAllWorlds() {
+			Action reset_all = () => {
+				ResetModeMod mymod = ResetModeMod.Instance;
+
+				try {
+					Main.LoadWorlds();
+
+					while( Main.WorldList.Count > 0 ) {
+						WorldFileData world_data = Main.WorldList[0];
+						//if( !world_data.IsValid ) { continue; }
+
+						/*string world_id = world_data.UniqueId.ToString();
+
+						if( this.Session.AllPlayedWorlds.Contains( world_id ) ) {
+							WorldFileHelpers.EraseWorld( i, false );
+						}*/
+
+						WorldFileHelpers.EraseWorld( world_data, false );
+					}
+
+					mymod.Session.AwaitingNextWorld = true;
+					mymod.Session.ClearWorldHistory();
+					mymod.SessionJson.SaveFile();
+				} catch( Exception e ) {
+					LogHelpers.Log( e.ToString() );
+				}
+			};
+			
+			TmlLoadHelpers.AddPostGameLoadPromise( reset_all );
+		}
+
+
+
+		////////////////
+
 		public ResetModeStatus WorldStatus { get; private set; }
 		private ISet<string> WorldPlayers = new HashSet<string>();
 
