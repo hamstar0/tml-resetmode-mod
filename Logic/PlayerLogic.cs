@@ -1,6 +1,7 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
 using HamstarHelpers.TmlHelpers;
+using HamstarHelpers.Utilities.Messages;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -55,9 +56,9 @@ namespace ResetMode.Logic {
 
 		public void Welcome( ResetModeMod mymod, Player player ) {
 			if( Main.netMode == 0 ) {
-				Main.NewText( "Type /resetmodestart to start Reset Mode. Type /help for a list of other available commands.", Color.LightGray );
+				InboxMessages.SetMessage( "reset_mode_welcome", "Type /resetmodestart to start Reset Mode. Type /help for a list of other available commands.", true );
 			} else {
-				Main.NewText( "Type resetmodestart in the server console to start Reset Mode.", Color.LightGray );
+				InboxMessages.SetMessage( "reset_mode_welcome", "Type resetmodestart in the server console to start Reset Mode.", true );
 			}
 		}
 
