@@ -1,6 +1,10 @@
 ﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.MiscHelpers;
 using HamstarHelpers.WorldHelpers;
-using Terraria;
+using ResetMode.Data;
+using System;
+using System.Collections.Generic;
+using Terraria.ModLoader;
 using TimeLimit;
 
 
@@ -27,10 +31,12 @@ namespace ResetMode.Logic {
 			}
 
 			mymod.Session.AddActiveWorld( world_id );
-			
-			mymod.SessionJson.SaveFile();
+
+			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, mymod.Session );
 
 			this.WorldStatus = ResetModeStatus.Active;
+
+			this.RunWorldCalls( mymod );
 
 			PlayerLogic.ValidateAll( mymod );
 		}
@@ -44,8 +50,8 @@ namespace ResetMode.Logic {
 			}
 
 			mymod.Session.ClearSessionData();
-			
-			mymod.SessionJson.SaveFile();
+
+			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, mymod.Session );
 
 			this.WorldStatus = ResetModeStatus.Normal;
 
@@ -61,12 +67,34 @@ namespace ResetMode.Logic {
 			}
 
 			mymod.Session.AwaitingNextWorld = true;
-			
-			mymod.SessionJson.SaveFile();
+
+			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, mymod.Session );
 
 			this.WorldStatus = ResetModeStatus.Expired;
 
 			this.GoodExit( mymod );
+		}
+
+
+		////////////////
+
+		public void RunWorldCalls( ResetModeMod mymod ) {
+			Mod mod;
+
+			foreach( KeyValuePair<string, string[]> kv in mymod.Config.OnWorldEngagedCalls ) {
+				try {
+					mod = ModLoader.GetMod( kv.Key );
+				} catch {
+					continue;
+				}
+
+				int len = kv.Value.Length;
+				object[] dest = new object[ len ];
+
+				Array.Copy( kv.Value, dest, len );
+
+				mod.Call( dest );
+			}
 		}
 	}
 }

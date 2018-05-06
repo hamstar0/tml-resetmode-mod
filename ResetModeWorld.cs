@@ -1,4 +1,6 @@
-﻿using ResetMode.Logic;
+﻿using HamstarHelpers.MiscHelpers;
+using ResetMode.Data;
+using ResetMode.Logic;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -18,7 +20,12 @@ namespace ResetMode {
 
 			if( Main.netMode != 1 ) {
 				var mymod = (ResetModeMod)this.mod;
-				mymod.SessionJson.LoadFile();
+				bool success;
+
+				var data = DataFileHelpers.LoadJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, out success );
+				if( success ) {
+					mymod.Session = data;
+				}
 			}
 		}
 

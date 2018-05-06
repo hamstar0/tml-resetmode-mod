@@ -1,7 +1,9 @@
 ﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.MiscHelpers;
 using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.WorldHelpers;
 using Microsoft.Xna.Framework;
+using ResetMode.Data;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -43,7 +45,8 @@ namespace ResetMode.Logic {
 
 					mymod.Session.AwaitingNextWorld = true;
 					mymod.Session.ClearWorldHistory();
-					mymod.SessionJson.SaveFile();
+
+					DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, mymod.Session );
 				} catch( Exception e ) {
 					LogHelpers.Log( e.ToString() );
 				}

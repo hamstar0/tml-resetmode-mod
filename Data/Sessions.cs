@@ -3,7 +3,7 @@
 
 namespace ResetMode.Data {
 	public class ResetModeSessionData {
-		public static string DataFileName { get { return "Session.json"; } }
+		public static string DataFileNameOnly { get { return "Session"; } }
 		public static string RelativePath { get { return "Reset Mode Sessions"; } }
 
 

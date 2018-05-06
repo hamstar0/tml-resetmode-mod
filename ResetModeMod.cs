@@ -41,9 +41,8 @@ namespace ResetMode {
 
 		internal JsonConfig<ResetModeConfigData> ConfigJson;
 		public ResetModeConfigData Config { get { return ConfigJson.Data; } }
-
-		internal JsonConfig<ResetModeSessionData> SessionJson;
-		public ResetModeSessionData Session { get { return SessionJson.Data; } }
+		
+		public ResetModeSessionData Session { get; internal set; }
 
 
 		////////////////
@@ -58,8 +57,7 @@ namespace ResetMode {
 			
 			this.ConfigJson = new JsonConfig<ResetModeConfigData>( ResetModeConfigData.ConfigFileName,
 				ConfigurationDataBase.RelativePath, new ResetModeConfigData() );
-			this.SessionJson = new JsonConfig<ResetModeSessionData>( ResetModeSessionData.DataFileName,
-				ResetModeSessionData.RelativePath, new ResetModeSessionData() );
+			this.Session = new ResetModeSessionData();
 		}
 
 		public override void Load() {

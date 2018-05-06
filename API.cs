@@ -1,4 +1,5 @@
-﻿using ResetMode.Data;
+﻿using HamstarHelpers.MiscHelpers;
+using ResetMode.Data;
 using System;
 using Terraria;
 
@@ -22,7 +23,9 @@ namespace ResetMode {
 		public static void SaveSessionDataChanges() {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
-			ResetModeMod.Instance.SessionJson.SaveFile();
+			var mymod = ResetModeMod.Instance;
+
+			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, mymod.Session );
 		}
 
 		////////////////
