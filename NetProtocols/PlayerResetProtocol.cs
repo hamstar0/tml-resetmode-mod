@@ -6,7 +6,7 @@ namespace ResetMode.NetProtocols {
 	class ResetModePlayerResetProtocol : PacketProtocol {
 		public override void SetClientDefaults() { }
 
-		public override bool ReceiveRequestOnClient() {
+		protected override bool ReceiveRequestWithClient() {
 			Player player = Main.LocalPlayer;
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 

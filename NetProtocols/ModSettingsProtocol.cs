@@ -13,7 +13,7 @@ namespace ResetMode.NetProtocols {
 			this.Data = ResetModeMod.Instance.Config;
 		}
 
-		public override void ReceiveOnClient() {
+		protected override void ReceiveWithClient() {
 			ResetModeMod.Instance.ConfigJson.SetData( this.Data );
 
 			Player player = Main.LocalPlayer;
