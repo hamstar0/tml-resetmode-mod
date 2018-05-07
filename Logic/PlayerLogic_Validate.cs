@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.Helpers.PlayerHelpers;
+﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.Helpers.PlayerHelpers;
 using HamstarHelpers.PlayerHelpers;
 using HamstarHelpers.UIHelpers.Elements.Dialogs;
 using HamstarHelpers.Utilities.Errors;
@@ -32,10 +33,10 @@ namespace ResetMode.Logic {
 			string uid = PlayerIdentityHelpers.GetUniqueId( player, out has_uid );
 			
 			if( !has_uid ) { throw new HamstarException( "ValidatePlayer - Player has no uid." ); }
-
+			
 			if( !myworld.Logic.IsPlaying(mymod, player) ) {
 				if( Main.netMode == 2 ) {
-					PacketProtocol.QuickRequestFromClient<ResetModePlayerResetProtocol>( player.whoAmI, -1 );
+					PacketProtocol.QuickRequestToClient<ResetModePlayerResetProtocol>( player.whoAmI, -1 );
 				} else if( Main.netMode == 0 ) {
 					this.PromptReset( mymod, player );
 				}
@@ -60,7 +61,7 @@ namespace ResetMode.Logic {
 				PlayerHelpers.FullVanillaReset( replayer );
 
 				if( Main.netMode == 1 ) {
-					PacketProtocol.QuickRequestFromServer<ResetModePlayerResetConfirmProtocol>();
+					PacketProtocol.QuickRequestToServer<ResetModePlayerResetConfirmProtocol>();
 				} else if( Main.netMode == 0 ) {
 					this.BeginSession( mymod, replayer );
 				}

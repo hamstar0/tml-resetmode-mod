@@ -37,7 +37,7 @@ namespace ResetMode.Logic {
 			this.WorldStatus = ResetModeStatus.Active;
 
 			this.RunWorldCalls( mymod );
-
+			
 			PlayerLogic.ValidateAll( mymod );
 		}
 
@@ -50,9 +50,10 @@ namespace ResetMode.Logic {
 			}
 
 			mymod.Session.ClearSessionData();
-
+			
 			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, mymod.Session );
 
+			this.WorldPlayers.Clear();
 			this.WorldStatus = ResetModeStatus.Normal;
 
 			TimeLimitAPI.TimerStop( "reset" );

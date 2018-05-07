@@ -70,7 +70,7 @@ namespace ResetMode {
 				}
 
 				if( Main.netMode == 1 ) {
-					PacketProtocol.QuickRequestFromServer<ResetModeModSettingsProtocol>();
+					PacketProtocol.QuickRequestToServer<ResetModeModSettingsProtocol>();
 				}
 				if( Main.netMode != 1 ) {	// NOT client
 					this.FinishModSettingsSync();
