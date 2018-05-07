@@ -86,6 +86,7 @@ namespace ResetMode.Logic {
 				try {
 					mod = ModLoader.GetMod( kv.Key );
 				} catch {
+					LogHelpers.Log( "Missing or invalid mod \""+kv.Key+'"' );
 					continue;
 				}
 
@@ -95,6 +96,7 @@ namespace ResetMode.Logic {
 				Array.Copy( kv.Value, dest, len );
 
 				mod.Call( dest );
+				LogHelpers.Log( "Calling " + kv.Key + " command \"" + string.Join( " ", dest )+'"' );
 			}
 		}
 	}
