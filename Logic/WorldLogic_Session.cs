@@ -83,10 +83,17 @@ namespace ResetMode.Logic {
 			Mod mod;
 
 			foreach( KeyValuePair<string, string[]> kv in mymod.Config.OnWorldEngagedCalls ) {
+				string mod_name = kv.Key;
+				if( string.IsNullOrEmpty( mod_name ) ) {
+					LogHelpers.Log( "Invalid mod name" );
+					continue;
+				}
+
 				try {
-					mod = ModLoader.GetMod( kv.Key );
+					mod = ModLoader.GetMod( mod_name );
+					if( mod == null ) { throw new Exception(); }
 				} catch {
-					LogHelpers.Log( "Missing or invalid mod \""+kv.Key+'"' );
+					LogHelpers.Log( "Missing or invalid mod \""+ mod_name + '"' );
 					continue;
 				}
 
@@ -95,8 +102,12 @@ namespace ResetMode.Logic {
 
 				Array.Copy( kv.Value, dest, len );
 
-				mod.Call( dest );
-				LogHelpers.Log( "Calling " + kv.Key + " command \"" + string.Join( " ", dest )+'"' );
+				try {
+					mod.Call( dest );
+					LogHelpers.Log( "Calling " + kv.Key + " command \"" + string.Join( " ", dest ) + '"' );
+				} catch( Exception e ) {
+					LogHelpers.Log( "World load "+ kv.Key + " command error - " + e.ToString() );
+				}
 			}
 		}
 	}
