@@ -51,9 +51,9 @@ namespace ResetMode {
 			var mymod = ResetModeMod.Instance;
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			if( !mymod.Session.IsRunning ) {
-				return false;
-			}
+			//if( !mymod.Session.IsRunning ) {
+			//	return false;
+			//}
 			
 			myworld.Logic.EndCurrentSession( mymod );
 
