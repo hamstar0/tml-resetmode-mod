@@ -76,7 +76,7 @@ namespace ResetMode {
 			Mod self = this;
 			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
 
-			if( rewards_mod != null ) {
+			if( rewards_mod != null && rewards_mod.Version >= new Version(1, 4, 12) ) {
 				Action<Player, float> func = ( plr, rewards ) => {
 					if( !TmlLoadHelpers.IsWorldLoaded() ) { return; }
 
