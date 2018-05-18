@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace ResetMode.Data {
 	public class ResetModeConfigData : ConfigurationDataBase {
-		public static Version ConfigVersion { get { return new Version(1, 0, 5); } }
+		public static Version ConfigVersion { get { return new Version( 1, 0, 5 ); } }
 		public static string ConfigFileName { get { return "Reset Mode Config.json"; } }
 
 
 		////////////////
 
 		public string VersionSinceUpdate = ResetModeConfigData.ConfigVersion.ToString();
-		
+
 		public bool DebugModeInfo = false;
 
 		public int SecondsUntilResetInitially = 60 * 45;

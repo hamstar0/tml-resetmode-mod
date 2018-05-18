@@ -3,6 +3,7 @@ using HamstarHelpers.MiscHelpers;
 using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.WorldHelpers;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 using ResetMode.Data;
 using System;
 using System.Collections.Generic;
@@ -61,6 +62,7 @@ namespace ResetMode.Logic {
 
 		public ResetModeStatus WorldStatus { get; private set; }
 		private ISet<string> WorldPlayers = new HashSet<string>();
+		internal IDictionary<string, float> Rewards = new Dictionary<string, float>();
 
 		public bool IsExiting { get; private set; }
 
@@ -86,6 +88,11 @@ namespace ResetMode.Logic {
 				}
 			}
 
+			if( tags.ContainsKey("rewards") ) {
+				string raw = tags.GetString( "rewards" );
+				this.Rewards = JsonConvert.DeserializeObject<IDictionary<string, float>>( raw );
+			}
+
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Log( "WorldLogic.Load uid: " + WorldHelpers.GetUniqueId() + ", this.WorldStatus: " + this.WorldStatus );
 			}
@@ -98,7 +105,8 @@ namespace ResetMode.Logic {
 			
 			var tags = new TagCompound {
 				{ "status", (int)this.WorldStatus },
-				{ "player_count", this.WorldPlayers.Count }
+				{ "player_count", this.WorldPlayers.Count },
+				{ "rewards", JsonConvert.SerializeObject(this.Rewards) }
 			};
 
 			int i = 0;

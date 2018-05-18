@@ -5,6 +5,9 @@ Future
 
 
 
+v1.0.6
+-	Store a shadow copy of PP from a world to transfer to the next
+
 v1.0.4.2
 -	Prevent reloading mods from resetting worlds on non-dedicated servers
 -	Set 'next world' flag after resetting all worlds

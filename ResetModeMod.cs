@@ -1,13 +1,11 @@
 using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.Utilities.Config;
-using HamstarHelpers.WorldHelpers;
 using ResetMode.Data;
 using ResetMode.Logic;
 using System;
 using System.IO;
 using Terraria;
-using Terraria.IO;
 using Terraria.ModLoader;
 using TimeLimit;
 
@@ -64,7 +62,7 @@ namespace ResetMode {
 			ResetModeMod.Instance = this;
 
 			this.LoadConfigs();
-			
+
 			if( this.Config.ResetAllWorldsOnLoad ) {
 				WorldLogic.ResetAllWorlds();
 			}
@@ -74,6 +72,20 @@ namespace ResetMode {
 					ResetModeAPI.StartSession();
 				}
 			} );
+
+			Mod self = this;
+			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
+
+			if( rewards_mod != null ) {
+				Action<Player, float> func = ( plr, rewards ) => {
+					if( !TmlLoadHelpers.IsWorldLoaded() ) { return; }
+
+					var myworld = self.GetModWorld<ResetModeWorld>();
+					myworld.Logic.AddRewards( plr, rewards );
+				};
+
+				rewards_mod.Call( "OnPointsGained", func );
+			}
 		}
 
 		private void LoadConfigs() {
@@ -90,6 +102,7 @@ namespace ResetMode {
 		public override void Unload() {
 			ResetModeMod.Instance = null;
 		}
+
 
 		////////////////
 

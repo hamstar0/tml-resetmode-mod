@@ -37,7 +37,7 @@ namespace ResetMode.Logic {
 			this.WorldStatus = ResetModeStatus.Active;
 
 			this.RunWorldCalls( mymod );
-			
+
 			PlayerLogic.ValidateAll( mymod );
 		}
 
@@ -50,7 +50,7 @@ namespace ResetMode.Logic {
 			}
 
 			mymod.Session.ClearSessionData();
-			
+
 			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, mymod.Session );
 
 			this.WorldPlayers.Clear();
@@ -93,12 +93,12 @@ namespace ResetMode.Logic {
 					mod = ModLoader.GetMod( mod_name );
 					if( mod == null ) { throw new Exception(); }
 				} catch {
-					LogHelpers.Log( "Missing or invalid mod \""+ mod_name + '"' );
+					LogHelpers.Log( "Missing or invalid mod \"" + mod_name + '"' );
 					continue;
 				}
 
 				int len = kv.Value.Length;
-				object[] dest = new object[ len ];
+				object[] dest = new object[len];
 
 				Array.Copy( kv.Value, dest, len );
 
@@ -106,7 +106,7 @@ namespace ResetMode.Logic {
 					mod.Call( dest );
 					LogHelpers.Log( "Calling " + kv.Key + " command \"" + string.Join( " ", dest ) + '"' );
 				} catch( Exception e ) {
-					LogHelpers.Log( "World load "+ kv.Key + " command error - " + e.ToString() );
+					LogHelpers.Log( "World load " + kv.Key + " command error - " + e.ToString() );
 				}
 			}
 		}

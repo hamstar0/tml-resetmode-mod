@@ -4,7 +4,7 @@ using Terraria;
 
 
 namespace ResetMode.NetProtocols {
-	class ResetModeModSettingsProtocol : PacketProtocol {
+	class ModSettingsProtocol : PacketProtocol {
 		public ResetModeConfigData Data;
 
 		////////////////

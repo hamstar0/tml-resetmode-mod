@@ -3,7 +3,7 @@ using Terraria;
 
 
 namespace ResetMode.NetProtocols {
-	class ResetModePlayerResetProtocol : PacketProtocol {
+	class PlayerResetProtocol : PacketProtocol {
 		public override void SetClientDefaults() { }
 
 		protected override bool ReceiveRequestWithClient() {

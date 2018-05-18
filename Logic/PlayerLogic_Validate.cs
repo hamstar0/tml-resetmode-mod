@@ -7,7 +7,7 @@ using HamstarHelpers.Utilities.Network;
 using ResetMode.NetProtocols;
 using System;
 using Terraria;
-
+using Terraria.ModLoader;
 
 namespace ResetMode.Logic {
 	partial class PlayerLogic {
@@ -36,7 +36,7 @@ namespace ResetMode.Logic {
 			
 			if( !myworld.Logic.IsPlaying(mymod, player) ) {
 				if( Main.netMode == 2 ) {
-					PacketProtocol.QuickRequestToClient<ResetModePlayerResetProtocol>( player.whoAmI, -1 );
+					PacketProtocol.QuickRequestToClient<PlayerResetProtocol>( player.whoAmI, -1 );
 				} else if( Main.netMode == 0 ) {
 					this.PromptReset( mymod, player );
 				}
@@ -61,7 +61,7 @@ namespace ResetMode.Logic {
 				PlayerHelpers.FullVanillaReset( replayer );
 
 				if( Main.netMode == 1 ) {
-					PacketProtocol.QuickRequestToServer<ResetModePlayerResetConfirmProtocol>();
+					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>();
 				} else if( Main.netMode == 0 ) {
 					this.BeginSession( mymod, replayer );
 				}
@@ -82,6 +82,21 @@ namespace ResetMode.Logic {
 		public void BeginSession( ResetModeMod mymod, Player player ) {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 			myworld.Logic.AddPlayer( mymod, player );
+
+			var rewards_mod = ModLoader.GetMod( "rewards" );
+			if( rewards_mod != null ) {
+				bool success;
+				var pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
+
+				if( success && myworld.Logic.Rewards.ContainsKey(pid) ) {
+					float curr_pp = (float)rewards_mod.Call( "GetPoints", player );
+					float pp = myworld.Logic.Rewards[pid] - curr_pp;
+
+					if( pp > 0 ) {
+						rewards_mod.Call( "AddPoints", player, pp );
+					}
+				}
+			}
 		}
 	}
 }

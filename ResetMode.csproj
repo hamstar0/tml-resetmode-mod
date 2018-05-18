@@ -41,6 +41,7 @@
     <Compile Include="Items\_TimeCapsuleItem.cs" />
     <Compile Include="Logic\PlayerLogic.cs" />
     <Compile Include="Logic\PlayerLogic_Validate.cs" />
+    <Compile Include="Logic\WorldLogic_Rewards.cs" />
     <Compile Include="Logic\WorldLogic_Player.cs" />
     <Compile Include="Logic\WorldLogic.cs" />
     <Compile Include="Logic\WorldLogic_Session.cs" />
@@ -72,6 +73,9 @@
     <Reference Include="Microsoft.Xna.Framework.Xact, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_32\Microsoft.Xna.Framework.Xact\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Xact.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\Reference\tModLoader Patcher\references\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Rewards">
       <HintPath>..\Rewards\bin\Release\Rewards.dll</HintPath>
