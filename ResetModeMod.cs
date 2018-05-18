@@ -77,13 +77,17 @@ namespace ResetMode {
 
 			if( rewards_mod != null && rewards_mod.Version >= new Version(1, 4, 12) ) {
 				Action<Player, float> func = ( plr, rewards ) => {
-					if( !TmlLoadHelpers.IsWorldLoaded() ) { return; }
-
-					var myworld = ResetModeMod.Instance.GetModWorld<ResetModeWorld>();
+					//if( !TmlLoadHelpers.IsWorldLoaded() ) { return; }
+					var mymod = ResetModeMod.Instance;
+					var myworld = mymod.GetModWorld<ResetModeWorld>();
 					myworld.Logic.AddRewards( plr, rewards );
 				};
 
-				rewards_mod.Call( "OnPointsGained", func );
+				try {
+					rewards_mod.Call( "OnPointsGained", func );
+				} catch( Exception e ) {
+					LogHelpers.Log( e.ToString() );
+				}
 			}
 		}
 
