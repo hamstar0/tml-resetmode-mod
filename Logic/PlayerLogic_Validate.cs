@@ -91,10 +91,8 @@ namespace ResetMode.Logic {
 				if( success && myworld.Logic.Rewards.ContainsKey(pid) ) {
 					float curr_pp = (float)rewards_mod.Call( "GetPoints", player );
 					float pp = myworld.Logic.Rewards[pid] - curr_pp;
-
-					if( pp > 0 ) {
-						rewards_mod.Call( "AddPoints", player, pp );
-					}
+					
+					rewards_mod.Call( "AddPoints", player, pp );
 				}
 			}
 		}
