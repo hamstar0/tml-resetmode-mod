@@ -64,6 +64,7 @@ namespace ResetMode.Logic {
 					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>();
 				} else if( Main.netMode == 0 ) {
 					this.BeginSession( mymod, replayer );
+					this.ResetRewards( mymod, replayer );
 				}
 
 				this.IsPromptingForReset = false;
@@ -82,18 +83,26 @@ namespace ResetMode.Logic {
 		public void BeginSession( ResetModeMod mymod, Player player ) {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 			myworld.Logic.AddPlayer( mymod, player );
+		}
 
+		public void ResetRewards( ResetModeMod mymod, Player player ) {
 			var rewards_mod = ModLoader.GetMod( "rewards" );
-			if( rewards_mod != null ) {
-				bool success;
-				var pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
+			if( rewards_mod == null ) { return; }
 
-				if( success && myworld.Logic.Rewards.ContainsKey(pid) ) {
-					float curr_pp = (float)rewards_mod.Call( "GetPoints", player );
-					float pp = myworld.Logic.Rewards[pid] - curr_pp;
-					
-					rewards_mod.Call( "AddPoints", player, pp );
-				}
+			var myworld = mymod.GetModWorld<ResetModeWorld>();
+
+			bool success;
+			var pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
+			if( !success ) {
+				LogHelpers.Log( "Could not reset player Rewards; no UID for player." );
+				return;
+			}
+
+			if( myworld.Logic.Rewards.ContainsKey( pid ) ) {
+				float curr_pp = (float)rewards_mod.Call( "GetPoints", player );
+				float pp = myworld.Logic.Rewards[pid] - curr_pp;
+
+				rewards_mod.Call( "AddPoints", player, pp );
 			}
 		}
 	}

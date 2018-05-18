@@ -72,24 +72,10 @@ namespace ResetMode {
 					ResetModeAPI.StartSession();
 				}
 			} );
-			
-			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
 
-			if( rewards_mod != null && rewards_mod.Version >= new Version(1, 4, 12) ) {
-				Action<Player, float> func = ( plr, rewards ) => {
-					//if( !TmlLoadHelpers.IsWorldLoaded() ) { return; }
-					var mymod = ResetModeMod.Instance;
-					var myworld = mymod.GetModWorld<ResetModeWorld>();
-					myworld.Logic.AddRewards( plr, rewards );
-				};
-
-				try {
-					rewards_mod.Call( "OnPointsGained", func );
-				} catch( Exception e ) {
-					LogHelpers.Log( e.ToString() );
-				}
-			}
+			this.LoadRewards();
 		}
+
 
 		private void LoadConfigs() {
 			if( !this.ConfigJson.LoadFile() ) {
@@ -101,6 +87,26 @@ namespace ResetMode {
 				this.ConfigJson.SaveFile();
 			}
 		}
+
+		private void LoadRewards() {
+			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
+			if( rewards_mod != null && rewards_mod.Version >= new Version( 1, 4, 12 ) ) {
+				return;
+			}
+
+			Action<Player, float> func = ( plr, rewards ) => {
+				var mymod = ResetModeMod.Instance;
+				var myworld = mymod.GetModWorld<ResetModeWorld>();
+				myworld.Logic.AddRewards( plr, rewards );
+			};
+
+			try {
+				rewards_mod.Call( "OnPointsGained", func );
+			} catch( Exception e ) {
+				LogHelpers.Log( e.ToString() );
+			}
+		}
+
 		
 		public override void Unload() {
 			ResetModeMod.Instance = null;

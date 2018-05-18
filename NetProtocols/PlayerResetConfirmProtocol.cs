@@ -11,6 +11,7 @@ namespace ResetMode.NetProtocols {
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
 			myplayer.Logic.BeginSession( ResetModeMod.Instance, player );
+			myplayer.Logic.ResetRewards( ResetModeMod.Instance, player );
 
 			return true;
 		}
