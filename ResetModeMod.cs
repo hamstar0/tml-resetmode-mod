@@ -69,7 +69,7 @@ namespace ResetMode {
 
 			TmlLoadHelpers.AddWorldLoadEachPromise( delegate {
 				if( this.Config.AutoStart && Main.netMode != 1 ) {
-					ResetModeAPI.StartSession();
+					this.Session.Start( this );
 				}
 			} );
 

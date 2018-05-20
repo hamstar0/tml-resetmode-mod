@@ -9,6 +9,7 @@ using System;
 using Terraria;
 using Terraria.ModLoader;
 
+
 namespace ResetMode.Logic {
 	partial class PlayerLogic {
 		public static void ValidateAll( ResetModeMod mymod ) {
@@ -98,9 +99,9 @@ namespace ResetMode.Logic {
 				return;
 			}
 
-			if( myworld.Logic.Rewards.ContainsKey( pid ) ) {
+			if( mymod.Session.Data.PlayerPP.ContainsKey( pid ) ) {
 				float curr_pp = (float)rewards_mod.Call( "GetPoints", player );
-				float pp = myworld.Logic.Rewards[pid] - curr_pp;
+				float pp = mymod.Session.Data.PlayerPP[pid] - curr_pp;
 
 				rewards_mod.Call( "AddPoints", player, pp );
 			}

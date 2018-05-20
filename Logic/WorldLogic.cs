@@ -87,11 +87,6 @@ namespace ResetMode.Logic {
 				}
 			}
 
-			if( tags.ContainsKey("rewards") ) {
-				string raw = tags.GetString( "rewards" );
-				this.Rewards = JsonConvert.DeserializeObject<IDictionary<string, float>>( raw );
-			}
-
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Log( "WorldLogic.Load uid: " + WorldHelpers.GetUniqueId() + ", this.WorldStatus: " + this.WorldStatus );
 			}
@@ -104,8 +99,7 @@ namespace ResetMode.Logic {
 			
 			var tags = new TagCompound {
 				{ "status", (int)this.WorldStatus },
-				{ "player_count", this.WorldPlayers.Count },
-				{ "rewards", JsonConvert.SerializeObject(this.Rewards) }
+				{ "player_count", this.WorldPlayers.Count }
 			};
 
 			int i = 0;

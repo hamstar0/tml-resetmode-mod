@@ -3,6 +3,7 @@ using HamstarHelpers.Helpers.PlayerHelpers;
 using HamstarHelpers.MiscHelpers;
 using HamstarHelpers.WorldHelpers;
 using ResetMode.Data;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using TimeLimit;
@@ -44,13 +45,31 @@ namespace ResetMode.Logic {
 
 
 		////////////////
-		
-		public void EndCurrentSession( ResetModeMod mymod ) {
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-			string world_id = WorldHelpers.GetUniqueId();   //Main.ActiveWorldFileData.UniqueId.ToString();
+
+		public bool Start( ResetModeMod mymod ) {
+			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.EndCurrentSession " + world_id );
+				LogHelpers.Log( "WorldLogic.Start" );
+			}
+
+			if( mymod.Session.Data.IsRunning ) {
+				return false;
+			}
+
+			var myworld = mymod.GetModWorld<ResetModeWorld>();
+
+			myworld.Logic.EngageForCurrentSession( mymod );
+
+			return true;
+		}
+		
+		public void End( ResetModeMod mymod ) {
+			var myworld = mymod.GetModWorld<ResetModeWorld>();
+
+			if( mymod.Config.DebugModeInfo ) {
+				string world_id = WorldHelpers.GetUniqueId();   //Main.ActiveWorldFileData.UniqueId.ToString();
+				LogHelpers.Log( "WorldLogic.End " + world_id );
 			}
 
 			this.Data.ClearSessionData();
@@ -58,8 +77,6 @@ namespace ResetMode.Logic {
 			this.Save( mymod );
 
 			myworld.Logic.ResetForCurrentSession();
-
-			TimeLimitAPI.TimerStop( "reset" );
 		}
 
 
@@ -72,10 +89,10 @@ namespace ResetMode.Logic {
 			string pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
 			if( !success ) { return; }
 
-			if( this.Rewards.ContainsKey( pid ) ) {
-				this.Rewards[pid] += rewards;
+			if( this.Data.PlayerPP.ContainsKey( pid ) ) {
+				this.Data.PlayerPP[pid] += rewards;
 			} else {
-				this.Rewards[pid] = rewards;
+				this.Data.PlayerPP[pid] = rewards;
 			}
 		}
 	}

@@ -54,9 +54,12 @@ namespace ResetMode.Logic {
 			this.GoodExit( mymod );
 		}
 
+
 		public void ResetForCurrentSession() {
 			this.WorldPlayers.Clear();
 			this.WorldStatus = ResetModeStatus.Normal;
+
+			TimeLimitAPI.TimerStop( "reset" );
 		}
 
 

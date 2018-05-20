@@ -34,15 +34,8 @@ namespace ResetMode {
 			if( Main.netMode == 1 ) { throw new Exception("Clients cannot call this."); }
 
 			var mymod = ResetModeMod.Instance;
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			if( mymod.Session.Data.IsRunning ) {
-				return false;
-			}
-
-			myworld.Logic.EngageForCurrentSession( mymod );
-
-			return true;
+			return mymod.Session.Start( mymod );
 		}
 
 		public static bool StopSession() {
@@ -50,7 +43,7 @@ namespace ResetMode {
 
 			var mymod = ResetModeMod.Instance;
 
-			mymod.Session.EndCurrentSession( mymod );
+			mymod.Session.End( mymod );
 
 			return true;
 		}
