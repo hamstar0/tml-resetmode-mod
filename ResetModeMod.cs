@@ -72,7 +72,7 @@ namespace ResetMode {
 					this.Session.Start( this );
 				}
 			} );
-
+			
 			this.LoadRewards();
 		}
 
@@ -90,11 +90,12 @@ namespace ResetMode {
 
 		private void LoadRewards() {
 			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
-			if( rewards_mod != null && rewards_mod.Version >= new Version( 1, 4, 12 ) ) {
+			if( rewards_mod == null || rewards_mod.Version < new Version( 1, 4, 12 ) ) {
 				return;
 			}
-
+			
 			Action<Player, float> func = ( plr, rewards ) => {
+				if( rewards == 0 ) { return; }
 				var mymod = ResetModeMod.Instance;
 				mymod.Session.AddRewards( plr, rewards );
 			};

@@ -83,7 +83,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void AddRewards( Player player, float rewards ) {
-			if( Main.netMode != 2 ) { return; }
+			if( Main.netMode == 1 ) { return; }
 
 			bool success;
 			string pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
