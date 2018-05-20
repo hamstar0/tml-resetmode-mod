@@ -26,6 +26,7 @@ namespace ResetMode.Data {
 
 		internal void ClearSessionData() {
 			this.ClearWorldHistory();
+			this.PlayerPP.Clear();
 			this.AwaitingNextWorld = false;
 			this.IsRunning = false;
 		}
