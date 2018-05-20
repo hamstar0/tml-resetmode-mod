@@ -1,10 +1,7 @@
 ﻿using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.MiscHelpers;
 using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.WorldHelpers;
 using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
-using ResetMode.Data;
 using System;
 using System.Collections.Generic;
 using Terraria;

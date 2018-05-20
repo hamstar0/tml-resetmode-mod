@@ -132,6 +132,15 @@ namespace ResetMode {
 
 		////////////////
 
+		public override void PreSaveAndQuit() {
+			if( Main.netMode != 1 ) {
+				this.Session.Save( this );
+			}
+		}
+
+
+		////////////////
+
 		public override object Call( params object[] args ) {
 			if( args.Length == 0 ) { throw new Exception( "Undefined call type." ); }
 
