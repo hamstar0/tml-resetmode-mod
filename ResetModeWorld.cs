@@ -20,12 +20,7 @@ namespace ResetMode {
 
 			if( Main.netMode != 1 ) {
 				var mymod = (ResetModeMod)this.mod;
-				bool success;
-
-				var data = DataFileHelpers.LoadJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, out success );
-				if( success ) {
-					mymod.Session = data;
-				}
+				mymod.Session.Load( mymod );
 			}
 		}
 

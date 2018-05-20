@@ -3,12 +3,6 @@
 
 namespace ResetMode.Data {
 	public class ResetModeSessionData {
-		public static string DataFileNameOnly { get { return "Session"; } }
-		public static string RelativePath { get { return "Reset Mode Sessions"; } }
-
-
-		////////////////
-
 		public IDictionary<string, int> PlayerHashes = new Dictionary<string, int>();
 		public IDictionary<string, int> PlayerPP = new Dictionary<string, int>();
 

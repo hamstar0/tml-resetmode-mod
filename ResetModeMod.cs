@@ -40,7 +40,7 @@ namespace ResetMode {
 		internal JsonConfig<ResetModeConfigData> ConfigJson;
 		public ResetModeConfigData Config { get { return ConfigJson.Data; } }
 		
-		public ResetModeSessionData Session { get; internal set; }
+		public SessionLogic Session { get; internal set; }
 
 
 		////////////////
@@ -55,7 +55,7 @@ namespace ResetMode {
 			
 			this.ConfigJson = new JsonConfig<ResetModeConfigData>( ResetModeConfigData.ConfigFileName,
 				ConfigurationDataBase.RelativePath, new ResetModeConfigData() );
-			this.Session = new ResetModeSessionData();
+			this.Session = new SessionLogic();
 		}
 
 		public override void Load() {
@@ -67,7 +67,7 @@ namespace ResetMode {
 				WorldLogic.ResetAllWorlds();
 			}
 
-			TmlLoadHelpers.AddWorldLoadPromise( delegate {
+			TmlLoadHelpers.AddWorldLoadEachPromise( delegate {
 				if( this.Config.AutoStart && Main.netMode != 1 ) {
 					ResetModeAPI.StartSession();
 				}
@@ -96,8 +96,7 @@ namespace ResetMode {
 
 			Action<Player, float> func = ( plr, rewards ) => {
 				var mymod = ResetModeMod.Instance;
-				var myworld = mymod.GetModWorld<ResetModeWorld>();
-				myworld.Logic.AddRewards( plr, rewards );
+				mymod.Session.AddRewards( plr, rewards );
 			};
 
 			try {
@@ -124,7 +123,7 @@ namespace ResetMode {
 				var mymod = ResetModeMod.Instance;
 				var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-				myworld.Logic.ExpireWorldForCurrentSession( mymod );
+				myworld.Logic.ExpireForCurrentSession( mymod );
 			} );
 
 			TimeLimitAPI.AddCustomAction( "reset", hook );

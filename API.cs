@@ -17,7 +17,7 @@ namespace ResetMode {
 		public static ResetModeSessionData GetSessionData() {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
-			return ResetModeMod.Instance.Session;
+			return ResetModeMod.Instance.Session.Data;
 		}
 
 		public static void SaveSessionDataChanges() {
@@ -25,7 +25,7 @@ namespace ResetMode {
 
 			var mymod = ResetModeMod.Instance;
 
-			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, mymod.Session );
+			mymod.Session.Save( mymod );
 		}
 
 		////////////////
@@ -36,11 +36,11 @@ namespace ResetMode {
 			var mymod = ResetModeMod.Instance;
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			if( mymod.Session.IsRunning ) {
+			if( mymod.Session.Data.IsRunning ) {
 				return false;
 			}
 
-			myworld.Logic.EngageWorldForCurrentSession( mymod );
+			myworld.Logic.EngageForCurrentSession( mymod );
 
 			return true;
 		}
@@ -49,13 +49,8 @@ namespace ResetMode {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			var mymod = ResetModeMod.Instance;
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			//if( !mymod.Session.IsRunning ) {
-			//	return false;
-			//}
-			
-			myworld.Logic.EndCurrentSession( mymod );
+			mymod.Session.EndCurrentSession( mymod );
 
 			return true;
 		}

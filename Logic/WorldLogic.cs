@@ -44,16 +44,16 @@ namespace ResetMode.Logic {
 						WorldFileHelpers.EraseWorld( world_data, false );
 					}
 
-					mymod.Session.AwaitingNextWorld = true;
-					mymod.Session.ClearWorldHistory();
+					mymod.Session.Data.AwaitingNextWorld = true;
+					mymod.Session.Data.ClearWorldHistory();
 
-					DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, mymod.Session );
+					mymod.Session.Save( mymod );
 				} catch( Exception e ) {
 					LogHelpers.Log( e.ToString() );
 				}
 			};
 			
-			TmlLoadHelpers.AddPostGameLoadPromise( reset_all );
+			TmlLoadHelpers.AddPostModLoadPromise( reset_all );
 		}
 
 
@@ -62,7 +62,6 @@ namespace ResetMode.Logic {
 
 		public ResetModeStatus WorldStatus { get; private set; }
 		private ISet<string> WorldPlayers = new HashSet<string>();
-		internal IDictionary<string, float> Rewards = new Dictionary<string, float>();
 
 		public bool IsExiting { get; private set; }
 
@@ -121,10 +120,10 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void OnWorldStart( ResetModeMod mymod ) {
-			if( mymod.Session.IsRunning ) {
+			if( mymod.Session.Data.IsRunning ) {
 				if( this.WorldStatus == ResetModeStatus.Normal ) {
-					if( mymod.Session.AwaitingNextWorld ) {
-						this.EngageWorldForCurrentSession( mymod );
+					if( mymod.Session.Data.AwaitingNextWorld ) {
+						this.EngageForCurrentSession( mymod );
 					}
 				}
 			}
@@ -135,7 +134,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void Update( ResetModeMod mymod ) {
-			if( mymod.Session.IsRunning ) {
+			if( mymod.Session.Data.IsRunning ) {
 				switch( this.WorldStatus ) {
 				case ResetModeStatus.Normal:
 					break;

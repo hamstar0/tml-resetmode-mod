@@ -1,7 +1,5 @@
 ﻿using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.MiscHelpers;
 using HamstarHelpers.WorldHelpers;
-using ResetMode.Data;
 using System;
 using System.Collections.Generic;
 using Terraria.ModLoader;
@@ -11,28 +9,28 @@ using TimeLimit;
 namespace ResetMode.Logic {
 	partial class WorldLogic {
 		public static bool IsWorldUidInSession( ResetModeMod mymod, string world_uid ) {
-			return mymod.Session.AllPlayedWorlds.Contains( world_uid );
+			return mymod.Session.Data.AllPlayedWorlds.Contains( world_uid );
 		}
 
 
 		////////////////
 
-		public void EngageWorldForCurrentSession( ResetModeMod mymod ) {
+		public void EngageForCurrentSession( ResetModeMod mymod ) {
 			string world_id = WorldHelpers.GetUniqueId();   //Main.ActiveWorldFileData.UniqueId.ToString();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.EngageWorldForCurrentSession " + world_id );
+				LogHelpers.Log( "WorldLogic.EngageForCurrentSession " + world_id );
 			}
 
-			if( !mymod.Session.AwaitingNextWorld ) {
+			if( !mymod.Session.Data.AwaitingNextWorld ) {
 				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetInitially, false );
 			} else {
 				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetSubsequently, false );
 			}
 
-			mymod.Session.AddActiveWorld( world_id );
+			mymod.Session.Data.AddActiveWorld( world_id );
 
-			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, mymod.Session );
+			mymod.Session.Save( mymod );
 
 			this.WorldStatus = ResetModeStatus.Active;
 
@@ -42,38 +40,23 @@ namespace ResetMode.Logic {
 		}
 
 
-		public void EndCurrentSession( ResetModeMod mymod ) {
-			string world_id = WorldHelpers.GetUniqueId();   //Main.ActiveWorldFileData.UniqueId.ToString();
-
+		public void ExpireForCurrentSession( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.EndCurrentSession " + world_id );
+				LogHelpers.Log( "WorldLogic.ExpireForCurrentSession" );
 			}
 
-			mymod.Session.ClearSessionData();
+			mymod.Session.Data.AwaitingNextWorld = true;
 
-			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, mymod.Session );
-
-			this.WorldPlayers.Clear();
-			this.WorldStatus = ResetModeStatus.Normal;
-
-			TimeLimitAPI.TimerStop( "reset" );
-		}
-
-
-		////////////////
-
-		public void ExpireWorldForCurrentSession( ResetModeMod mymod ) {
-			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.CloseWorldForCurrentSession" );
-			}
-
-			mymod.Session.AwaitingNextWorld = true;
-
-			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, ResetModeSessionData.DataFileNameOnly, mymod.Session );
+			mymod.Session.Save( mymod );
 
 			this.WorldStatus = ResetModeStatus.Expired;
 
 			this.GoodExit( mymod );
+		}
+
+		public void ResetForCurrentSession() {
+			this.WorldPlayers.Clear();
+			this.WorldStatus = ResetModeStatus.Normal;
 		}
 
 
