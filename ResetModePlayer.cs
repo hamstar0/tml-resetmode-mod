@@ -9,42 +9,32 @@ using Terraria.ModLoader;
 namespace ResetMode {
 	class ResetModePlayer : ModPlayer {
 		public PlayerLogic Logic;
-
-		private bool HasSyncedModSettings = false;
-
+		
+		public bool HasModSettings { get; private set; }
+		public bool HasSessionData { get; private set; }
+		
 
 
 		////////////////
+
+		public override bool CloneNewInstances { get { return false; } }
 
 		public override void Initialize() {
 			this.Logic = new PlayerLogic();
+			this.HasModSettings = false;
+			this.HasSessionData = false;
 		}
-
-		////////////////
 
 		public override void clientClone( ModPlayer client_clone ) {
 			var clone = (ResetModePlayer)client_clone;
-			clone.HasSyncedModSettings = this.HasSyncedModSettings;
+			clone.HasModSettings = this.HasModSettings;
+			clone.HasSessionData = this.HasSessionData;
 		}
 
-		public override void SyncPlayer( int to_who, int from_who, bool new_player ) {
-			var mymod = (ResetModeMod)this.mod;
 
-			if( Main.netMode == 1 ) {
-				if( new_player ) {
-					this.OnClientConnect();
-					return;
-				}
-			} else {
-				if( to_who == -1 && from_who == this.player.whoAmI ) {
-					this.OnServerConnect();
-				}
-			}
-		}
+		////////////////
 
-		private void OnClientConnect() { }
-
-		private void OnServerConnect() {
+		private void LoadGame() {
 			var mymod = (ResetModeMod)this.mod;
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
@@ -55,9 +45,19 @@ namespace ResetMode {
 			}
 		}
 
-
+		
 		////////////////
 
+		public override void SyncPlayer( int to_who, int from_who, bool new_player ) {
+			var mymod = (ResetModeMod)this.mod;
+
+			if( Main.netMode == 2 ) {
+				if( to_who == -1 && from_who == this.player.whoAmI ) {
+					this.OnServerConnect();
+				}
+			}
+		}
+		
 		public override void OnEnterWorld( Player player ) {
 			var mymod = (ResetModeMod)this.mod;
 
@@ -70,27 +70,54 @@ namespace ResetMode {
 				}
 
 				if( Main.netMode == 1 ) {
-					PacketProtocol.QuickRequestToServer<ModSettingsProtocol>();
-				}
-				if( Main.netMode != 1 ) {	// NOT client
-					this.FinishModSettingsSync();
+					this.OnClientConnect();
 				}
 				if( Main.netMode == 0 ) {
-					this.OnClientConnect();
-					this.OnServerConnect();
+					this.OnSingleConnect();
 				}
 			}
 		}
 
 		////////////////
-
-		public bool IsSynced() {
-			return this.HasSyncedModSettings;
+		
+		private void OnSingleConnect() {
+			this.LoadGame();
+			this.FinishModSettingsSync();
+			this.FinishSessionSync();
 		}
 
-		public void FinishModSettingsSync() {
-			this.HasSyncedModSettings = true;
+		private void OnClientConnect() {
+			PacketProtocol.QuickRequestToServer<ModSettingsProtocol>();
+			PacketProtocol.QuickRequestToServer<SessionProtocol>();
+		}
 
+		private void OnServerConnect() {
+			this.HasModSettings = true;
+			this.LoadGame();
+		}
+
+
+		////////////////
+
+		public void FinishModSettingsSync() {
+			this.HasModSettings = true;
+
+			this.UpdateSync();
+		}
+		
+		public void FinishSessionSync() {
+			this.HasSessionData = true;
+
+			this.UpdateSync();
+		}
+
+		////////////////
+
+		public bool IsSynced() {
+			return this.HasModSettings && this.HasSessionData;
+		}
+
+		public void UpdateSync() {
 			if( this.IsSynced() ) {
 				this.Logic.OnEnterWorld( (ResetModeMod)this.mod, this.player );
 			}

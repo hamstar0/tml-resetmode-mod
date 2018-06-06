@@ -6,7 +6,6 @@ using ResetMode.Data;
 using System;
 using System.Collections.Generic;
 using Terraria;
-using TimeLimit;
 
 
 namespace ResetMode.Logic {
@@ -46,6 +45,12 @@ namespace ResetMode.Logic {
 
 		////////////////
 
+		internal void SetData( ResetModeSessionData data ) {
+			this.Data = data;
+		}
+
+		////////////////
+
 		public bool Start( ResetModeMod mymod ) {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
@@ -68,7 +73,7 @@ namespace ResetMode.Logic {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				string world_id = WorldHelpers.GetUniqueId();   //Main.ActiveWorldFileData.UniqueId.ToString();
+				string world_id = WorldHelpers.GetUniqueIdWithSeed();
 				LogHelpers.Log( "WorldLogic.End " + world_id );
 			}
 

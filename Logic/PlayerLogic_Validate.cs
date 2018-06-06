@@ -95,15 +95,24 @@ namespace ResetMode.Logic {
 			bool success;
 			var pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
 			if( !success ) {
-				LogHelpers.Log( "Could not reset player Rewards; no UID for player." );
+				LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - Could not reset player Rewards; no UID for player." );
 				return;
 			}
 
 			if( mymod.Session.Data.PlayerPP.ContainsKey( pid ) ) {
 				float curr_pp = (float)rewards_mod.Call( "GetPoints", player );
-				float pp = mymod.Session.Data.PlayerPP[pid] - curr_pp;
+				float total_pp = mymod.Session.Data.PlayerPP[pid];
+				float add_pp = total_pp - curr_pp;
 
-				rewards_mod.Call( "AddPoints", player, pp );
+				rewards_mod.Call( "AddPoints", player, add_pp );
+
+				if( mymod.Config.DebugModeInfo ) {
+					LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - "+player.name+" points set to "+total_pp+" (was "+curr_pp+")" );
+				}
+			} else {
+				if( mymod.Config.DebugModeInfo ) {
+					LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - "+player.name+" points could not be set" );
+				}
 			}
 		}
 	}

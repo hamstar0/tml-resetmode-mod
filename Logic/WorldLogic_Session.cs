@@ -16,7 +16,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void EngageForCurrentSession( ResetModeMod mymod ) {
-			string world_id = WorldHelpers.GetUniqueId();   //Main.ActiveWorldFileData.UniqueId.ToString();
+			string world_id = WorldHelpers.GetUniqueIdWithSeed();
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Log( "WorldLogic.EngageForCurrentSession " + world_id );
@@ -71,7 +71,7 @@ namespace ResetMode.Logic {
 			foreach( KeyValuePair<string, string[]> kv in mymod.Config.OnWorldEngagedCalls ) {
 				string mod_name = kv.Key;
 				if( string.IsNullOrEmpty( mod_name ) ) {
-					LogHelpers.Log( "Invalid mod name" );
+					LogHelpers.Log( "Reset Mode - Invalid mod name for API call " );
 					continue;
 				}
 
@@ -79,7 +79,7 @@ namespace ResetMode.Logic {
 					mod = ModLoader.GetMod( mod_name );
 					if( mod == null ) { throw new Exception(); }
 				} catch {
-					LogHelpers.Log( "Missing or invalid mod \"" + mod_name + '"' );
+					LogHelpers.Log( "Reset Mode - Missing or invalid mod \"" + mod_name + "\" for API call" );
 					continue;
 				}
 
@@ -90,9 +90,9 @@ namespace ResetMode.Logic {
 
 				try {
 					mod.Call( dest );
-					LogHelpers.Log( "Calling " + kv.Key + " command \"" + string.Join( " ", dest ) + '"' );
+					LogHelpers.Log( "Reset Mode - Calling " + kv.Key + " command \"" + string.Join( " ", dest ) + '"' );
 				} catch( Exception e ) {
-					LogHelpers.Log( "World load " + kv.Key + " command error - " + e.ToString() );
+					LogHelpers.Log( "Reset Mode - World load " + kv.Key + " command error - " + e.ToString() );
 				}
 			}
 		}

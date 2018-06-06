@@ -1,6 +1,4 @@
-﻿using HamstarHelpers.MiscHelpers;
-using ResetMode.Data;
-using ResetMode.Logic;
+﻿using ResetMode.Logic;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;

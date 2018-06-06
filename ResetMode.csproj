@@ -45,6 +45,7 @@
     <Compile Include="Logic\WorldLogic_Player.cs" />
     <Compile Include="Logic\WorldLogic.cs" />
     <Compile Include="Logic\WorldLogic_Session.cs" />
+    <Compile Include="NetProtocols\SessionProtocol.cs" />
     <Compile Include="NetProtocols\PlayerResetConfirmProtocol.cs" />
     <Compile Include="NetProtocols\PlayerResetProtocol.cs" />
     <Compile Include="NetProtocols\ModSettingsProtocol.cs" />

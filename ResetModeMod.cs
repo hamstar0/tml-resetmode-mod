@@ -81,7 +81,7 @@ namespace ResetMode {
 			if( !this.ConfigJson.LoadFile() ) {
 				this.ConfigJson.SaveFile();
 			}
-
+			
 			if( this.Config.UpdateToLatestVersion() ) {
 				ErrorLogger.Log( "Reset Mode updated to " + ResetModeConfigData.ConfigVersion.ToString() );
 				this.ConfigJson.SaveFile();
@@ -135,7 +135,7 @@ namespace ResetMode {
 
 		public override void PreSaveAndQuit() {
 			if( Main.netMode != 1 ) {
-				this.Session.Save( this );
+				this.Session.Save( this );	// This probably does nothing...
 			}
 		}
 

@@ -85,13 +85,13 @@ namespace ResetMode.Logic {
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.Load uid: " + WorldHelpers.GetUniqueId() + ", this.WorldStatus: " + this.WorldStatus );
+				LogHelpers.Log( "WorldLogic.Load uid: " + WorldHelpers.GetUniqueIdWithSeed() + ", this.WorldStatus: " + this.WorldStatus );
 			}
 		}
 
 		internal TagCompound Save( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.Save uid: " + WorldHelpers.GetUniqueId() + ", this.WorldStatus: " + this.WorldStatus );
+				LogHelpers.Log( "WorldLogic.Save uid: " + WorldHelpers.GetUniqueIdWithSeed() + ", this.WorldStatus: " + this.WorldStatus );
 			}
 			
 			var tags = new TagCompound {
