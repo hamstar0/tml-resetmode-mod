@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.Utilities.Network;
+﻿using HamstarHelpers.TmlHelpers;
+using HamstarHelpers.Utilities.Network;
 using ResetMode.Data;
 using ResetMode.Logic;
 using ResetMode.NetProtocols;
@@ -12,7 +13,8 @@ namespace ResetMode {
 		
 		public bool HasModSettings { get; private set; }
 		public bool HasSessionData { get; private set; }
-		
+		private bool HasEnteredWorld = false;
+
 
 
 		////////////////
@@ -23,12 +25,14 @@ namespace ResetMode {
 			this.Logic = new PlayerLogic();
 			this.HasModSettings = false;
 			this.HasSessionData = false;
+			this.HasEnteredWorld = false;
 		}
 
 		public override void clientClone( ModPlayer client_clone ) {
 			var clone = (ResetModePlayer)client_clone;
 			clone.HasModSettings = this.HasModSettings;
 			clone.HasSessionData = this.HasSessionData;
+			clone.HasEnteredWorld = this.HasEnteredWorld;
 		}
 
 
@@ -118,7 +122,9 @@ namespace ResetMode {
 		}
 
 		public void UpdateSync() {
-			if( this.IsSynced() ) {
+			if( this.IsSynced() && !this.HasEnteredWorld ) {
+				this.HasEnteredWorld = true;
+				
 				this.Logic.OnEnterWorld( (ResetModeMod)this.mod, this.player );
 			}
 		}

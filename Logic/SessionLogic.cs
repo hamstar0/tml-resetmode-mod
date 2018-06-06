@@ -45,8 +45,11 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		internal void SetData( ResetModeSessionData data ) {
+		internal void SetData( ResetModeMod mymod, ResetModeSessionData data, ResetModeStatus world_status ) {
+			var myworld = mymod.GetModWorld<ResetModeWorld>();
+
 			this.Data = data;
+			myworld.Logic.WorldStatus = world_status;
 		}
 
 		////////////////

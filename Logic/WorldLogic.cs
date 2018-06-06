@@ -57,7 +57,7 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public ResetModeStatus WorldStatus { get; private set; }
+		public ResetModeStatus WorldStatus { get; internal set; }
 		private ISet<string> WorldPlayers = new HashSet<string>();
 
 		public bool IsExiting { get; private set; }
