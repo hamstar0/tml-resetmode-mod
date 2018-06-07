@@ -34,9 +34,7 @@ namespace ResetMode {
 
 
 		////////////////
-
-		public bool IsContentSetup { get; private set; }
-
+		
 		internal JsonConfig<ResetModeConfigData> ConfigJson;
 		public ResetModeConfigData Config { get { return ConfigJson.Data; } }
 		
@@ -46,7 +44,6 @@ namespace ResetMode {
 		////////////////
 
 		public ResetModeMod() {
-			this.IsContentSetup = false;
 			this.Properties = new ModProperties() {
 				Autoload = true,
 				AutoloadGores = true,
@@ -72,7 +69,20 @@ namespace ResetMode {
 					this.Session.Start( this );
 				}
 			} );
-			
+		}
+
+		public override void PostAddRecipes() {
+			var hook = new CustomTimerAction( delegate () {
+				if( Main.netMode == 1 ) { return; }
+
+				var mymod = ResetModeMod.Instance;
+				var myworld = mymod.GetModWorld<ResetModeWorld>();
+
+				myworld.Logic.ExpireForCurrentSession( mymod );
+			} );
+
+			TimeLimitAPI.AddCustomAction( "reset", hook );
+
 			this.LoadRewards();
 		}
 
@@ -91,43 +101,38 @@ namespace ResetMode {
 		private void LoadRewards() {
 			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
 			if( rewards_mod == null || rewards_mod.Version < new Version( 1, 4, 12 ) ) {
+				if( this.Config.DebugModeInfo ) {
+					LogHelpers.Log( "Reset Mode - Mod.LoadRewards - No Rewards mod found." );
+				}
 				return;
 			}
 			
 			Action<Player, float> func = ( plr, rewards ) => {
 				if( rewards == 0 ) { return; }
+
 				var mymod = ResetModeMod.Instance;
+
 				mymod.Session.AddRewards( plr, rewards );
+
+				if( this.Config.DebugModeInfo ) {
+					LogHelpers.Log( "Reset Mode - Mod.LoadRewards - Points added: "+rewards );
+				}
 			};
 
 			try {
 				rewards_mod.Call( "OnPointsGained", func );
+
+				if( this.Config.DebugModeInfo ) {
+					LogHelpers.Log( "Reset Mode - Mod.LoadRewards - Success." );
+				}
 			} catch( Exception e ) {
-				LogHelpers.Log( e.ToString() );
+				LogHelpers.Log( "Reset Mode - Mod.LoadRewards - Could not hook Rewards: " + e.ToString() );
 			}
 		}
 
 		
 		public override void Unload() {
 			ResetModeMod.Instance = null;
-		}
-
-
-		////////////////
-
-		public override void PostSetupContent() {
-			this.IsContentSetup = true;
-
-			var hook = new CustomTimerAction( delegate () {
-				if( Main.netMode == 1 ) { return; }
-
-				var mymod = ResetModeMod.Instance;
-				var myworld = mymod.GetModWorld<ResetModeWorld>();
-
-				myworld.Logic.ExpireForCurrentSession( mymod );
-			} );
-
-			TimeLimitAPI.AddCustomAction( "reset", hook );
 		}
 
 

@@ -7,11 +7,12 @@ namespace ResetMode.NetProtocols {
 		public override void SetServerDefaults() { }
 
 		protected override bool ReceiveRequestWithServer( int from_who ) {
+			var mymod = (ResetModeMod)ResetModeMod.Instance;
 			Player player = Main.player[ from_who ];
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
-			myplayer.Logic.BeginSession( ResetModeMod.Instance, player );
-			myplayer.Logic.ResetRewards( ResetModeMod.Instance, player );
+			myplayer.Logic.BeginSession( mymod, player );
+			myplayer.Logic.ResetRewards( mymod, player );
 
 			return true;
 		}

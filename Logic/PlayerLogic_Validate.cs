@@ -87,8 +87,13 @@ namespace ResetMode.Logic {
 		}
 
 		public void ResetRewards( ResetModeMod mymod, Player player ) {
-			var rewards_mod = ModLoader.GetMod( "rewards" );
-			if( rewards_mod == null ) { return; }
+			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
+			if( rewards_mod == null ) {
+				if( mymod.Config.DebugModeInfo ) {
+					LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - No Rewards mod." );
+				}
+				return;
+			}
 
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
