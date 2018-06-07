@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ResetMode.Data {
 	public class ResetModeConfigData : ConfigurationDataBase {
-		public static Version ConfigVersion { get { return new Version( 1, 0, 5 ); } }
+		public static Version ConfigVersion { get { return new Version( 1, 0, 8, 3 ); } }
 		public static string ConfigFileName { get { return "Reset Mode Config.json"; } }
 
 
@@ -19,9 +19,15 @@ namespace ResetMode.Data {
 
 		public bool AutoStart = false;
 
-		public bool ResetAllWorldsOnLoad = false;
+		public bool ResetAllWorldsBetweenGames = false;
 
 		public KeyValuePair<string, string[]>[] OnWorldEngagedCalls = new KeyValuePair<string, string[]>[0];
+		
+		////
+
+		public string _OLD_SETTINGS_BELOW_ = "";
+
+		public bool ResetAllWorldsOnLoad = false;
 
 
 

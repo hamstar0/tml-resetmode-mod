@@ -21,7 +21,7 @@ namespace ResetMode.Logic {
 
 
 	partial class WorldLogic {
-		public static void ResetAllWorlds() {
+		public static void ClearAllWorlds() {
 			Action reset_all = () => {
 				ResetModeMod mymod = ResetModeMod.Instance;
 

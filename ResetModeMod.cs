@@ -60,9 +60,15 @@ namespace ResetMode {
 
 			this.LoadConfigs();
 
-			if( this.Config.ResetAllWorldsOnLoad ) {
-				WorldLogic.ResetAllWorlds();
+			if( this.Config.ResetAllWorldsBetweenGames ) {
+				WorldLogic.ClearAllWorlds();
 			}
+
+			TmlLoadHelpers.AddWorldUnloadEachPromise( () => {
+				if( this.Config.ResetAllWorldsBetweenGames ) {
+					WorldLogic.ClearAllWorlds();
+				}
+			} );
 
 			TmlLoadHelpers.AddWorldLoadEachPromise( delegate {
 				if( this.Config.AutoStart && Main.netMode != 1 ) {
