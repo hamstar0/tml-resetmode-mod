@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 
+
 namespace ResetMode.Data {
 	public class ResetModeConfigData : ConfigurationDataBase {
 		public static Version ConfigVersion { get { return new Version( 1, 0, 8, 3 ); } }
@@ -19,7 +20,7 @@ namespace ResetMode.Data {
 
 		public bool AutoStart = false;
 
-		public bool ResetAllWorldsBetweenGames = false;
+		public bool DeleteAllWorldsBetweenGames = false;
 
 		public KeyValuePair<string, string[]>[] OnWorldEngagedCalls = new KeyValuePair<string, string[]>[0];
 		
@@ -28,6 +29,8 @@ namespace ResetMode.Data {
 		public string _OLD_SETTINGS_BELOW_ = "";
 
 		public bool ResetAllWorldsOnLoad = false;
+
+		public bool ResetAllWorldsBetweenGames = false;
 
 
 

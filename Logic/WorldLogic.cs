@@ -22,12 +22,12 @@ namespace ResetMode.Logic {
 
 	partial class WorldLogic {
 		public static void ClearAllWorlds() {
-			Action reset_all = () => {
+			TmlLoadHelpers.AddPostModLoadPromise( () => {
 				ResetModeMod mymod = ResetModeMod.Instance;
 
 				try {
 					Main.LoadWorlds();
-
+					
 					while( Main.WorldList.Count > 0 ) {
 						WorldFileData world_data = Main.WorldList[0];
 						//if( !world_data.IsValid ) { continue; }
@@ -42,15 +42,13 @@ namespace ResetMode.Logic {
 					}
 
 					mymod.Session.Data.AwaitingNextWorld = true;
-					mymod.Session.Data.ClearWorldHistory();
+					//mymod.Session.Data.ClearWorldHistory();
 
 					mymod.Session.Save( mymod );
 				} catch( Exception e ) {
 					LogHelpers.Log( e.ToString() );
 				}
-			};
-			
-			TmlLoadHelpers.AddPostModLoadPromise( reset_all );
+			} );
 		}
 
 

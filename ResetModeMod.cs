@@ -40,6 +40,8 @@ namespace ResetMode {
 		
 		public SessionLogic Session { get; internal set; }
 
+		private int CurrentNetMode = -1;
+
 
 		////////////////
 
@@ -60,19 +62,25 @@ namespace ResetMode {
 
 			this.LoadConfigs();
 
-			if( this.Config.ResetAllWorldsBetweenGames ) {
-				WorldLogic.ClearAllWorlds();
-			}
-
-			TmlLoadHelpers.AddWorldUnloadEachPromise( () => {
-				if( this.Config.ResetAllWorldsBetweenGames ) {
-					WorldLogic.ClearAllWorlds();
+			TmlLoadHelpers.AddWorldLoadEachPromise( () => {
+				this.CurrentNetMode = Main.netMode;
+			} );
+			
+			TmlLoadHelpers.AddPostWorldUnloadEachPromise( () => {
+				if( this.Config.DeleteAllWorldsBetweenGames ) {
+					if( this.Session.Data.AwaitingNextWorld ) {
+						if( this.CurrentNetMode == 0 || this.CurrentNetMode == 2 ) {
+							WorldLogic.ClearAllWorlds();
+						}
+					}
 				}
 			} );
 
 			TmlLoadHelpers.AddWorldLoadEachPromise( delegate {
-				if( this.Config.AutoStart && Main.netMode != 1 ) {
-					this.Session.Start( this );
+				if( this.Config.AutoStart ) {
+					if( Main.netMode == 0 || Main.netMode == 2 ) {
+						this.Session.Start( this );
+					}
 				}
 			} );
 		}
