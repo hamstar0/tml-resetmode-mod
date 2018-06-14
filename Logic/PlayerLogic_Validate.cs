@@ -86,6 +86,7 @@ namespace ResetMode.Logic {
 			myworld.Logic.AddPlayer( mymod, player );
 		}
 
+
 		public void ResetRewards( ResetModeMod mymod, Player player ) {
 			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
 			if( rewards_mod == null ) {
@@ -100,23 +101,23 @@ namespace ResetMode.Logic {
 			bool success;
 			var pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
 			if( !success ) {
-				LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - Could not reset player Rewards; no UID for player." );
+				LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - Could not reset player Rewards; no UID for player "+player.name );
 				return;
 			}
 
-			if( mymod.Session.Data.PlayerPP.ContainsKey( pid ) ) {
-				float curr_pp = (float)rewards_mod.Call( "GetPoints", player );
-				float total_pp = mymod.Session.Data.PlayerPP[pid];
-				float add_pp = total_pp - curr_pp;
+			if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
+				float pp_spent = mymod.Session.Data.PlayerPPSpendings[ pid ];
 
-				rewards_mod.Call( "AddPoints", player, add_pp );
+				rewards_mod.Call( "AddPoints", player, pp_spent );
+
+				mymod.Session.Data.PlayerPPSpendings[ pid ] = 0;
 
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - "+player.name+" points set to "+total_pp+" (was "+curr_pp+")" );
+					LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - '"+player.name+"' PP spendings of " + pp_spent + " returned" );
 				}
 			} else {
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - "+player.name+" points could not be set" );
+					LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - '"+player.name+"' PP could not be set" );
 				}
 			}
 		}

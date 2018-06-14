@@ -121,7 +121,7 @@ namespace ResetMode {
 				return;
 			}
 			
-			Action<Player, float> func = ( plr, rewards ) => {
+			Action<Player, string, float, Item[]> func = ( plr, pack_name, rewards, items ) => {
 				if( rewards == 0 ) { return; }
 
 				var mymod = ResetModeMod.Instance;
@@ -129,12 +129,12 @@ namespace ResetMode {
 				mymod.Session.AddRewards( plr, rewards );
 
 				if( this.Config.DebugModeInfo ) {
-					LogHelpers.Log( "Reset Mode - Mod.LoadRewards - Points added: "+rewards );
+					LogHelpers.Log( "Reset Mode - Mod.LoadRewards - Refundable PP added: "+rewards );
 				}
 			};
 
 			try {
-				rewards_mod.Call( "OnPointsGained", func );
+				rewards_mod.Call( "OnPointsSpent", func );
 
 				if( this.Config.DebugModeInfo ) {
 					LogHelpers.Log( "Reset Mode - Mod.LoadRewards - Success." );

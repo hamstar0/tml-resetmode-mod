@@ -97,10 +97,10 @@ namespace ResetMode.Logic {
 			string pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
 			if( !success ) { return; }
 
-			if( this.Data.PlayerPP.ContainsKey( pid ) ) {
-				this.Data.PlayerPP[pid] += rewards;
+			if( this.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
+				this.Data.PlayerPPSpendings[pid] += rewards;
 			} else {
-				this.Data.PlayerPP[pid] = rewards;
+				this.Data.PlayerPPSpendings[pid] = rewards;
 			}
 		}
 	}
