@@ -51,9 +51,12 @@ namespace ResetMode {
 				if( this.Config.DeleteAllWorldsBetweenGames ) {
 					if( this.Session.Data.AwaitingNextWorld ) {
 						if( this.CurrentNetMode == 0 || this.CurrentNetMode == 2 ) {
-							SessionLogic.ClearAllWorlds();
+							this.Session.ClearAllWorlds();
 						}
 					}
+				}
+				if( this.CurrentNetMode == 0 || this.CurrentNetMode == 2 ) {
+					this.Session.Save( this );
 				}
 			} );
 		}
@@ -63,7 +66,7 @@ namespace ResetMode {
 			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
 			if( rewards_mod == null || rewards_mod.Version < new Version( 1, 5, 0 ) ) {
 				if( this.Config.DebugModeInfo ) {
-					LogHelpers.Log( "Reset Mode - Mod.LoadRewards - No Rewards mod found." );
+					LogHelpers.Log( "ResetMode - Mod.LoadRewards - No Rewards mod found." );
 				}
 				return;
 			}
@@ -76,7 +79,7 @@ namespace ResetMode {
 				mymod.Session.LogRewardsPPSpending( plr, rewards );
 
 				if( this.Config.DebugModeInfo ) {
-					LogHelpers.Log( "Reset Mode - Mod.LoadRewards - Refundable PP added: "+rewards );
+					LogHelpers.Log( "ResetMode - Mod.LoadRewards - Refundable PP added: " + rewards );
 				}
 			};
 
@@ -84,10 +87,10 @@ namespace ResetMode {
 				rewards_mod.Call( "OnPointsSpent", func );
 
 				if( this.Config.DebugModeInfo ) {
-					LogHelpers.Log( "Reset Mode - Mod.LoadRewards - Success." );
+					LogHelpers.Log( "ResetMode - Mod.LoadRewards - Success." );
 				}
 			} catch( Exception e ) {
-				LogHelpers.Log( "Reset Mode - Mod.LoadRewards - Could not hook Rewards: " + e.ToString() );
+				LogHelpers.Log( "ResetMode - Mod.LoadRewards - Could not hook Rewards: " + e.ToString() );
 			}
 		}
 	}

@@ -5,8 +5,10 @@ using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.Utilities.Network;
 using ResetMode.Data;
 using ResetMode.NetProtocols;
+using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ModLoader;
 
 
 namespace ResetMode.Logic {
@@ -72,31 +74,17 @@ namespace ResetMode.Logic {
 			var mymod = ResetModeMod.Instance;
 			if( mymod == null ) { return; }
 
-			mymod.Session.Update();
-		}
-
-		internal void Update() {
-			if( !this.Data.IsRunning ) { return; }
-
-			var mymod = ResetModeMod.Instance;
-
 			if( TmlLoadHelpers.IsWorldLoaded() ) {
-				var myworld = mymod.GetModWorld<ResetModeWorld>();
-
-				switch( myworld.Data.WorldStatus ) {
-				case ResetModeStatus.Normal:
-					break;
-
-				case ResetModeStatus.Active:
-					break;
-
-				case ResetModeStatus.Expired:
-					if( !myworld.Data.IsExiting ) {
-						this.GoodExit( mymod );
-					}
-					break;
+				if( mymod.Session.Data.IsRunning ) {
+					mymod.Session.UpdateForRunningSession();
 				}
 			}
+		}
+
+		internal void UpdateForRunningSession() {
+			var mymod = ResetModeMod.Instance;
+
+			this.UpdateWorldForRunningSession( mymod );
 		}
 
 
@@ -106,7 +94,7 @@ namespace ResetMode.Logic {
 			bool success;
 			string pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
 			if( !success ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.LogRewardsPPSpending - Invalid player UID for " + player.name );
+				LogHelpers.Log( "ResetMode - SessionLogic.LogRewardsPPSpending - Invalid player UID for " + player.name );
 				return;
 			}
 
@@ -118,6 +106,39 @@ namespace ResetMode.Logic {
 
 			if( Main.netMode == 1 ) {
 				PacketProtocol.QuickSendToServer<RewardsSpendingProtocol>();
+			}
+		}
+
+		
+		public void RunModCalls( ResetModeMod mymod ) {
+			Mod mod;
+
+			foreach( KeyValuePair<string, string[]> kv in mymod.Config.OnWorldEngagedCalls ) {
+				string mod_name = kv.Key;
+				if( string.IsNullOrEmpty( mod_name ) ) {
+					LogHelpers.Log( "ResetMode - SessionLogic.RunModCalls - Invalid mod name for API call " );
+					continue;
+				}
+
+				try {
+					mod = ModLoader.GetMod( mod_name );
+					if( mod == null ) { throw new Exception(); }
+				} catch {
+					LogHelpers.Log( "ResetMode - SessionLogic.RunModCalls - Missing or invalid mod \"" + mod_name + "\" for API call" );
+					continue;
+				}
+
+				int len = kv.Value.Length;
+				object[] dest = new object[len];
+
+				Array.Copy( kv.Value, dest, len );
+
+				try {
+					mod.Call( dest );
+					LogHelpers.Log( "ResetMode - SessionLogic.RunModCalls - Calling " + kv.Key + " command \"" + string.Join( " ", dest ) + '"' );
+				} catch( Exception e ) {
+					LogHelpers.Log( "ResetMode - SessionLogic.RunModCalls - World load " + kv.Key + " command error - " + e.ToString() );
+				}
 			}
 		}
 	}

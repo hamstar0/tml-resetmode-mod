@@ -19,7 +19,6 @@ namespace ResetMode.Data {
 		public int SecondsUntilResetSubsequently = 60 * 30;
 
 		public bool AutoStartSession = false;
-		public bool AutoStartWorldWithSession = true;
 
 		public bool DeleteAllWorldsBetweenGames = false;
 

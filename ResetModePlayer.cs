@@ -1,7 +1,5 @@
-﻿using HamstarHelpers.Utilities.Network;
-using ResetMode.Data;
+﻿using ResetMode.Data;
 using ResetMode.Logic;
-using ResetMode.NetProtocols;
 using Terraria;
 using Terraria.ModLoader;
 
