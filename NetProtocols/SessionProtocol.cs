@@ -1,6 +1,5 @@
 ﻿using HamstarHelpers.Utilities.Network;
 using ResetMode.Data;
-using ResetMode.Logic;
 using Terraria;
 
 
@@ -17,7 +16,7 @@ namespace ResetMode.NetProtocols {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			this.Data = mymod.Session.Data;
-			this.Status = (int)myworld.Logic.WorldStatus;
+			this.Status = (int)myworld.Data.WorldStatus;
 		}
 
 		////////////////

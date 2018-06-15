@@ -1,5 +1,4 @@
-﻿using HamstarHelpers.MiscHelpers;
-using ResetMode.Data;
+﻿using ResetMode.Data;
 using System;
 using Terraria;
 
@@ -35,7 +34,7 @@ namespace ResetMode {
 
 			var mymod = ResetModeMod.Instance;
 
-			return mymod.Session.Start( mymod );
+			return mymod.Session.StartSession( mymod );
 		}
 
 		public static bool StopSession() {
@@ -43,7 +42,7 @@ namespace ResetMode {
 
 			var mymod = ResetModeMod.Instance;
 
-			mymod.Session.End( mymod );
+			mymod.Session.EndSession( mymod );
 
 			return true;
 		}

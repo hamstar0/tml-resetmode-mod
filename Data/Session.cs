@@ -14,18 +14,8 @@ namespace ResetMode.Data {
 
 		////////////////
 		
-		internal void AddActiveWorld( string world_id ) {
-			this.AllPlayedWorlds.Add( world_id );
-			this.AwaitingNextWorld = false;
-			this.IsRunning = true;
-		}
-
-		internal void ClearWorldHistory() {
+		internal void ResetAll() {
 			this.AllPlayedWorlds.Clear();
-		}
-
-		internal void ClearSessionData() {
-			this.ClearWorldHistory();
 			this.PlayerPPSpendings.Clear();
 			this.AwaitingNextWorld = false;
 			this.IsRunning = false;

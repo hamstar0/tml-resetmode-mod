@@ -1,13 +1,39 @@
 ﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.WorldHelpers;
+using ResetMode.Data;
 using System;
 using System.Collections.Generic;
+using Terraria;
+using Terraria.IO;
 using Terraria.ModLoader;
 using TimeLimit;
 
 
 namespace ResetMode.Logic {
-	partial class WorldLogic {
+	partial class SessionLogic {
+		public static void ClearAllWorlds() {
+			TmlLoadHelpers.AddPostModLoadPromise( () => {
+				ResetModeMod mymod = ResetModeMod.Instance;
+
+				try {
+					Main.LoadWorlds();
+
+					while( Main.WorldList.Count > 0 ) {
+						WorldFileData world_data = Main.WorldList[0];
+						WorldFileHelpers.EraseWorld( world_data, false );
+					}
+
+					mymod.Session.Data.AwaitingNextWorld = true;
+
+					mymod.Session.Save( mymod );
+				} catch( Exception e ) {
+					LogHelpers.Log( e.ToString() );
+				}
+			} );
+		}
+
+
 		public static bool IsWorldUidInSession( ResetModeMod mymod, string world_uid ) {
 			return mymod.Session.Data.AllPlayedWorlds.Contains( world_uid );
 		}
@@ -15,49 +41,54 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public void EngageForCurrentSession( ResetModeMod mymod ) {
+		public void AddWorldToSession( ResetModeMod mymod ) {
 			string world_id = WorldHelpers.GetUniqueIdWithSeed();
+			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.EngageForCurrentSession " + world_id );
+				LogHelpers.Log( "ResetMode - SessionLogic.EngageForCurrentSession " + world_id );
 			}
 
-			if( !mymod.Session.Data.AwaitingNextWorld ) {
+			if( !this.Data.AwaitingNextWorld ) {
 				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetInitially, false );
 			} else {
 				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetSubsequently, false );
 			}
 
-			mymod.Session.Data.AddActiveWorld( world_id );
+			this.Data.AllPlayedWorlds.Add( world_id );
+			this.Data.AwaitingNextWorld = false;
+			this.Data.IsRunning = true;
 
-			mymod.Session.Save( mymod );
+			this.Save( mymod );
 
-			this.WorldStatus = ResetModeStatus.Active;
+			myworld.Data.WorldStatus = ResetModeStatus.Active;
 
 			this.RunWorldCalls( mymod );
-
-			PlayerLogic.ValidateAll( mymod );
 		}
 
 
-		public void ExpireForCurrentSession( ResetModeMod mymod ) {
+		public void ExpireWorldInSession( ResetModeMod mymod ) {
+			var myworld = mymod.GetModWorld<ResetModeWorld>();
+
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.ExpireForCurrentSession" );
+				LogHelpers.Log( "ResetMode - SessionLogic.ExpireForCurrentSession" );
 			}
 
 			mymod.Session.Data.AwaitingNextWorld = true;
 
 			mymod.Session.Save( mymod );
 
-			this.WorldStatus = ResetModeStatus.Expired;
+			myworld.Data.WorldStatus = ResetModeStatus.Expired;
 
 			this.GoodExit( mymod );
 		}
 
 
-		public void ResetForCurrentSession() {
-			this.WorldPlayers.Clear();
-			this.WorldStatus = ResetModeStatus.Normal;
+		public void ResetWorldForSession( ResetModeMod mymod ) {
+			var myworld = mymod.GetModWorld<ResetModeWorld>();
+
+			myworld.Data.WorldPlayers.Clear();
+			myworld.Data.WorldStatus = ResetModeStatus.Normal;
 
 			TimeLimitAPI.TimerStop( "reset" );
 		}

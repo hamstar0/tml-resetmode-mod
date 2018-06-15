@@ -3,6 +3,7 @@ using HamstarHelpers.Helpers.PlayerHelpers;
 using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.Utilities.Messages;
 using Microsoft.Xna.Framework;
+using ResetMode.Data;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -26,10 +27,11 @@ namespace ResetMode.Logic {
 		public void OnEnterWorld( ResetModeMod mymod, Player player ) {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			switch( myworld.Logic.WorldStatus ) {
+			switch( myworld.Data.WorldStatus ) {
 			case ResetModeStatus.Normal:
 				this.Welcome( mymod, player );
 				break;
+
 			case ResetModeStatus.Active:
 				this.Instruct( player );
 				break;

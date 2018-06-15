@@ -35,7 +35,7 @@ namespace ResetMode.Logic {
 			
 			if( !has_uid ) { throw new HamstarException( "ValidatePlayer - Player has no uid." ); }
 			
-			if( !myworld.Logic.IsPlaying(mymod, player) ) {
+			if( !myworld.Data.IsPlaying(mymod, player) ) {
 				if( Main.netMode == 2 ) {
 					PacketProtocol.QuickRequestToClient<PlayerResetProtocol>( player.whoAmI, -1 );
 				} else if( Main.netMode == 0 ) {
@@ -83,7 +83,7 @@ namespace ResetMode.Logic {
 
 		public void BeginSession( ResetModeMod mymod, Player player ) {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
-			myworld.Logic.AddPlayer( mymod, player );
+			myworld.Data.AddPlayer( mymod, player );
 		}
 
 

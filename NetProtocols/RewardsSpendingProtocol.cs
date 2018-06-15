@@ -19,14 +19,14 @@ namespace ResetMode.NetProtocols {
 			bool success;
 			string pid = PlayerIdentityHelpers.GetUniqueId( Main.LocalPlayer, out success );
 			if( !success ) {
-				LogHelpers.Log( "ResetMode.NetProtocols.RewardsSpendingProtocol.SetClientDefaults - Invalid player UID for " + Main.LocalPlayer.name );
+				LogHelpers.Log( "ResetMode - RewardsSpendingProtocol.SetClientDefaults - Invalid player UID for " + Main.LocalPlayer.name );
 				return;
 			}
 
 			this.FromWho = Main.LocalPlayer.whoAmI;
 
 			if( !mymod.Session.Data.PlayerPPSpendings.TryGetValue( pid, out this.PP ) ) {
-				LogHelpers.Log( "ResetMode.NetProtocols.RewardsSpendingProtocol.SetClientDefaults - Invalid player PP for " + Main.LocalPlayer.name );
+				LogHelpers.Log( "ResetMode - RewardsSpendingProtocol.SetClientDefaults - Invalid player PP for " + Main.LocalPlayer.name );
 			}
 		}
 

@@ -1,19 +1,19 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
 using HamstarHelpers.MiscHelpers;
+using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.Utilities.Network;
-using HamstarHelpers.WorldHelpers;
 using ResetMode.Data;
 using ResetMode.NetProtocols;
-using System;
 using System.Collections.Generic;
 using Terraria;
 
 
 namespace ResetMode.Logic {
-	class SessionLogic {
+	partial class SessionLogic {
 		public static string DataFileNameOnly { get { return "Session"; } }
 		public static string RelativePath { get { return "Reset Mode Sessions"; } }
+
 
 
 		////////////////
@@ -23,11 +23,19 @@ namespace ResetMode.Logic {
 		internal IDictionary<string, float> Rewards = new Dictionary<string, float>();
 
 
+
 		////////////////
 
 		internal SessionLogic() {
 			this.Data = new ResetModeSessionData();
+
+			Main.OnTick += SessionLogic._Update;
 		}
+
+		~SessionLogic() {
+			Main.OnTick -= SessionLogic._Update;
+		}
+
 
 		////////////////
 
@@ -38,55 +46,57 @@ namespace ResetMode.Logic {
 			if( success ) {
 				this.Data = data;
 			}
+
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "ResetMode - SessionLogic.Load - Success? "+success );
+			}
 		}
 
 		public void Save( ResetModeMod mymod ) {
 			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, this.Data );
 		}
-
-
+		
 		////////////////
 
 		internal void SetData( ResetModeMod mymod, ResetModeSessionData data, ResetModeStatus world_status ) {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			this.Data = data;
-			myworld.Logic.WorldStatus = world_status;
+			myworld.Data.WorldStatus = world_status;
 		}
+
 
 		////////////////
 
-		public bool Start( ResetModeMod mymod ) {
-			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
+		private static void _Update() {
+			var mymod = ResetModeMod.Instance;
+			if( mymod == null ) { return; }
 
-			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "WorldLogic.Start" );
-			}
-
-			if( mymod.Session.Data.IsRunning ) {
-				return false;
-			}
-
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-
-			myworld.Logic.EngageForCurrentSession( mymod );
-
-			return true;
+			mymod.Session.Update();
 		}
-		
-		public void End( ResetModeMod mymod ) {
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			if( mymod.Config.DebugModeInfo ) {
-				string world_id = WorldHelpers.GetUniqueIdWithSeed();
-				LogHelpers.Log( "WorldLogic.End " + world_id );
+		internal void Update() {
+			if( !this.Data.IsRunning ) { return; }
+
+			var mymod = ResetModeMod.Instance;
+
+			if( TmlLoadHelpers.IsWorldLoaded() ) {
+				var myworld = mymod.GetModWorld<ResetModeWorld>();
+
+				switch( myworld.Data.WorldStatus ) {
+				case ResetModeStatus.Normal:
+					break;
+
+				case ResetModeStatus.Active:
+					break;
+
+				case ResetModeStatus.Expired:
+					if( !myworld.Data.IsExiting ) {
+						this.GoodExit( mymod );
+					}
+					break;
+				}
 			}
-
-			this.Data.ClearSessionData();
-
-			this.Save( mymod );
-
-			myworld.Logic.ResetForCurrentSession();
 		}
 
 
