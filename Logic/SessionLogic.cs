@@ -75,16 +75,22 @@ namespace ResetMode.Logic {
 			if( mymod == null ) { return; }
 
 			if( TmlLoadHelpers.IsWorldLoaded() ) {
-				if( mymod.Session.Data.IsRunning ) {
-					mymod.Session.UpdateForRunningSession();
-				}
+				mymod.Session.UpdateSession();
 			}
 		}
 
-		internal void UpdateForRunningSession() {
+		internal void UpdateSession() {
 			var mymod = ResetModeMod.Instance;
 
-			this.UpdateWorldForRunningSession( mymod );
+			if( this.Data.IsRunning ) {
+				if( Main.netMode == 0 ) {
+					this.UpdateSessionWorldSingle( mymod );
+				} else if( Main.netMode == 1 ) {
+					this.UpdateSessionWorldClient( mymod );
+				} else {
+					this.UpdateSessionWorldServer( mymod );
+				}
+			}
 		}
 
 

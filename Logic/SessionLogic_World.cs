@@ -9,25 +9,6 @@ using TimeLimit;
 
 namespace ResetMode.Logic {
 	partial class SessionLogic {
-		public void ClearAllWorlds() {
-			var mymod = ResetModeMod.Instance;
-
-			try {
-				Main.LoadWorlds();
-
-				while( Main.WorldList.Count > 0 ) {
-					WorldFileData world_data = Main.WorldList[0];
-					WorldFileHelpers.EraseWorld( world_data, false );
-				}
-
-				this.Data.AwaitingNextWorld = true;
-				this.Save( mymod );
-			} catch( Exception e ) {
-				LogHelpers.Log( e.ToString() );
-			}
-		}
-
-
 		public static bool IsWorldUidInSession( ResetModeMod mymod, string world_uid ) {
 			return mymod.Session.Data.AllPlayedWorlds.Contains( world_uid );
 		}
@@ -36,7 +17,19 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		internal void UpdateWorldForRunningSession( ResetModeMod mymod ) {
+		internal void UpdateSessionWorldSingle( ResetModeMod mymod ) {
+			this.UpdateSessionWorld( mymod );
+		}
+
+		internal void UpdateSessionWorldClient( ResetModeMod mymod ) {
+		}
+
+		internal void UpdateSessionWorldServer( ResetModeMod mymod ) {
+			this.UpdateSessionWorld( mymod );
+		}
+
+
+		private void UpdateSessionWorld( ResetModeMod mymod ) {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			switch( myworld.Data.WorldStatus ) {
@@ -105,6 +98,27 @@ namespace ResetMode.Logic {
 			myworld.Data.WorldStatus = ResetModeStatus.Normal;
 
 			TimeLimitAPI.TimerStop( "reset" );
+		}
+
+
+		////////////////
+
+		public void ClearAllWorlds() {
+			var mymod = ResetModeMod.Instance;
+
+			try {
+				Main.LoadWorlds();
+
+				while( Main.WorldList.Count > 0 ) {
+					WorldFileData world_data = Main.WorldList[0];
+					WorldFileHelpers.EraseWorld( world_data, false );
+				}
+
+				this.Data.AwaitingNextWorld = true;
+				this.Save( mymod );
+			} catch( Exception e ) {
+				LogHelpers.Log( e.ToString() );
+			}
 		}
 	}
 }

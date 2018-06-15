@@ -1,4 +1,5 @@
-﻿using ResetMode.Data;
+﻿using HamstarHelpers.DebugHelpers;
+using ResetMode.Data;
 using ResetMode.Logic;
 using Terraria;
 using Terraria.ModLoader;
@@ -69,10 +70,12 @@ namespace ResetMode {
 		////////////////
 
 		public override void PreUpdate() {
-			if( this.player.whoAmI != Main.myPlayer ) { return; }
+			if( Main.netMode != 2 ) {
+				if( this.player.whoAmI != Main.myPlayer ) { return; }
+			}
 
 			var mymod = (ResetModeMod)this.mod;
-
+			
 			if( this.IsSynced() ) {
 				if( Main.netMode == 0 ) {
 					this.Logic.PreUpdateSingle( mymod, this.player );

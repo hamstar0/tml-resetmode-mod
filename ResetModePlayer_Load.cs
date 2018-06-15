@@ -1,6 +1,5 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.Utilities.Network;
-using ResetMode.Data;
 using ResetMode.NetProtocols;
 using Terraria.ModLoader;
 
@@ -8,7 +7,6 @@ using Terraria.ModLoader;
 namespace ResetMode {
 	partial class ResetModePlayer : ModPlayer {
 		private void OnSingleConnect() {
-			//this.LoadGame();
 			this.FinishModSettingsSync();
 			this.FinishSessionSync();
 		}
@@ -20,7 +18,7 @@ namespace ResetMode {
 
 		private void OnServerConnect() {
 			this.HasModSettings = true;
-			//this.LoadGame();
+			this.HasSessionData = true;
 		}
 
 
@@ -51,19 +49,5 @@ namespace ResetMode {
 				this.Logic.OnEnterWorld( (ResetModeMod)this.mod, this.player );
 			}
 		}
-
-
-		////////////////
-
-		/*private void LoadGame() {
-			var mymod = (ResetModeMod)this.mod;
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-			
-			if( mymod.Session.Data.IsRunning ) {
-				if( myworld.Data.WorldStatus != ResetModeStatus.Normal ) {
-					this.Logic.ValidatePlayer( mymod, this.player );
-				}
-			}
-		}*/
 	}
 }

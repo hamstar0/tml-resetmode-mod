@@ -19,6 +19,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		private bool IsPromptingForReset = false;
+		private bool HasCheckedValidation = false;
 
 
 
@@ -67,11 +68,14 @@ namespace ResetMode.Logic {
 		}
 
 		private void CheckValidation( ResetModeMod mymod, Player player ) {
+			if( this.HasCheckedValidation ) { return; }
+
 			if( mymod.Session.Data.IsRunning ) {
 				var myworld = mymod.GetModWorld<ResetModeWorld>();
-
-				if( myworld.Data.WorldStatus != ResetModeStatus.Normal ) {
+				
+				if( myworld.Data.WorldStatus == ResetModeStatus.Active ) {
 					if( !myworld.Data.IsPlaying( mymod, player ) ) {
+						this.HasCheckedValidation = true;
 						this.ValidatePlayer( mymod, player );
 					}
 				}
