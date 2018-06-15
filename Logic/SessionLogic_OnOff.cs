@@ -27,7 +27,7 @@ namespace ResetMode.Logic {
 				PacketProtocol.QuickSendToClient<SessionProtocol>( -1, -1 );
 			}
 
-			PlayerLogic.ValidateAll( mymod );
+			//PlayerLogic.ValidateAll( mymod );
 
 			return true;
 		}

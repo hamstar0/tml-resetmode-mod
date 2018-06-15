@@ -37,14 +37,14 @@ namespace ResetMode.Data {
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - WorldLogic.Load uid: " + WorldHelpers.GetUniqueIdWithSeed() + ", this.WorldStatus: " + this.WorldStatus );
+				LogHelpers.Log( "ResetMode - ResetModeWorldData.Load uid: " + WorldHelpers.GetUniqueIdWithSeed() + ", this.WorldStatus: " + this.WorldStatus );
 			}
 		}
 
 
 		internal TagCompound Save( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - WorldLogic.Save uid: " + WorldHelpers.GetUniqueIdWithSeed() + ", this.WorldStatus: " + this.WorldStatus );
+				LogHelpers.Log( "ResetMode - ResetModeWorldData.Save uid: " + WorldHelpers.GetUniqueIdWithSeed() + ", this.WorldStatus: " + this.WorldStatus );
 			}
 			
 			var tags = new TagCompound {
@@ -67,8 +67,9 @@ namespace ResetMode.Data {
 		internal bool IsPlaying( ResetModeMod mymod, Player player ) {
 			bool has_uid;
 			string uid = PlayerIdentityHelpers.GetUniqueId( player, out has_uid );
-
-			if( !has_uid ) { throw new HamstarException( "ResetMode - WorldLogic.AddPlayer - Player has no uid." ); }
+			if( !has_uid ) {
+				throw new HamstarException( "ResetMode - ResetModeWorldData.IsPlaying - Player has no uid." );
+			}
 
 			return this.WorldPlayers.Contains( uid );
 		}
@@ -77,8 +78,9 @@ namespace ResetMode.Data {
 		internal void AddPlayer( ResetModeMod mymod, Player player ) {
 			bool has_uid;
 			string uid = PlayerIdentityHelpers.GetUniqueId( player, out has_uid );
-
-			if( !has_uid ) { throw new HamstarException( "ResetMode - WorldLogic.AddPlayer - Player has no uid." ); }
+			if( !has_uid ) {
+				throw new HamstarException( "ResetMode - ResetModeWorldData.AddPlayer - Player has no uid." );
+			}
 
 			this.WorldPlayers.Add( uid );
 		}

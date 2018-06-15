@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace ResetMode {
 	partial class ResetModePlayer : ModPlayer {
 		private void OnSingleConnect() {
-			this.LoadGame();
+			//this.LoadGame();
 			this.FinishModSettingsSync();
 			this.FinishSessionSync();
 		}
@@ -20,7 +20,7 @@ namespace ResetMode {
 
 		private void OnServerConnect() {
 			this.HasModSettings = true;
-			this.LoadGame();
+			//this.LoadGame();
 		}
 
 
@@ -55,7 +55,7 @@ namespace ResetMode {
 
 		////////////////
 
-		private void LoadGame() {
+		/*private void LoadGame() {
 			var mymod = (ResetModeMod)this.mod;
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 			
@@ -64,6 +64,6 @@ namespace ResetMode {
 					this.Logic.ValidatePlayer( mymod, this.player );
 				}
 			}
-		}
+		}*/
 	}
 }

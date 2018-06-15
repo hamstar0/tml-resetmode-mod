@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace ResetMode.Logic {
 	partial class PlayerLogic {
-		public static void ValidateAll( ResetModeMod mymod ) {
+		/*public static void ValidateAll( ResetModeMod mymod ) {
 			for( int i=0; i<Main.player.Length; i++ ) {
 				Player player = Main.player[i];
 				if( player == null || !player.active ) { continue; }
@@ -20,27 +20,18 @@ namespace ResetMode.Logic {
 				var myplayer = player.GetModPlayer<ResetModePlayer>();
 				myplayer.Logic.ValidatePlayer( mymod, player );
 			}
-		}
-
-
-
+		}*/
+		
+		
 		////////////////
 
 		public void ValidatePlayer( ResetModeMod mymod, Player player ) {
 			if( Main.netMode == 1 ) { throw new Exception("Clients cannot call this."); }
-
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-			bool has_uid;
-			string uid = PlayerIdentityHelpers.GetUniqueId( player, out has_uid );
 			
-			if( !has_uid ) { throw new HamstarException( "ValidatePlayer - Player has no uid." ); }
-			
-			if( !myworld.Data.IsPlaying(mymod, player) ) {
-				if( Main.netMode == 2 ) {
-					PacketProtocol.QuickRequestToClient<PlayerResetProtocol>( player.whoAmI, -1 );
-				} else if( Main.netMode == 0 ) {
-					this.PromptReset( mymod, player );
-				}
+			if( Main.netMode == 2 ) {
+				PacketProtocol.QuickRequestToClient<PlayerResetProtocol>( player.whoAmI, -1 );
+			} else if( Main.netMode == 0 ) {
+				this.PromptReset( mymod, player );
 			}
 		}
 

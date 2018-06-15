@@ -41,15 +41,40 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public void Update( ResetModeMod mymod, Player player ) {
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
+		public void PreUpdateSingle( ResetModeMod mymod, Player player ) {
+			this.CheckValidation( mymod, player );
+			this.UpdatePrompt( player );
+		}
 
+		public void PreUpdateClient( ResetModeMod mymod, Player player ) {
+			this.UpdatePrompt( player );
+		}
+
+		public void PreUpdateServer( ResetModeMod mymod, Player player ) {
+			this.CheckValidation( mymod, player );
+		}
+
+		////////////////
+
+		private void UpdatePrompt( Player player ) {
 			if( this.IsPromptingForReset ) {
 				player.noItems = true;
 				player.noBuilding = true;
 				player.stoned = true;
 				player.immune = true;
 				player.immuneTime = 2;
+			}
+		}
+
+		private void CheckValidation( ResetModeMod mymod, Player player ) {
+			if( mymod.Session.Data.IsRunning ) {
+				var myworld = mymod.GetModWorld<ResetModeWorld>();
+
+				if( myworld.Data.WorldStatus != ResetModeStatus.Normal ) {
+					if( !myworld.Data.IsPlaying( mymod, player ) ) {
+						this.ValidatePlayer( mymod, player );
+					}
+				}
 			}
 		}
 

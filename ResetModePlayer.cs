@@ -69,11 +69,18 @@ namespace ResetMode {
 		////////////////
 
 		public override void PreUpdate() {
-			var mymod = (ResetModeMod)this.mod;
-			bool is_me = this.player.whoAmI == Main.myPlayer;
+			if( this.player.whoAmI != Main.myPlayer ) { return; }
 
-			if( is_me && this.IsSynced() ) {
-				this.Logic.Update( mymod, this.player );
+			var mymod = (ResetModeMod)this.mod;
+
+			if( this.IsSynced() ) {
+				if( Main.netMode == 0 ) {
+					this.Logic.PreUpdateSingle( mymod, this.player );
+				} else if( Main.netMode == 1 ) {
+					this.Logic.PreUpdateClient( mymod, this.player );
+				} else {
+					this.Logic.PreUpdateServer( mymod, this.player );
+				}
 			}
 		}
 	}
