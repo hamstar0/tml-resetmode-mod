@@ -9,7 +9,7 @@ namespace ResetMode.Logic {
 			bool has_uid;
 			string uid = PlayerIdentityHelpers.GetUniqueId( player, out has_uid );
 
-			if( !has_uid ) { throw new HamstarException( "AddPlayer - Player has no uid." ); }
+			if( !has_uid ) { throw new HamstarException( "ResetMode - WorldLogic.AddPlayer - Player has no uid." ); }
 			
 			return this.WorldPlayers.Contains( uid );
 		}
@@ -19,7 +19,7 @@ namespace ResetMode.Logic {
 			bool has_uid;
 			string uid = PlayerIdentityHelpers.GetUniqueId( player, out has_uid );
 
-			if( !has_uid ) { throw new HamstarException( "AddPlayer - Player has no uid." ); }
+			if( !has_uid ) { throw new HamstarException( "ResetMode - WorldLogic.AddPlayer - Player has no uid." ); }
 
 			this.WorldPlayers.Add( uid );
 		}

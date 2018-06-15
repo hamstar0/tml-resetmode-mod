@@ -65,7 +65,7 @@ namespace ResetMode.Logic {
 					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>();
 				} else if( Main.netMode == 0 ) {
 					this.BeginSession( mymod, replayer );
-					this.ResetRewards( mymod, replayer );
+					this.RefundRewardsSpendings( mymod, replayer );
 				}
 
 				this.IsPromptingForReset = false;
@@ -87,7 +87,7 @@ namespace ResetMode.Logic {
 		}
 
 
-		public void ResetRewards( ResetModeMod mymod, Player player ) {
+		public void RefundRewardsSpendings( ResetModeMod mymod, Player player ) {
 			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
 			if( rewards_mod == null ) {
 				if( mymod.Config.DebugModeInfo ) {
@@ -105,20 +105,26 @@ namespace ResetMode.Logic {
 				return;
 			}
 
-			if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
-				float pp_spent = mymod.Session.Data.PlayerPPSpendings[ pid ];
+			if( mymod.Config.ResetRewardsSpendings ) {
+				if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
+					float pp_spent = mymod.Session.Data.PlayerPPSpendings[pid];
 
-				rewards_mod.Call( "AddPoints", player, pp_spent );
+					rewards_mod.Call( "AddPoints", player, pp_spent );
 
-				mymod.Session.Data.PlayerPPSpendings[ pid ] = 0;
-
-				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - '"+player.name+"' PP spendings of " + pp_spent + " returned" );
+					if( mymod.Config.DebugModeInfo ) {
+						LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - '" + player.name + "' PP spendings of " + pp_spent + " returned" );
+					}
+				} else {
+					if( mymod.Config.DebugModeInfo ) {
+						LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - '" + player.name + "' PP could not be set" );
+					}
 				}
-			} else {
-				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - '"+player.name+"' PP could not be set" );
-				}
+			}
+
+			mymod.Session.Data.PlayerPPSpendings[pid] = 0;
+
+			if( mymod.Config.ResetRewardsKills ) {
+				rewards_mod.Call( "ResetKills", player );
 			}
 		}
 	}

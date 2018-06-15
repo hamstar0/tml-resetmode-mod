@@ -20,6 +20,8 @@ namespace ResetMode.NetProtocols {
 			this.Status = (int)myworld.Logic.WorldStatus;
 		}
 
+		////////////////
+
 		protected override void ReceiveWithClient() {
 			var mymod = ResetModeMod.Instance;
 			var myworld = mymod.GetModWorld<ResetModeWorld>();

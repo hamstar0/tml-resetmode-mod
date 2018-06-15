@@ -1,8 +1,10 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
 using HamstarHelpers.MiscHelpers;
+using HamstarHelpers.Utilities.Network;
 using HamstarHelpers.WorldHelpers;
 using ResetMode.Data;
+using ResetMode.NetProtocols;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -90,17 +92,22 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public void AddRewards( Player player, float rewards ) {
-			if( Main.netMode == 1 ) { return; }
-
+		public void LogRewardsPPSpending( Player player, float pp ) {
 			bool success;
 			string pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
-			if( !success ) { return; }
+			if( !success ) {
+				LogHelpers.Log( "ResetMode.Logic.SessionLogic.LogRewardsPPSpending - Invalid player UID for " + player.name );
+				return;
+			}
 
 			if( this.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
-				this.Data.PlayerPPSpendings[pid] += rewards;
+				this.Data.PlayerPPSpendings[pid] += pp;
 			} else {
-				this.Data.PlayerPPSpendings[pid] = rewards;
+				this.Data.PlayerPPSpendings[pid] = pp;
+			}
+
+			if( Main.netMode == 1 ) {
+				PacketProtocol.QuickSendToServer<RewardsSpendingProtocol>();
 			}
 		}
 	}

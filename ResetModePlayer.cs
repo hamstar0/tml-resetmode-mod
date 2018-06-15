@@ -63,22 +63,22 @@ namespace ResetMode {
 		}
 		
 		public override void OnEnterWorld( Player player ) {
+			if( player.whoAmI != this.player.whoAmI ) { return; }
+
 			var mymod = (ResetModeMod)this.mod;
 
-			if( player.whoAmI == this.player.whoAmI ) {
-				if( Main.netMode == 0 ) {
-					if( !mymod.ConfigJson.LoadFile() ) {
-						mymod.ConfigJson.SaveFile();
-						ErrorLogger.Log( "Reset Mode config " + ResetModeConfigData.ConfigVersion.ToString() + " created (ModPlayer.OnEnterWorld())." );
-					}
+			if( Main.netMode == 0 ) {
+				if( !mymod.ConfigJson.LoadFile() ) {
+					mymod.ConfigJson.SaveFile();
+					ErrorLogger.Log( "Reset Mode config " + ResetModeConfigData.ConfigVersion.ToString() + " created (ModPlayer.OnEnterWorld())." );
 				}
+			}
 
-				if( Main.netMode == 1 ) {
-					this.OnClientConnect();
-				}
-				if( Main.netMode == 0 ) {
-					this.OnSingleConnect();
-				}
+			if( Main.netMode == 0 ) {
+				this.OnSingleConnect();
+			}
+			if( Main.netMode == 1 ) {
+				this.OnClientConnect();
 			}
 		}
 

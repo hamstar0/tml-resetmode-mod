@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ResetMode.Data {
 	public class ResetModeConfigData : ConfigurationDataBase {
-		public static Version ConfigVersion { get { return new Version( 1, 0, 8, 3 ); } }
+		public static Version ConfigVersion { get { return new Version( 1, 1, 0 ); } }
 		public static string ConfigFileName { get { return "Reset Mode Config.json"; } }
 
 
@@ -22,14 +22,19 @@ namespace ResetMode.Data {
 
 		public bool DeleteAllWorldsBetweenGames = false;
 
+		public bool ResetRewardsSpendings = true;
+		public bool ResetRewardsKills = false;
+
 		public KeyValuePair<string, string[]>[] OnWorldEngagedCalls = new KeyValuePair<string, string[]>[0];
 		
 		////
 
 		public string _OLD_SETTINGS_BELOW_ = "";
 
+		[Obsolete( "use DeleteAllWorldsBetweenGames", true )]
 		public bool ResetAllWorldsOnLoad = false;
 
+		[Obsolete( "use DeleteAllWorldsBetweenGames", true )]
 		public bool ResetAllWorldsBetweenGames = false;
 
 

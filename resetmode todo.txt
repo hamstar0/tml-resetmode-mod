@@ -8,7 +8,6 @@ Future
 v1.1.0
 -	Reset boss kills on reset
 -	Track PP spendings and refund on reset
-
 -	Fix world deletions; must occur on world exit (not deleting because save undeletes?)
 v1.0.8
 -	Store a shadow copy of PP from a world to transfer to the next

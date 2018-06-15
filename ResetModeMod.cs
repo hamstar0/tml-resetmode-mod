@@ -114,7 +114,7 @@ namespace ResetMode {
 
 		private void LoadRewards() {
 			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
-			if( rewards_mod == null || rewards_mod.Version < new Version( 1, 4, 12 ) ) {
+			if( rewards_mod == null || rewards_mod.Version < new Version( 1, 5, 0 ) ) {
 				if( this.Config.DebugModeInfo ) {
 					LogHelpers.Log( "Reset Mode - Mod.LoadRewards - No Rewards mod found." );
 				}
@@ -126,7 +126,7 @@ namespace ResetMode {
 
 				var mymod = ResetModeMod.Instance;
 
-				mymod.Session.AddRewards( plr, rewards );
+				mymod.Session.LogRewardsPPSpending( plr, rewards );
 
 				if( this.Config.DebugModeInfo ) {
 					LogHelpers.Log( "Reset Mode - Mod.LoadRewards - Refundable PP added: "+rewards );
