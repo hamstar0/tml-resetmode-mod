@@ -1,7 +1,7 @@
 ﻿using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.Helpers.PlayerHelpers;
+using HamstarHelpers.PlayerHelpers;
+using HamstarHelpers.Services.Messages;
 using HamstarHelpers.TmlHelpers;
-using HamstarHelpers.Utilities.Messages;
 using Microsoft.Xna.Framework;
 using ResetMode.Data;
 using Terraria;

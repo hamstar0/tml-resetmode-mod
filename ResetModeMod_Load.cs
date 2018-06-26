@@ -1,5 +1,5 @@
 using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.TmlHelpers;
+using HamstarHelpers.Services.Promises;
 using ResetMode.Data;
 using ResetMode.Logic;
 using System;
@@ -23,7 +23,7 @@ namespace ResetMode {
 
 
 		private void LoadStages() {
-			TmlLoadHelpers.AddPostModLoadPromise( () => {
+			Promises.AddPostModLoadPromise( () => {
 				this.Session.Load( this );
 
 				var hook = new CustomTimerAction( delegate () {
@@ -37,7 +37,7 @@ namespace ResetMode {
 				this.LoadRewards();
 			} );
 
-			TmlLoadHelpers.AddWorldLoadEachPromise( delegate {
+			Promises.AddWorldLoadEachPromise( delegate {
 				this.CurrentNetMode = Main.netMode;
 
 				if( this.Config.AutoStartSession ) {
@@ -46,8 +46,8 @@ namespace ResetMode {
 					}
 				}
 			} );
-			
-			TmlLoadHelpers.AddPostWorldUnloadEachPromise( () => {
+
+			Promises.AddPostWorldUnloadEachPromise( () => {
 				if( this.Config.DeleteAllWorldsBetweenGames ) {
 					if( this.Session.Data.AwaitingNextWorld ) {
 						if( this.CurrentNetMode == 0 || this.CurrentNetMode == 2 ) {

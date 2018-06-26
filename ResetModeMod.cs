@@ -1,5 +1,5 @@
+using HamstarHelpers.Components.Config;
 using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.Utilities.Config;
 using ResetMode.Data;
 using ResetMode.Logic;
 using System;

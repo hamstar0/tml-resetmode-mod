@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.Utilities.Network;
+﻿using HamstarHelpers.Components.Network;
+using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.WorldHelpers;
 using ResetMode.NetProtocols;
 using System;

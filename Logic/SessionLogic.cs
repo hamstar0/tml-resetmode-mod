@@ -1,8 +1,8 @@
-﻿using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.Helpers.PlayerHelpers;
+﻿using HamstarHelpers.Components.Network;
+using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.MiscHelpers;
+using HamstarHelpers.PlayerHelpers;
 using HamstarHelpers.TmlHelpers;
-using HamstarHelpers.Utilities.Network;
 using ResetMode.Data;
 using ResetMode.NetProtocols;
 using System;
@@ -74,7 +74,7 @@ namespace ResetMode.Logic {
 			var mymod = ResetModeMod.Instance;
 			if( mymod == null ) { return; }
 
-			if( TmlLoadHelpers.IsWorldLoaded() ) {
+			if( LoadHelpers.IsWorldLoaded() ) {
 				mymod.Session.UpdateSession();
 			}
 		}

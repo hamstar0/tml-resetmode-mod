@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.Utilities.Config;
+﻿using HamstarHelpers.Components.Config;
 using System;
 using System.Collections.Generic;
 
