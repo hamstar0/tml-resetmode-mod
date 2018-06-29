@@ -28,11 +28,18 @@ namespace ResetMode {
 				}
 			}
 		}
+		public static void ResetConfigFromDefaults() {
+			if( Main.netMode != 0 ) {
+				throw new Exception( "Cannot reset to default configs outside of single player." );
+			}
+			ResetModeMod.Instance.ConfigJson.SetData( new ResetModeConfigData() );
+			ResetModeMod.Instance.ConfigJson.SaveFile();
+		}
 
 
 
 		////////////////
-		
+
 		internal JsonConfig<ResetModeConfigData> ConfigJson;
 		public ResetModeConfigData Config { get { return ConfigJson.Data; } }
 		
