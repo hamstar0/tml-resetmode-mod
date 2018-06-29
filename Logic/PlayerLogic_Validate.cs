@@ -49,6 +49,7 @@ namespace ResetMode.Logic {
 				Player replayer = Main.player[ player_who ];
 
 				PlayerHelpers.FullVanillaReset( replayer );
+				//PlayerHelpers.ModdedExtensionsReset( replayer );
 
 				if( Main.netMode == 1 ) {
 					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>();
