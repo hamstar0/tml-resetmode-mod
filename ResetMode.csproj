@@ -39,6 +39,7 @@
     <Compile Include="Commands\ResetModeStopCommand.cs" />
     <Compile Include="Data\Config.cs" />
     <Compile Include="Data\Session.cs" />
+    <Compile Include="Helpers\PlayerHelpers\PlayerHelpers.cs" />
     <Compile Include="Items\_TimeCapsuleItem.cs" />
     <Compile Include="Logic\PlayerLogic.cs" />
     <Compile Include="Logic\PlayerLogic_Validate.cs" />

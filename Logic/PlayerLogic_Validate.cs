@@ -48,8 +48,8 @@ namespace ResetMode.Logic {
 			Action confirm_action = delegate () {
 				Player replayer = Main.player[ player_who ];
 
-				PlayerHelpers.FullVanillaReset( replayer );
-				PlayerHelpers.ModdedExtensionsReset( replayer );
+				HamstarHelpers.PlayerHelpers.PlayerHelpers.FullVanillaReset( replayer );
+				ResetMode.PlayerHelpers.PlayerHelpers.ModdedExtensionsReset( replayer );
 
 				if( Main.netMode == 1 ) {
 					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>();
