@@ -1,6 +1,7 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.PlayerHelpers;
 using HamstarHelpers.Services.Messages;
+using HamstarHelpers.Services.Timers;
 using HamstarHelpers.TmlHelpers;
 using Microsoft.Xna.Framework;
 using ResetMode.Data;
@@ -42,22 +43,32 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public void PreUpdateSingle( ResetModeMod mymod, Player player ) {
-			this.CheckValidation( mymod, player );
-			this.UpdatePrompt( player );
+		public void PreUpdateUnsyncedLocal( ResetModeMod mymod, Player player ) {
+			this.CheckFailsafeTimerUnsynced( mymod, player );
 		}
 
-		public void PreUpdateClient( ResetModeMod mymod, Player player ) {
-			this.UpdatePrompt( player );
+		public void PreUpdateSyncedSingle( ResetModeMod mymod ) {
+			this.CheckValidation( mymod, Main.LocalPlayer );
+			this.UpdatePrompt( mymod, Main.LocalPlayer );
+
+			this.CheckFailsafeTimerSynced( mymod );
 		}
 
-		public void PreUpdateServer( ResetModeMod mymod, Player player ) {
+		public void PreUpdateSyncedClient( ResetModeMod mymod, Player player ) {
+			this.UpdatePrompt( mymod, player );
+
+			this.CheckFailsafeTimerSynced( mymod );
+		}
+
+		public void PreUpdateSyncedServer( ResetModeMod mymod, Player player ) {
 			this.CheckValidation( mymod, player );
 		}
 
 		////////////////
 
-		private void UpdatePrompt( Player player ) {
+		private void UpdatePrompt( ResetModeMod mymod, Player player ) {
+			if( !mymod.Session.Data.IsRunning ) { return; }
+
 			if( this.IsPromptingForReset ) {
 				player.noItems = true;
 				player.noBuilding = true;
@@ -68,17 +79,36 @@ namespace ResetMode.Logic {
 		}
 
 		private void CheckValidation( ResetModeMod mymod, Player player ) {
+			if( !mymod.Session.Data.IsRunning ) { return; }
 			if( this.HasCheckedValidation ) { return; }
 
-			if( mymod.Session.Data.IsRunning ) {
-				var myworld = mymod.GetModWorld<ResetModeWorld>();
-				
-				if( myworld.Data.WorldStatus == ResetModeStatus.Active ) {
-					if( !myworld.Data.IsPlaying( mymod, player ) ) {
-						this.HasCheckedValidation = true;
-						this.ValidatePlayer( mymod, player );
-					}
-				}
+			var myworld = mymod.GetModWorld<ResetModeWorld>();
+			if( myworld.Data.WorldStatus != ResetModeStatus.Active ) { return; }
+
+			if( myworld.Data.IsPlaying( mymod, player ) ) { return; }
+
+			this.HasCheckedValidation = true;
+			this.ValidatePlayer( mymod, player );
+		}
+
+		////////////////
+		
+		private void CheckFailsafeTimerUnsynced( ResetModeMod mymod, Player player ) {
+			if( !mymod.Session.Data.IsRunning ) { return; }
+
+			if( Timers.GetTimerTickDuration( "ResetMode:ValidationTimeoutFailsafe" ) == 0 ) {
+				Timers.SetTimer( "ResetMode:ValidationTimeoutFailsafe", 10 * 60, () => {
+					this.Boot( mymod, player, "Could not be validated." );
+					return false;
+				} );
+			}
+		}
+
+		private void CheckFailsafeTimerSynced( ResetModeMod mymod ) {
+			if( !mymod.Session.Data.IsRunning ) { return; }
+
+			if( Timers.GetTimerTickDuration( "ResetMode:ValidationTimeoutFailsafe" ) > 0 ) {
+				Timers.UnsetTimer( "ResetMode:ValidationTimeoutFailsafe" );
 			}
 		}
 
@@ -109,7 +139,7 @@ namespace ResetMode.Logic {
 				LogHelpers.Log( "PlayerLogic.Boot player: " + player.whoAmI );
 			}
 
-			ErrorLogger.Log( player.name + " was booted because " + reason );
+			ErrorLogger.Log( player.name + " was booted. Reason: " + reason );
 			TmlHelpers.ExitToMenu( true );
 		}
 	}

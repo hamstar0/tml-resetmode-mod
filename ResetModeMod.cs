@@ -32,7 +32,11 @@ namespace ResetMode {
 			if( Main.netMode != 0 ) {
 				throw new Exception( "Cannot reset to default configs outside of single player." );
 			}
-			ResetModeMod.Instance.ConfigJson.SetData( new ResetModeConfigData() );
+
+			var new_config = new ResetModeConfigData();
+			//new_config.SetDefaults();
+
+			ResetModeMod.Instance.ConfigJson.SetData( new_config );
 			ResetModeMod.Instance.ConfigJson.SaveFile();
 		}
 

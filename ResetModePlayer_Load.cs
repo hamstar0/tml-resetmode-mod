@@ -27,27 +27,29 @@ namespace ResetMode {
 		public void FinishModSettingsSync() {
 			this.HasModSettings = true;
 
-			this.UpdateSync();
+			this.PostAnySync();
 		}
 		
 		public void FinishSessionSync() {
 			this.HasSessionData = true;
 
-			this.UpdateSync();
+			this.PostAnySync();
+		}
+
+		////////////////
+		
+		public void PostAnySync() {
+			if( this.IsSynced() && !this.HasEnteredWorld ) {
+				this.HasEnteredWorld = true;
+				
+				this.Logic.OnEnterWorld( (ResetModeMod)this.mod, this.player );
+			}
 		}
 
 		////////////////
 
 		public bool IsSynced() {
 			return this.HasModSettings && this.HasSessionData;
-		}
-
-		public void UpdateSync() {
-			if( this.IsSynced() && !this.HasEnteredWorld ) {
-				this.HasEnteredWorld = true;
-				
-				this.Logic.OnEnterWorld( (ResetModeMod)this.mod, this.player );
-			}
 		}
 	}
 }

@@ -75,14 +75,18 @@ namespace ResetMode {
 			}
 
 			var mymod = (ResetModeMod)this.mod;
-			
+
 			if( this.IsSynced() ) {
 				if( Main.netMode == 0 ) {
-					this.Logic.PreUpdateSingle( mymod, this.player );
+					this.Logic.PreUpdateSyncedSingle( mymod );
 				} else if( Main.netMode == 1 ) {
-					this.Logic.PreUpdateClient( mymod, this.player );
+					this.Logic.PreUpdateSyncedClient( mymod, this.player );
 				} else {
-					this.Logic.PreUpdateServer( mymod, this.player );
+					this.Logic.PreUpdateSyncedServer( mymod, this.player );
+				}
+			} else {
+				if( Main.netMode != 2 ) {
+					this.Logic.PreUpdateUnsyncedLocal( mymod, this.player );
 				}
 			}
 		}
