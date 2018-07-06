@@ -33,14 +33,14 @@ namespace ResetMode.Logic {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			switch( myworld.Data.WorldStatus ) {
-			case ResetModeStatus.Normal:
-				this.AddWorldToSession( mymod );
+			case ResetModeWorldStatus.Normal:
+				this.AddWorldToSession( mymod );	// Changes world status
 				break;
 
-			case ResetModeStatus.Active:
+			case ResetModeWorldStatus.Active:
 				break;
 
-			case ResetModeStatus.Expired:
+			case ResetModeWorldStatus.Expired:
 				if( !myworld.Data.IsExiting ) {
 					this.GoodExit( mymod );
 				}
@@ -56,9 +56,9 @@ namespace ResetMode.Logic {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - SessionLogic.EngageForCurrentSession " + world_id );
+				LogHelpers.Log( "ResetMode - SessionLogic.AddWorldToSession " + world_id );
 			}
-
+			
 			if( !this.Data.AwaitingNextWorld ) {
 				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetInitially, false );
 			} else {
@@ -69,7 +69,7 @@ namespace ResetMode.Logic {
 			this.Data.AwaitingNextWorld = false;
 			this.Save( mymod );
 
-			myworld.Data.WorldStatus = ResetModeStatus.Active;
+			myworld.Data.WorldStatus = ResetModeWorldStatus.Active;
 
 			this.RunModCalls( mymod );
 		}
@@ -79,13 +79,13 @@ namespace ResetMode.Logic {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - SessionLogic.ExpireForCurrentSession" );
+				LogHelpers.Log( "ResetMode - SessionLogic.ExpireWorldInSession" );
 			}
 
 			this.Data.AwaitingNextWorld = true;
 			this.Save( mymod );
 
-			myworld.Data.WorldStatus = ResetModeStatus.Expired;
+			myworld.Data.WorldStatus = ResetModeWorldStatus.Expired;
 
 			this.GoodExit( mymod );
 		}
@@ -95,7 +95,7 @@ namespace ResetMode.Logic {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			myworld.Data.WorldPlayers.Clear();
-			myworld.Data.WorldStatus = ResetModeStatus.Normal;
+			myworld.Data.WorldStatus = ResetModeWorldStatus.Normal;
 
 			TimeLimitAPI.TimerStop( "reset" );
 		}

@@ -60,7 +60,7 @@ namespace ResetMode.Logic {
 		
 		////////////////
 
-		internal void SetData( ResetModeMod mymod, ResetModeSessionData data, ResetModeStatus world_status ) {
+		internal void SetData( ResetModeMod mymod, ResetModeSessionData data, ResetModeWorldStatus world_status ) {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			this.Data = data;
@@ -74,7 +74,7 @@ namespace ResetMode.Logic {
 			var mymod = ResetModeMod.Instance;
 			if( mymod == null ) { return; }
 
-			if( LoadHelpers.IsWorldLoaded() ) {
+			if( LoadHelpers.IsWorldBeingPlayed() ) {
 				mymod.Session.UpdateSession();
 			}
 		}

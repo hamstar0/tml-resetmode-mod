@@ -1,4 +1,5 @@
-﻿using ResetMode.Data;
+﻿using HamstarHelpers.DebugHelpers;
+using ResetMode.Data;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -18,7 +19,7 @@ namespace ResetMode {
 
 		public override void Load( TagCompound tags ) {
 			var mymod = (ResetModeMod)this.mod;
-
+			
 			this.Data.Load( mymod, tags );
 		}
 

@@ -63,6 +63,7 @@ namespace ResetMode {
 			
 			this.ConfigJson = new JsonConfig<ResetModeConfigData>( ResetModeConfigData.ConfigFileName,
 				ConfigurationDataBase.RelativePath, new ResetModeConfigData() );
+
 			this.Session = new SessionLogic();
 		}
 

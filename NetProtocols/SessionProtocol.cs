@@ -25,7 +25,7 @@ namespace ResetMode.NetProtocols {
 			var mymod = ResetModeMod.Instance;
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
-			mymod.Session.SetData( mymod, this.Data, (ResetModeStatus)this.Status );
+			mymod.Session.SetData( mymod, this.Data, (ResetModeWorldStatus)this.Status );
 
 			Player player = Main.LocalPlayer;
 			var myplayer = player.GetModPlayer<ResetModePlayer>();

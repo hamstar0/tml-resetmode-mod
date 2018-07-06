@@ -8,7 +8,7 @@ using Terraria.ModLoader.IO;
 
 
 namespace ResetMode.Data {
-	public enum ResetModeStatus {
+	public enum ResetModeWorldStatus {
 		Normal,
 		Active,
 		Expired
@@ -17,7 +17,7 @@ namespace ResetMode.Data {
 
 
 	public class ResetModeWorldData {
-		public ResetModeStatus WorldStatus = ResetModeStatus.Normal;
+		public ResetModeWorldStatus WorldStatus = ResetModeWorldStatus.Normal;
 		public ISet<string> WorldPlayers = new HashSet<string>();
 		public bool IsExiting = false;
 
@@ -26,7 +26,7 @@ namespace ResetMode.Data {
 		
 		internal void Load( ResetModeMod mymod, TagCompound tags ) {
 			if( tags.ContainsKey( "status" ) ) {
-				this.WorldStatus = (ResetModeStatus)tags.GetInt( "status" );
+				this.WorldStatus = (ResetModeWorldStatus)tags.GetInt( "status" );
 			}
 
 			if( tags.ContainsKey( "player_count" ) ) {

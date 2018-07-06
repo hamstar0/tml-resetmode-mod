@@ -1,7 +1,6 @@
 using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.Services.Promises;
 using ResetMode.Data;
-using ResetMode.Logic;
 using System;
 using Terraria;
 using Terraria.ModLoader;

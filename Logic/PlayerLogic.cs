@@ -30,11 +30,11 @@ namespace ResetMode.Logic {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			switch( myworld.Data.WorldStatus ) {
-			case ResetModeStatus.Normal:
+			case ResetModeWorldStatus.Normal:
 				this.Welcome( mymod, player );
 				break;
 
-			case ResetModeStatus.Active:
+			case ResetModeWorldStatus.Active:
 				this.Instruct( player );
 				break;
 			}
@@ -83,7 +83,7 @@ namespace ResetMode.Logic {
 			if( this.HasCheckedValidation ) { return; }
 
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
-			if( myworld.Data.WorldStatus != ResetModeStatus.Active ) { return; }
+			if( myworld.Data.WorldStatus != ResetModeWorldStatus.Active ) { return; }
 
 			if( myworld.Data.IsPlaying( mymod, player ) ) { return; }
 
