@@ -49,24 +49,26 @@ namespace ResetMode.Logic {
 
 		public void PreUpdateSyncedSingle( ResetModeMod mymod ) {
 			this.CheckValidation( mymod, Main.LocalPlayer );
-			this.UpdatePrompt( mymod, Main.LocalPlayer );
+			this.UpdatePromptStasis( mymod, Main.LocalPlayer );
 
 			this.CheckFailsafeTimerSynced( mymod );
 		}
 
 		public void PreUpdateSyncedClient( ResetModeMod mymod, Player player ) {
-			this.UpdatePrompt( mymod, player );
+			this.UpdatePromptStasis( mymod, player );
 
 			this.CheckFailsafeTimerSynced( mymod );
 		}
 
 		public void PreUpdateSyncedServer( ResetModeMod mymod, Player player ) {
-			this.CheckValidation( mymod, player );
+			if( LoadHelpers.IsWorldSafelyBeingPlayed() ) {
+				this.CheckValidation( mymod, player );
+			}
 		}
 
 		////////////////
 
-		private void UpdatePrompt( ResetModeMod mymod, Player player ) {
+		private void UpdatePromptStasis( ResetModeMod mymod, Player player ) {
 			if( !mymod.Session.Data.IsRunning ) { return; }
 
 			if( this.IsPromptingForReset ) {

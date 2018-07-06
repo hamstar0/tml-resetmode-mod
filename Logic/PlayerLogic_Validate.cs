@@ -51,11 +51,12 @@ namespace ResetMode.Logic {
 				PlayerHelpers.FullVanillaReset( replayer );
 				PlayerModHelpers.ModdedExtensionsReset( replayer );
 
-				if( Main.netMode == 1 ) {
-					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>();
-				} else if( Main.netMode == 0 ) {
+				if( Main.netMode == 0 ) {
 					this.BeginSession( mymod, replayer );
 					this.RefundRewardsSpendings( mymod, replayer );
+				}
+				if( Main.netMode == 1 ) {
+					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>();
 				}
 
 				this.IsPromptingForReset = false;
@@ -81,7 +82,7 @@ namespace ResetMode.Logic {
 			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
 			if( rewards_mod == null ) {
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - No Rewards mod." );
+					LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - No Rewards mod." );
 				}
 				return;
 			}
@@ -91,7 +92,7 @@ namespace ResetMode.Logic {
 			bool success;
 			var pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
 			if( !success ) {
-				LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - Could not reset player Rewards; no UID for player "+player.name );
+				LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - Could not reset player Rewards; no UID for player " + player.name );
 				return;
 			}
 
@@ -102,11 +103,11 @@ namespace ResetMode.Logic {
 					rewards_mod.Call( "AddPoints", player, pp_spent );
 
 					if( mymod.Config.DebugModeInfo ) {
-						LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - '" + player.name + "' PP spendings of " + pp_spent + " returned" );
+						LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - '" + player.name + "' PP spendings of " + pp_spent + " returned" );
 					}
 				} else {
 					if( mymod.Config.DebugModeInfo ) {
-						LogHelpers.Log( "ResetMode - PlayerLogic.ResetRewards - '" + player.name + "' PP could not be set" );
+						LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - '" + player.name + "' PP could not be set" );
 					}
 				}
 			}
