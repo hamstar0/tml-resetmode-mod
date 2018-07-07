@@ -57,7 +57,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		private void UpdatePromptStasis( ResetModeMod mymod, Player player ) {
-			if( !mymod.Session.SessionData.IsRunning ) { return; }
+			if( !mymod.Session.Data.IsRunning ) { return; }
 
 			if( this.IsPromptingForReset ) {
 				player.noItems = true;
@@ -69,7 +69,7 @@ namespace ResetMode.Logic {
 		}
 
 		private void CheckValidation( ResetModeMod mymod, Player player ) {
-			if( !mymod.Session.SessionData.IsRunning ) { return; }
+			if( !mymod.Session.Data.IsRunning ) { return; }
 			if( this.HasCheckedValidation ) { return; }
 			
 			if( mymod.Session.IsSessionNeedingWorld() ) { return; }

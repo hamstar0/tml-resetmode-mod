@@ -13,7 +13,7 @@ namespace ResetMode.NetProtocols {
 		public override void SetServerDefaults() {
 			var mymod = ResetModeMod.Instance;
 
-			this.Data = mymod.Session.SessionData;
+			this.Data = mymod.Session.Data;
 		}
 
 		////////////////

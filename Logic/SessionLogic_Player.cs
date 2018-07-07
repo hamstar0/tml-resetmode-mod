@@ -13,7 +13,7 @@ namespace ResetMode.Logic {
 				throw new HamstarException( "ResetMode.SessionLogic.IsPlaying - Player has no uid." );
 			}
 
-			return this.SessionData.PlayersValidated.Contains( uid );
+			return this.Data.PlayersValidated.Contains( uid );
 		}
 
 
@@ -24,7 +24,7 @@ namespace ResetMode.Logic {
 				throw new HamstarException( "ResetMode.SessionLogic.AddPlayer - Player has no uid." );
 			}
 
-			this.SessionData.PlayersValidated.Add( uid );
+			this.Data.PlayersValidated.Add( uid );
 		}
 	}
 }

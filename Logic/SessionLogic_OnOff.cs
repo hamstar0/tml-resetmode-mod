@@ -12,7 +12,7 @@ namespace ResetMode.Logic {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			// Already running?
-			if( this.SessionData.IsRunning ) {
+			if( this.Data.IsRunning ) {
 				return false;
 			}
 
@@ -20,7 +20,7 @@ namespace ResetMode.Logic {
 				LogHelpers.Log( "ResetMode.SessionLogic.StartSession" );
 			}
 			
-			this.SessionData.IsRunning = true;
+			this.Data.IsRunning = true;
 			this.Save( mymod );
 
 			if( Main.netMode == 2 ) {
@@ -35,7 +35,7 @@ namespace ResetMode.Logic {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			// Already ended?
-			if( !this.SessionData.IsRunning ) {
+			if( !this.Data.IsRunning ) {
 				return false;
 			}
 
@@ -44,7 +44,7 @@ namespace ResetMode.Logic {
 				LogHelpers.Log( "ResetMode.SessionLogic.EndSession" );
 			}
 
-			this.SessionData.ResetAll();
+			this.Data.ResetAll();
 			this.Save( mymod );
 
 			if( Main.netMode == 2 ) {

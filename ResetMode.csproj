@@ -52,6 +52,7 @@
     <Compile Include="NetProtocols\PlayerResetProtocol.cs" />
     <Compile Include="NetProtocols\ModSettingsProtocol.cs" />
     <Compile Include="Commands\ResetModeStartCommand.cs" />
+    <Compile Include="ResetModeMod_Meta.cs" />
     <Compile Include="ResetModeMod.cs" />
     <Compile Include="ResetModePlayer_Load.cs" />
     <Compile Include="ResetModePlayer.cs" />

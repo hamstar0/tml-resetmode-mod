@@ -81,8 +81,8 @@ namespace ResetMode.Logic {
 			}
 
 			if( mymod.Config.ResetRewardsSpendings ) {
-				if( mymod.Session.SessionData.PlayerPPSpendings.ContainsKey( pid ) ) {
-					float pp_spent = mymod.Session.SessionData.PlayerPPSpendings[pid];
+				if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
+					float pp_spent = mymod.Session.Data.PlayerPPSpendings[pid];
 
 					rewards_mod.Call( "AddPoints", player, pp_spent );
 
@@ -96,7 +96,7 @@ namespace ResetMode.Logic {
 				}
 			}
 
-			mymod.Session.SessionData.PlayerPPSpendings[pid] = 0;
+			mymod.Session.Data.PlayerPPSpendings[pid] = 0;
 
 			if( mymod.Config.ResetRewardsKills ) {
 				rewards_mod.Call( "ResetKills", player );

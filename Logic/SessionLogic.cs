@@ -18,7 +18,7 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public ResetModeSessionData SessionData { get; private set; }
+		public ResetModeSessionData Data { get; private set; }
 
 		public bool IsExiting = false;
 
@@ -27,7 +27,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		internal SessionLogic() {
-			this.SessionData = new ResetModeSessionData();
+			this.Data = new ResetModeSessionData();
 			
 			Main.OnTick += SessionLogic._Update;
 		}
@@ -44,7 +44,7 @@ namespace ResetMode.Logic {
 
 			var data = DataFileHelpers.LoadJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, out success );
 			if( success ) {
-				this.SessionData = data;
+				this.Data = data;
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
@@ -53,13 +53,13 @@ namespace ResetMode.Logic {
 		}
 
 		public void Save( ResetModeMod mymod ) {
-			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, this.SessionData );
+			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, this.Data );
 		}
 		
 		////////////////
 
 		internal void SetData( ResetModeMod mymod, ResetModeSessionData data ) {
-			this.SessionData = data;
+			this.Data = data;
 		}
 
 
@@ -77,7 +77,7 @@ namespace ResetMode.Logic {
 		internal void UpdateSession() {
 			var mymod = ResetModeMod.Instance;
 
-			if( this.SessionData.IsRunning ) {
+			if( this.Data.IsRunning ) {
 				if( Main.netMode == 0 ) {
 					this.UpdateSessionWorldSingle( mymod );
 				} else if( Main.netMode == 1 ) {
@@ -99,10 +99,10 @@ namespace ResetMode.Logic {
 				return;
 			}
 
-			if( this.SessionData.PlayerPPSpendings.ContainsKey( pid ) ) {
-				this.SessionData.PlayerPPSpendings[pid] += pp;
+			if( this.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
+				this.Data.PlayerPPSpendings[pid] += pp;
 			} else {
-				this.SessionData.PlayerPPSpendings[pid] = pp;
+				this.Data.PlayerPPSpendings[pid] = pp;
 			}
 		}
 
