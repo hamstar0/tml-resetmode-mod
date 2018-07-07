@@ -37,20 +37,15 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void PreUpdateUnsyncedLocal( ResetModeMod mymod, Player player ) {
-			this.CheckFailsafeTimerUnsynced( mymod, player );
 		}
 
 		public void PreUpdateSyncedSingle( ResetModeMod mymod ) {
 			this.CheckValidation( mymod, Main.LocalPlayer );
 			this.UpdatePromptStasis( mymod, Main.LocalPlayer );
-
-			this.CheckFailsafeTimerSynced( mymod );
 		}
 
 		public void PreUpdateSyncedClient( ResetModeMod mymod, Player player ) {
 			this.UpdatePromptStasis( mymod, player );
-
-			this.CheckFailsafeTimerSynced( mymod );
 		}
 
 		public void PreUpdateSyncedServer( ResetModeMod mymod, Player player ) {
@@ -86,28 +81,6 @@ namespace ResetMode.Logic {
 
 		////////////////
 		
-		private void CheckFailsafeTimerUnsynced( ResetModeMod mymod, Player player ) {
-			if( !mymod.Session.SessionData.IsRunning ) { return; }
-
-			if( Timers.GetTimerTickDuration( "ResetMode:ValidationTimeoutFailsafe" ) == 0 ) {
-				Timers.SetTimer( "ResetMode:ValidationTimeoutFailsafe", 10 * 60, () => {
-					this.Boot( mymod, player, "Could not be validated." );
-					return false;
-				} );
-			}
-		}
-
-		private void CheckFailsafeTimerSynced( ResetModeMod mymod ) {
-			if( !mymod.Session.SessionData.IsRunning ) { return; }
-
-			if( Timers.GetTimerTickDuration( "ResetMode:ValidationTimeoutFailsafe" ) > 0 ) {
-				Timers.UnsetTimer( "ResetMode:ValidationTimeoutFailsafe" );
-			}
-		}
-
-
-		////////////////
-
 		public void Welcome( ResetModeMod mymod, Player player ) {
 			if( Main.netMode == 0 ) {
 				InboxMessages.SetMessage( "reset_mode_welcome", "Type /resetmodestart to start Reset Mode. Type /help for a list of other available commands.", true );
