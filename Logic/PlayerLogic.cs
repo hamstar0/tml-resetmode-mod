@@ -27,9 +27,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void OnEnterWorld( ResetModeMod mymod, Player player ) {
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-
-			switch( myworld.Data.WorldStatus ) {
+			switch( mymod.Session.WorldData.WorldStatus ) {
 			case ResetModeWorldStatus.Normal:
 				this.Welcome( mymod, player );
 				break;
@@ -69,7 +67,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		private void UpdatePromptStasis( ResetModeMod mymod, Player player ) {
-			if( !mymod.Session.Data.IsRunning ) { return; }
+			if( !mymod.Session.SessionData.IsRunning ) { return; }
 
 			if( this.IsPromptingForReset ) {
 				player.noItems = true;
@@ -81,13 +79,11 @@ namespace ResetMode.Logic {
 		}
 
 		private void CheckValidation( ResetModeMod mymod, Player player ) {
-			if( !mymod.Session.Data.IsRunning ) { return; }
+			if( !mymod.Session.SessionData.IsRunning ) { return; }
 			if( this.HasCheckedValidation ) { return; }
-
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-			if( myworld.Data.WorldStatus != ResetModeWorldStatus.Active ) { return; }
-
-			if( myworld.Data.IsPlaying( mymod, player ) ) { return; }
+			
+			if( mymod.Session.WorldData.WorldStatus != ResetModeWorldStatus.Active ) { return; }
+			if( mymod.Session.WorldData.IsPlaying( mymod, player ) ) { return; }
 
 			this.HasCheckedValidation = true;
 			this.ValidatePlayer( mymod, player );
@@ -96,7 +92,7 @@ namespace ResetMode.Logic {
 		////////////////
 		
 		private void CheckFailsafeTimerUnsynced( ResetModeMod mymod, Player player ) {
-			if( !mymod.Session.Data.IsRunning ) { return; }
+			if( !mymod.Session.SessionData.IsRunning ) { return; }
 
 			if( Timers.GetTimerTickDuration( "ResetMode:ValidationTimeoutFailsafe" ) == 0 ) {
 				Timers.SetTimer( "ResetMode:ValidationTimeoutFailsafe", 10 * 60, () => {
@@ -107,7 +103,7 @@ namespace ResetMode.Logic {
 		}
 
 		private void CheckFailsafeTimerSynced( ResetModeMod mymod ) {
-			if( !mymod.Session.Data.IsRunning ) { return; }
+			if( !mymod.Session.SessionData.IsRunning ) { return; }
 
 			if( Timers.GetTimerTickDuration( "ResetMode:ValidationTimeoutFailsafe" ) > 0 ) {
 				Timers.UnsetTimer( "ResetMode:ValidationTimeoutFailsafe" );

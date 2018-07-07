@@ -18,16 +18,16 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public ResetModeSessionData Data { get; private set; }
-
-		internal IDictionary<string, float> Rewards = new Dictionary<string, float>();
+		public ResetModeSessionData SessionData { get; private set; }
+		public ResetModeWorldData WorldData { get; private set; }
 
 
 
 		////////////////
 
 		internal SessionLogic() {
-			this.Data = new ResetModeSessionData();
+			this.SessionData = new ResetModeSessionData();
+			this.WorldData = new ResetModeWorldData( this.SessionData );
 
 			Main.OnTick += SessionLogic._Update;
 		}
@@ -44,7 +44,7 @@ namespace ResetMode.Logic {
 
 			var data = DataFileHelpers.LoadJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, out success );
 			if( success ) {
-				this.Data = data;
+				this.SessionData = data;
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
@@ -53,16 +53,13 @@ namespace ResetMode.Logic {
 		}
 
 		public void Save( ResetModeMod mymod ) {
-			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, this.Data );
+			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, this.SessionData );
 		}
 		
 		////////////////
 
-		internal void SetData( ResetModeMod mymod, ResetModeSessionData data, ResetModeWorldStatus world_status ) {
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-
-			this.Data = data;
-			myworld.Data.WorldStatus = world_status;
+		internal void SetData( ResetModeMod mymod, ResetModeSessionData data ) {
+			this.SessionData = data;
 		}
 
 
@@ -80,7 +77,7 @@ namespace ResetMode.Logic {
 		internal void UpdateSession() {
 			var mymod = ResetModeMod.Instance;
 
-			if( this.Data.IsRunning ) {
+			if( this.SessionData.IsRunning ) {
 				if( Main.netMode == 0 ) {
 					this.UpdateSessionWorldSingle( mymod );
 				} else if( Main.netMode == 1 ) {
@@ -102,10 +99,10 @@ namespace ResetMode.Logic {
 				return;
 			}
 
-			if( this.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
-				this.Data.PlayerPPSpendings[pid] += pp;
+			if( this.SessionData.PlayerPPSpendings.ContainsKey( pid ) ) {
+				this.SessionData.PlayerPPSpendings[pid] += pp;
 			} else {
-				this.Data.PlayerPPSpendings[pid] = pp;
+				this.SessionData.PlayerPPSpendings[pid] = pp;
 			}
 		}
 

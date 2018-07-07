@@ -1,10 +1,8 @@
 ﻿using HamstarHelpers.Components.Errors;
 using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.PlayerHelpers;
-using HamstarHelpers.WorldHelpers;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.ModLoader.IO;
 
 
 namespace ResetMode.Data {
@@ -17,48 +15,33 @@ namespace ResetMode.Data {
 
 
 	public class ResetModeWorldData {
-		public ResetModeWorldStatus WorldStatus = ResetModeWorldStatus.Normal;
-		public ISet<string> WorldPlayers = new HashSet<string>();
+		private ResetModeSessionData Session;
+
+		public ResetModeWorldStatus WorldStatus {
+			get {
+				if( !this.Session.AllPlayedWorlds.Contains(this.Session.CurrentWorld) ) {
+					return ResetModeWorldStatus.Normal;
+				}
+				if( this.Session.CurrentWorld != "" ) {
+					return ResetModeWorldStatus.Active;
+				}
+				return ResetModeWorldStatus.Expired;
+			}
+		}
+
+		public ISet<string> WorldPlayers {
+			get {
+				return this.Session.PlayersValidated;
+			}
+		}
+
 		public bool IsExiting = false;
 
 
 		////////////////
-		
-		internal void Load( ResetModeMod mymod, TagCompound tags ) {
-			if( tags.ContainsKey( "status" ) ) {
-				this.WorldStatus = (ResetModeWorldStatus)tags.GetInt( "status" );
-			}
 
-			if( tags.ContainsKey( "player_count" ) ) {
-				int count = tags.GetInt( "player_count" );
-				for( int i=0; i<count; i++ ) {
-					this.WorldPlayers.Add( tags.GetString( "player_" + i ) );
-				}
-			}
-
-			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - ResetModeWorldData.Load uid: " + WorldHelpers.GetUniqueIdWithSeed() + ", this.WorldStatus: " + this.WorldStatus );
-			}
-		}
-
-
-		internal TagCompound Save( ResetModeMod mymod ) {
-			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - ResetModeWorldData.Save uid: " + WorldHelpers.GetUniqueIdWithSeed() + ", this.WorldStatus: " + this.WorldStatus );
-			}
-			
-			var tags = new TagCompound {
-				{ "status", (int)this.WorldStatus },
-				{ "player_count", this.WorldPlayers.Count }
-			};
-
-			int i = 0;
-			foreach( string uid in this.WorldPlayers ) {
-				tags.Set( "player_" + i, uid );
-				i++;
-			}
-
-			return tags;
+		internal ResetModeWorldData( ResetModeSessionData session ) {
+			this.Session = session;
 		}
 
 

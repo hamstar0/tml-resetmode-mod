@@ -16,7 +16,7 @@ namespace ResetMode {
 		public static ResetModeSessionData GetSessionData() {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
-			return ResetModeMod.Instance.Session.Data;
+			return ResetModeMod.Instance.Session.SessionData;
 		}
 
 		public static void SaveSessionDataChanges() {

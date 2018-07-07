@@ -10,19 +10,6 @@ using Terraria.ModLoader;
 
 namespace ResetMode.Logic {
 	partial class PlayerLogic {
-		/*public static void ValidateAll( ResetModeMod mymod ) {
-			for( int i=0; i<Main.player.Length; i++ ) {
-				Player player = Main.player[i];
-				if( player == null || !player.active ) { continue; }
-
-				var myplayer = player.GetModPlayer<ResetModePlayer>();
-				myplayer.Logic.ValidatePlayer( mymod, player );
-			}
-		}*/
-		
-		
-		////////////////
-
 		public void ValidatePlayer( ResetModeMod mymod, Player player ) {
 			if( Main.netMode == 1 ) { throw new Exception("Clients cannot call this."); }
 			
@@ -73,8 +60,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void BeginSession( ResetModeMod mymod, Player player ) {
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-			myworld.Data.AddPlayer( mymod, player );
+			mymod.Session.WorldData.AddPlayer( mymod, player );
 		}
 
 
@@ -86,9 +72,7 @@ namespace ResetMode.Logic {
 				}
 				return;
 			}
-
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-
+			
 			bool success;
 			var pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
 			if( !success ) {
@@ -97,8 +81,8 @@ namespace ResetMode.Logic {
 			}
 
 			if( mymod.Config.ResetRewardsSpendings ) {
-				if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
-					float pp_spent = mymod.Session.Data.PlayerPPSpendings[pid];
+				if( mymod.Session.SessionData.PlayerPPSpendings.ContainsKey( pid ) ) {
+					float pp_spent = mymod.Session.SessionData.PlayerPPSpendings[pid];
 
 					rewards_mod.Call( "AddPoints", player, pp_spent );
 
@@ -112,7 +96,7 @@ namespace ResetMode.Logic {
 				}
 			}
 
-			mymod.Session.Data.PlayerPPSpendings[pid] = 0;
+			mymod.Session.SessionData.PlayerPPSpendings[pid] = 0;
 
 			if( mymod.Config.ResetRewardsKills ) {
 				rewards_mod.Call( "ResetKills", player );

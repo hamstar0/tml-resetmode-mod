@@ -39,7 +39,6 @@
     <Compile Include="Commands\ResetModeStopCommand.cs" />
     <Compile Include="Data\Config.cs" />
     <Compile Include="Data\Session.cs" />
-    <Compile Include="Items\_TimeCapsuleItem.cs" />
     <Compile Include="Logic\PlayerLogic.cs" />
     <Compile Include="Logic\PlayerLogic_Validate.cs" />
     <Compile Include="Logic\SessionLogic_Exit.cs" />
@@ -56,7 +55,6 @@
     <Compile Include="ResetModeMod.cs" />
     <Compile Include="ResetModePlayer_Load.cs" />
     <Compile Include="ResetModePlayer.cs" />
-    <Compile Include="ResetModeWorld.cs" />
     <Compile Include="UIPromptTheme.cs" />
   </ItemGroup>
   <ItemGroup>

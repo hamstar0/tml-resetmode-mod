@@ -15,8 +15,8 @@ namespace ResetMode.Data {
 
 		public bool DebugModeInfo = false;
 
-		public int SecondsUntilResetInitially = 60 * 45;
-		public int SecondsUntilResetSubsequently = 60 * 30;
+		public int SecondsUntilResetInitially = 60 * 45;	// 45 minutes
+		public int SecondsUntilResetSubsequently = 60 * 30;	// 30 minutes
 
 		public bool AutoStartSession = false;
 
@@ -41,8 +41,8 @@ namespace ResetMode.Data {
 
 		////////////////
 
-		public static readonly int _1_0_0_SecondsUntilResetInitially = 60 * 60 * 45;
-		public static readonly int _1_0_0_SecondsUntilResetSubsequently = 60 * 60 * 30;
+		public static readonly int _1_0_0_SecondsUntilResetInitially = 60 * 60 * 45;	// 45 hours
+		public static readonly int _1_0_0_SecondsUntilResetSubsequently = 60 * 60 * 30;	// 30 hours
 
 		////////////////
 

@@ -28,7 +28,7 @@ namespace ResetMode {
 				var hook = new CustomTimerAction( delegate () {
 					if( Main.netMode == 1 ) { return; }
 					
-					this.Session.ExpireWorldInSession( ResetModeMod.Instance );
+					this.Session.ExpireCurrentWorldInSession( ResetModeMod.Instance );
 				} );
 
 				TimeLimitAPI.AddCustomAction( "reset", hook );
@@ -48,7 +48,7 @@ namespace ResetMode {
 
 			Promises.AddPostWorldUnloadEachPromise( () => {
 				if( this.Config.DeleteAllWorldsBetweenGames ) {
-					if( this.Session.Data.AwaitingNextWorld ) {
+					if( this.Session.SessionData.AwaitingNextWorld ) {
 						if( this.CurrentNetMode == 0 || this.CurrentNetMode == 2 ) {
 							this.Session.ClearAllWorlds();
 						}

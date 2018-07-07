@@ -12,7 +12,7 @@ namespace ResetMode.Logic {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			// Already running?
-			if( this.Data.IsRunning ) {
+			if( this.SessionData.IsRunning ) {
 				return false;
 			}
 
@@ -20,7 +20,7 @@ namespace ResetMode.Logic {
 				LogHelpers.Log( "ResetMode - SessionLogic.StartSession" );
 			}
 			
-			this.Data.IsRunning = true;
+			this.SessionData.IsRunning = true;
 			this.Save( mymod );
 
 			if( Main.netMode == 2 ) {
@@ -36,10 +36,8 @@ namespace ResetMode.Logic {
 		public bool EndSession( ResetModeMod mymod ) {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-
 			// Already ended?
-			if( !this.Data.IsRunning ) {
+			if( !this.SessionData.IsRunning ) {
 				return false;
 			}
 
@@ -48,14 +46,14 @@ namespace ResetMode.Logic {
 				LogHelpers.Log( "ResetMode - SessionLogic.EndSession" );
 			}
 
-			this.Data.ResetAll();
+			this.SessionData.ResetAll();
 			this.Save( mymod );
 
 			if( Main.netMode == 2 ) {
 				PacketProtocol.QuickSendToClient<SessionProtocol>( -1, -1 );
 			}
 
-			this.ResetWorldForSession( mymod );
+			this.ResetCurrentWorldForSession( mymod );
 
 			return true;
 		}

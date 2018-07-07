@@ -11,7 +11,7 @@ namespace ResetMode.Logic {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - WorldLogic.GoodExit " + myworld.Data.IsExiting );
+				LogHelpers.Log( "ResetMode - ResetModeWorld.GoodExit " + myworld.Data.IsExiting );
 			}
 
 			myworld.Data.IsExiting = true;
@@ -32,7 +32,7 @@ namespace ResetMode.Logic {
 			var myworld = mymod.GetModWorld<ResetModeWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - WorldLogic.BadExit " + myworld.Data.IsExiting );
+				LogHelpers.Log( "ResetMode - ResetModeWorld.BadExit " + myworld.Data.IsExiting );
 			}
 
 			if( myworld.Data.IsExiting ) { return; }
