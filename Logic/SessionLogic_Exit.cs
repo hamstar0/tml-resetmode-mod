@@ -8,13 +8,11 @@ using TimeLimit;
 namespace ResetMode.Logic {
 	partial class SessionLogic {
 		public void GoodExit( ResetModeMod mymod ) {
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - ResetModeWorld.GoodExit " + myworld.Data.IsExiting );
+				LogHelpers.Log( "ResetMode.ResetModeWorld.GoodExit " + mymod.Session.IsExiting );
 			}
 
-			myworld.Data.IsExiting = true;
+			mymod.Session.IsExiting = true;
 
 			if( Main.netMode == 0 ) {
 				Main.NewText( "Time's up. Please switch to the next world to continue.", Color.Red );
@@ -29,14 +27,12 @@ namespace ResetMode.Logic {
 
 
 		public void BadExit( ResetModeMod mymod ) {
-			var myworld = mymod.GetModWorld<ResetModeWorld>();
-
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - ResetModeWorld.BadExit " + myworld.Data.IsExiting );
+				LogHelpers.Log( "ResetMode.ResetModeWorld.BadExit " + mymod.Session.IsExiting );
 			}
 
-			if( myworld.Data.IsExiting ) { return; }
-			myworld.Data.IsExiting = true;
+			if( mymod.Session.IsExiting ) { return; }
+			mymod.Session.IsExiting = true;
 
 			if( Main.netMode == 0 ) {
 				//TmlHelpers.ExitToMenu( false );

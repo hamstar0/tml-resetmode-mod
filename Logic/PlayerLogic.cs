@@ -4,7 +4,6 @@ using HamstarHelpers.Services.Messages;
 using HamstarHelpers.Services.Timers;
 using HamstarHelpers.TmlHelpers;
 using Microsoft.Xna.Framework;
-using ResetMode.Data;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -27,14 +26,10 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void OnEnterWorld( ResetModeMod mymod, Player player ) {
-			switch( mymod.Session.WorldData.WorldStatus ) {
-			case ResetModeWorldStatus.Normal:
+			if( mymod.Session.IsWorldFresh() ) {
 				this.Welcome( mymod, player );
-				break;
-
-			case ResetModeWorldStatus.Active:
+			} else if( !mymod.Session.IsSessionWorldNotCurrent() ) {
 				this.Instruct( player );
-				break;
 			}
 		}
 
@@ -82,8 +77,8 @@ namespace ResetMode.Logic {
 			if( !mymod.Session.SessionData.IsRunning ) { return; }
 			if( this.HasCheckedValidation ) { return; }
 			
-			if( mymod.Session.WorldData.WorldStatus != ResetModeWorldStatus.Active ) { return; }
-			if( mymod.Session.WorldData.IsPlaying( mymod, player ) ) { return; }
+			if( mymod.Session.IsWorldFresh() || mymod.Session.IsSessionWorldNotCurrent() ) { return; }
+			if( mymod.Session.IsPlaying( mymod, player ) ) { return; }
 
 			this.HasCheckedValidation = true;
 			this.ValidatePlayer( mymod, player );

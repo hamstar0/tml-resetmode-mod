@@ -17,7 +17,7 @@ namespace ResetMode.Logic {
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - SessionLogic.StartSession" );
+				LogHelpers.Log( "ResetMode.SessionLogic.StartSession" );
 			}
 			
 			this.SessionData.IsRunning = true;
@@ -43,7 +43,7 @@ namespace ResetMode.Logic {
 
 			if( mymod.Config.DebugModeInfo ) {
 				string world_id = WorldHelpers.GetUniqueIdWithSeed();
-				LogHelpers.Log( "ResetMode - SessionLogic.EndSession" );
+				LogHelpers.Log( "ResetMode.SessionLogic.EndSession" );
 			}
 
 			this.SessionData.ResetAll();

@@ -41,11 +41,11 @@
     <Compile Include="Data\Session.cs" />
     <Compile Include="Logic\PlayerLogic.cs" />
     <Compile Include="Logic\PlayerLogic_Validate.cs" />
+    <Compile Include="Logic\SessionLogic_Player.cs" />
     <Compile Include="Logic\SessionLogic_Exit.cs" />
     <Compile Include="Logic\SessionLogic_World.cs" />
     <Compile Include="Logic\SessionLogic_OnOff.cs" />
     <Compile Include="Logic\SessionLogic.cs" />
-    <Compile Include="Data\World.cs" />
     <Compile Include="NetProtocols\SessionProtocol.cs" />
     <Compile Include="NetProtocols\PlayerResetConfirmProtocol.cs" />
     <Compile Include="NetProtocols\PlayerResetProtocol.cs" />

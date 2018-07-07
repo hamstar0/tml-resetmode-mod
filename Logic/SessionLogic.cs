@@ -19,7 +19,8 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public ResetModeSessionData SessionData { get; private set; }
-		public ResetModeWorldData WorldData { get; private set; }
+
+		public bool IsExiting = false;
 
 
 
@@ -27,7 +28,6 @@ namespace ResetMode.Logic {
 
 		internal SessionLogic() {
 			this.SessionData = new ResetModeSessionData();
-			this.WorldData = new ResetModeWorldData( this.SessionData );
 
 			Main.OnTick += SessionLogic._Update;
 		}

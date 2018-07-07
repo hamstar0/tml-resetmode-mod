@@ -30,20 +30,27 @@ namespace ResetMode.Logic {
 
 
 		private void UpdateSessionWorld( ResetModeMod mymod ) {
-			switch( this.WorldData.WorldStatus ) {
-			case ResetModeWorldStatus.Normal:
-				this.AddWorldToSession( mymod );	// Changes world status
-				break;
-
-			case ResetModeWorldStatus.Active:
-				break;
-
-			case ResetModeWorldStatus.Expired:
-				if( !this.WorldData.IsExiting ) {
+			if( this.IsWorldFresh() ) {
+				this.AddWorldToSession( mymod );    // Changes world status
+			} else if( this.IsSessionWorldNotCurrent() ) {
+				if( !this.IsExiting ) {
 					this.GoodExit( mymod );
 				}
-				break;
 			}
+		}
+
+
+		////////////////
+
+		public bool IsWorldFresh() {
+			if( string.IsNullOrEmpty(this.SessionData.CurrentSessionedWorldId) ) {
+				return true;
+			}
+			return !this.SessionData.AllPlayedWorlds.Contains( this.SessionData.CurrentSessionedWorldId );
+		}
+
+		public bool IsSessionWorldNotCurrent() {
+			return this.SessionData.CurrentSessionedWorldId != WorldHelpers.GetUniqueIdWithSeed();
 		}
 
 
@@ -53,7 +60,7 @@ namespace ResetMode.Logic {
 			string world_id = WorldHelpers.GetUniqueIdWithSeed();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - SessionLogic.AddWorldToSession " + world_id );
+				LogHelpers.Log( "ResetMode.SessionLogic.AddWorldToSession - World ID: " + world_id );
 			}
 			
 			if( !this.SessionData.AwaitingNextWorld ) {
@@ -62,9 +69,11 @@ namespace ResetMode.Logic {
 				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetSubsequently, false );
 			}
 
+LogHelpers.Log( "STATUS1: " + this.IsWorldFresh() + " " + this.IsSessionWorldNotCurrent() );
 			this.SessionData.AllPlayedWorlds.Add( world_id );
-			this.SessionData.CurrentWorld = world_id;
+			this.SessionData.CurrentSessionedWorldId = world_id;
 			this.SessionData.AwaitingNextWorld = false;
+LogHelpers.Log( "STATUS2: " + this.IsWorldFresh() + " " + this.IsSessionWorldNotCurrent() );
 			this.Save( mymod );
 
 			this.RunModCalls( mymod );
@@ -73,11 +82,11 @@ namespace ResetMode.Logic {
 
 		public void ExpireCurrentWorldInSession( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode - SessionLogic.ExpireWorldInSession" );
+				LogHelpers.Log( "ResetMode.SessionLogic.ExpireWorldInSession" );
 			}
 
 			this.SessionData.AwaitingNextWorld = true;
-			this.SessionData.CurrentWorld = "";
+			this.SessionData.CurrentSessionedWorldId = "";
 			this.SessionData.PlayersValidated.Clear();
 			this.Save( mymod );
 
@@ -87,7 +96,7 @@ namespace ResetMode.Logic {
 
 		public void ResetCurrentWorldForSession( ResetModeMod mymod ) {
 			this.SessionData.PlayersValidated.Clear();
-			this.SessionData.CurrentWorld = "";
+			this.SessionData.CurrentSessionedWorldId = "";
 
 			TimeLimitAPI.TimerStop( "reset" );
 		}
@@ -107,7 +116,7 @@ namespace ResetMode.Logic {
 				}
 
 				this.SessionData.PlayersValidated.Clear();
-				this.SessionData.CurrentWorld = "";
+				this.SessionData.CurrentSessionedWorldId = "";
 				this.SessionData.AwaitingNextWorld = true;
 
 				this.Save( mymod );

@@ -1,0 +1,30 @@
+﻿using HamstarHelpers.Components.Errors;
+using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.PlayerHelpers;
+using Terraria;
+
+
+namespace ResetMode.Logic {
+	partial class SessionLogic {
+		internal bool IsPlaying( ResetModeMod mymod, Player player ) {
+			bool has_uid;
+			string uid = PlayerIdentityHelpers.GetUniqueId( player, out has_uid );
+			if( !has_uid ) {
+				throw new HamstarException( "ResetMode.SessionLogic.IsPlaying - Player has no uid." );
+			}
+
+			return this.SessionData.PlayersValidated.Contains( uid );
+		}
+
+
+		internal void AddPlayer( ResetModeMod mymod, Player player ) {
+			bool has_uid;
+			string uid = PlayerIdentityHelpers.GetUniqueId( player, out has_uid );
+			if( !has_uid ) {
+				throw new HamstarException( "ResetMode.SessionLogic.AddPlayer - Player has no uid." );
+			}
+
+			this.SessionData.PlayersValidated.Add( uid );
+		}
+	}
+}

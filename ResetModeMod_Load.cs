@@ -11,6 +11,7 @@ namespace ResetMode {
 	partial class ResetModeMod : Mod {
 		private void LoadConfigs() {
 			if( !this.ConfigJson.LoadFile() ) {
+				LogHelpers.Log( "ResetMode.ResetModeMod.LoadConfigs - Reset Mode missing/invalid config created anew." );
 				this.ConfigJson.SaveFile();
 			}
 
