@@ -29,12 +29,12 @@ namespace ResetMode.Logic {
 
 
 		public void BadExit( ResetModeMod mymod ) {
-			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.ResetModeWorld.BadExit " + mymod.Session.IsExiting );
-			}
-
 			if( mymod.Session.IsExiting ) { return; }
 			mymod.Session.IsExiting = true;
+
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "ResetMode.ResetModeWorld.BadExit" );
+			}
 
 			if( Main.netMode == 0 ) {
 				//TmlHelpers.ExitToMenu( false );

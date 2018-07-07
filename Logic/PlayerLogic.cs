@@ -73,8 +73,12 @@ namespace ResetMode.Logic {
 			if( this.HasCheckedValidation ) { return; }
 			
 			if( mymod.Session.IsSessionNeedingWorld() ) { return; }
-			if( mymod.Session.IsSessionedWorldNotOurs() ) { return; }
 			if( mymod.Session.IsPlaying( mymod, player ) ) { return; }
+
+			if( mymod.Session.IsSessionedWorldNotOurs() ) {
+				mymod.Session.BadExit( mymod );
+				return;
+			}
 
 			this.HasCheckedValidation = true;
 			this.ValidatePlayer( mymod, player );

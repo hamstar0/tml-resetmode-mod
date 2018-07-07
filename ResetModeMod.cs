@@ -1,5 +1,6 @@
 using HamstarHelpers.Components.Config;
 using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.Services.Promises;
 using ResetMode.Data;
 using ResetMode.Logic;
 using System;
@@ -49,7 +50,7 @@ namespace ResetMode {
 		
 		public SessionLogic Session { get; internal set; }
 
-		private int CurrentNetMode = -1;
+		internal int CurrentNetMode = -1;
 
 
 		////////////////
@@ -72,17 +73,36 @@ namespace ResetMode {
 			ResetModeMod.Instance = this;
 
 			this.LoadConfigs();
-			this.LoadStages();
+
+			Promises.AddWorldLoadEachPromise( delegate {
+				this.CurrentNetMode = Main.netMode;
+			} );
+
+			this.Session.OnModLoad();
 		}
 
 		
 		public override void Unload() {
 			ResetModeMod.Instance = null;
 		}
+		
+		////////////////
+
+		private void LoadConfigs() {
+			if( !this.ConfigJson.LoadFile() ) {
+				LogHelpers.Log( "ResetMode.ResetModeMod.LoadConfigs - Reset Mode missing/invalid config created anew." );
+				this.ConfigJson.SaveFile();
+			}
+
+			if( this.Config.UpdateToLatestVersion() ) {
+				ErrorLogger.Log( "Reset Mode updated to " + ResetModeConfigData.ConfigVersion.ToString() );
+				this.ConfigJson.SaveFile();
+			}
+		}
 
 
 		////////////////
-		
+
 		public override object Call( params object[] args ) {
 			if( args.Length == 0 ) { throw new Exception( "Undefined call type." ); }
 

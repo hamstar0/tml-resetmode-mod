@@ -41,6 +41,7 @@
     <Compile Include="Data\Session.cs" />
     <Compile Include="Logic\PlayerLogic.cs" />
     <Compile Include="Logic\PlayerLogic_Validate.cs" />
+    <Compile Include="Logic\SessionLogic_Load.cs" />
     <Compile Include="Logic\SessionLogic_Player.cs" />
     <Compile Include="Logic\SessionLogic_Exit.cs" />
     <Compile Include="Logic\SessionLogic_World.cs" />
@@ -51,7 +52,6 @@
     <Compile Include="NetProtocols\PlayerResetProtocol.cs" />
     <Compile Include="NetProtocols\ModSettingsProtocol.cs" />
     <Compile Include="Commands\ResetModeStartCommand.cs" />
-    <Compile Include="ResetModeMod_Load.cs" />
     <Compile Include="ResetModeMod.cs" />
     <Compile Include="ResetModePlayer_Load.cs" />
     <Compile Include="ResetModePlayer.cs" />

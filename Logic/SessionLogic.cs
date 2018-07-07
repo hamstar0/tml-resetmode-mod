@@ -28,7 +28,7 @@ namespace ResetMode.Logic {
 
 		internal SessionLogic() {
 			this.SessionData = new ResetModeSessionData();
-
+			
 			Main.OnTick += SessionLogic._Update;
 		}
 
