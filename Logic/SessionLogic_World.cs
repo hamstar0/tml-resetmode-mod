@@ -29,10 +29,14 @@ namespace ResetMode.Logic {
 
 
 		private void UpdateSessionWorld( ResetModeMod mymod ) {
-			if( this.IsWorldFresh() ) {
+			if( this.IsSessionNeedingWorld() ) {
 				this.AddWorldToSession( mymod );    // Changes world status
-			} else if( this.IsSessionWorldNotCurrent() ) {
+			} else if( this.IsSessionedWorldNotOurs() ) {
 				if( !this.IsExiting ) {
+					if( mymod.Config.DebugModeInfo ) {
+						LogHelpers.Log( "ResetMode.SessionLogic.UpdateSessionWorld - World has expired. World id: " + WorldHelpers.GetUniqueIdWithSeed() );
+					}
+
 					this.GoodExit( mymod );
 				}
 			}
@@ -41,15 +45,16 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public bool IsWorldFresh() {
-			if( string.IsNullOrEmpty(this.SessionData.CurrentSessionedWorldId) ) {
-				return true;
-			}
-			return !this.SessionData.AllPlayedWorlds.Contains( this.SessionData.CurrentSessionedWorldId );
+		public bool IsSessionNeedingWorld() {
+			return string.IsNullOrEmpty( this.SessionData.CurrentSessionedWorldId );
 		}
 
-		public bool IsSessionWorldNotCurrent() {
+		public bool IsSessionedWorldNotOurs() {
 			return this.SessionData.CurrentSessionedWorldId != WorldHelpers.GetUniqueIdWithSeed();
+		}
+
+		public bool HasWorldEverBeenPlayed( string world_id ) {
+			return !this.SessionData.AllPlayedWorlds.Contains( world_id );
 		}
 
 

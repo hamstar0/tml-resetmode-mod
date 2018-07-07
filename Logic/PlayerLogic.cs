@@ -26,9 +26,9 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void OnEnterWorld( ResetModeMod mymod, Player player ) {
-			if( mymod.Session.IsWorldFresh() ) {
+			if( mymod.Session.IsSessionNeedingWorld() ) {
 				this.Welcome( mymod, player );
-			} else if( !mymod.Session.IsSessionWorldNotCurrent() ) {
+			} else if( !mymod.Session.IsSessionedWorldNotOurs() ) {
 				this.Instruct( player );
 			}
 		}
@@ -72,7 +72,8 @@ namespace ResetMode.Logic {
 			if( !mymod.Session.SessionData.IsRunning ) { return; }
 			if( this.HasCheckedValidation ) { return; }
 			
-			if( mymod.Session.IsWorldFresh() || mymod.Session.IsSessionWorldNotCurrent() ) { return; }
+			if( mymod.Session.IsSessionNeedingWorld() ) { return; }
+			if( mymod.Session.IsSessionedWorldNotOurs() ) { return; }
 			if( mymod.Session.IsPlaying( mymod, player ) ) { return; }
 
 			this.HasCheckedValidation = true;

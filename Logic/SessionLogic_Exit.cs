@@ -14,12 +14,14 @@ namespace ResetMode.Logic {
 
 			mymod.Session.IsExiting = true;
 
+			string msg = "This world is now expired. Please switch to the next world to continue.";
+
 			if( Main.netMode == 0 ) {
-				Main.NewText( "Time's up. Please switch to the next world to continue.", Color.Red );
+				Main.NewText( msg, Color.Red );
 
 				TimeLimitAPI.TimerStart( "exit", 5, false );
 			} else if( Main.netMode == 2 ) {
-				NetMessage.BroadcastChatMessage( NetworkText.FromLiteral( "Time's up. Please switch to the next new world to continue." ), Color.Red, -1 );
+				NetMessage.BroadcastChatMessage( NetworkText.FromLiteral( msg ), Color.Red, -1 );
 
 				TimeLimitAPI.TimerStart( "serverclose", 7, false );
 			}
