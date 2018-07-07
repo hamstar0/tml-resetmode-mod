@@ -1,6 +1,5 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.WorldHelpers;
-using ResetMode.Data;
 using System;
 using Terraria;
 using Terraria.IO;
@@ -68,12 +67,10 @@ namespace ResetMode.Logic {
 			} else {
 				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetSubsequently, false );
 			}
-
-LogHelpers.Log( "STATUS1: " + this.IsWorldFresh() + " " + this.IsSessionWorldNotCurrent() );
+			
 			this.SessionData.AllPlayedWorlds.Add( world_id );
 			this.SessionData.CurrentSessionedWorldId = world_id;
 			this.SessionData.AwaitingNextWorld = false;
-LogHelpers.Log( "STATUS2: " + this.IsWorldFresh() + " " + this.IsSessionWorldNotCurrent() );
 			this.Save( mymod );
 
 			this.RunModCalls( mymod );

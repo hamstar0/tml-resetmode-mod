@@ -24,7 +24,7 @@ namespace ResetMode.Commands {
 			var mymod = (ResetModeMod)this.mod;
 			
 			if( ResetModeAPI.StopSession() ) {
-				caller.Reply( "Reset mode ended!.", Color.YellowGreen );
+				caller.Reply( "Reset mode ended.", Color.YellowGreen );
 			} else {
 				caller.Reply( "Reset mode is not in session.", Color.Red );
 			}

@@ -60,7 +60,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void BeginSession( ResetModeMod mymod, Player player ) {
-			mymod.Session.WorldData.AddPlayer( mymod, player );
+			mymod.Session.AddPlayer( mymod, player );
 		}
 
 
