@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.UserHelpers;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -12,7 +13,7 @@ namespace ResetMode.Commands {
 				if( Main.netMode == 0 && !Main.dedServ ) {
 					return CommandType.World;
 				}
-				return CommandType.Console;
+				return CommandType.Console | CommandType.Server;
 			}
 		}
 		public override string Command { get { return "resetmodestart"; } }
@@ -23,6 +24,19 @@ namespace ResetMode.Commands {
 		////////////////
 
 		public override void Action( CommandCaller caller, string input, string[] args ) {
+			if( Main.netMode == 2 && caller.CommandType != CommandType.Console ) {
+				bool success;
+				bool has_priv = UserHelpers.HasBasicServerPrivilege( caller.Player, out success );
+
+				if( !success ) {
+					caller.Reply( "Could not validate.", Color.Yellow );
+					return;
+				} else if( !has_priv ) {
+					caller.Reply( "Access denied.", Color.Red );
+					return;
+				}
+			}
+
 			var mymod = (ResetModeMod)this.mod;
 
 			try {
