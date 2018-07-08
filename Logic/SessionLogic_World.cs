@@ -8,45 +8,6 @@ using TimeLimit;
 
 namespace ResetMode.Logic {
 	partial class SessionLogic {
-		public static bool IsWorldUidInSession( ResetModeMod mymod, string world_uid ) {
-			return mymod.Session.Data.AllPlayedWorlds.Contains( world_uid );
-		}
-
-
-
-		////////////////
-
-		internal void UpdateSessionWorldSingle( ResetModeMod mymod ) {
-			this.UpdateSessionWorld( mymod );
-		}
-
-		internal void UpdateSessionWorldClient( ResetModeMod mymod ) {
-		}
-
-		internal void UpdateSessionWorldServer( ResetModeMod mymod ) {
-			this.UpdateSessionWorld( mymod );
-		}
-
-
-		private void UpdateSessionWorld( ResetModeMod mymod ) {
-			if( this.IsSessionNeedingWorld() ) {
-				if( !this.IsExiting ) {
-					this.AddWorldToSession( mymod );    // Changes world status
-				}
-			} else if( this.IsSessionedWorldNotOurs() ) {
-				if( !this.IsExiting ) {
-					if( mymod.Config.DebugModeInfo ) {
-						LogHelpers.Log( "ResetMode.SessionLogic.UpdateSessionWorld - World has expired. World id: " + WorldHelpers.GetUniqueIdWithSeed() );
-					}
-
-					this.GoodExit( mymod );
-				}
-			}
-		}
-
-
-		////////////////
-
 		public bool IsSessionNeedingWorld() {
 			return string.IsNullOrEmpty( this.Data.CurrentSessionedWorldId );
 		}
@@ -62,25 +23,31 @@ namespace ResetMode.Logic {
 
 		////////////////
 
+		public void BeginResetTimer( ResetModeMod mymod ) {
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "ResetMode.SessionLogic.BeginResetTimer" );
+			}
+			
+			if( TimeLimitAPI.GetTimersOf( "reset" ).Count > 0 ) {
+				LogHelpers.Log( "ResetMode.SessionLogic.BeginResetTimer - Existing reset timers halted." );
+				Main.NewText( "Warning: Existing reset timers removed." );
+			}
+			TimeLimitAPI.TimerStop( "reset" );	// Stop regardless? API failure perhaps?
+
+			if( !this.Data.AwaitingNextWorld ) {
+				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetInitially, false );
+			} else {
+				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetSubsequently, false );
+			}
+		}
+			
 		public void AddWorldToSession( ResetModeMod mymod ) {
 			string world_id = WorldHelpers.GetUniqueIdWithSeed();
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Log( "ResetMode.SessionLogic.AddWorldToSession - World ID: " + world_id );
 			}
-			
-			if( TimeLimitAPI.GetTimersOf( "reset" ).Count > 0 ) {
-				TimeLimitAPI.TimerStop( "reset" );
-				LogHelpers.Log( "ResetMode.SessionLogic.AddWorldToSession - Existing reset timers halted." );
-				Main.NewText( "Warning: Existing reset timers removed." );
-			}
-			
-			if( !this.Data.AwaitingNextWorld ) {
-				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetInitially, false );
-			} else {
-				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetSubsequently, false );
-			}
-			
+
 			this.Data.AllPlayedWorlds.Add( world_id );
 			this.Data.CurrentSessionedWorldId = world_id;
 			this.Data.AwaitingNextWorld = false;

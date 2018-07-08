@@ -21,6 +21,7 @@ namespace ResetMode.Logic {
 		public ResetModeSessionData Data { get; private set; }
 
 		public bool IsExiting = false;
+		public bool IsWorldInPlay = false;
 
 
 
@@ -68,23 +69,9 @@ namespace ResetMode.Logic {
 		private static void _Update() {
 			var mymod = ResetModeMod.Instance;
 			if( mymod == null ) { return; }
-
-			if( LoadHelpers.IsWorldSafelyBeingPlayed() ) {
+			
+			if( LoadHelpers.IsWorldSafelyBeingPlayed() && mymod.Session.IsWorldInPlay ) {
 				mymod.Session.UpdateSession();
-			}
-		}
-
-		internal void UpdateSession() {
-			var mymod = ResetModeMod.Instance;
-
-			if( this.Data.IsRunning ) {
-				if( Main.netMode == 0 ) {
-					this.UpdateSessionWorldSingle( mymod );
-				} else if( Main.netMode == 1 ) {
-					this.UpdateSessionWorldClient( mymod );
-				} else {
-					this.UpdateSessionWorldServer( mymod );
-				}
 			}
 		}
 

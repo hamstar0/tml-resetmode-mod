@@ -33,6 +33,12 @@ namespace ResetMode.Logic {
 						this.StartSession( mymod );
 					}
 				}
+
+				this.IsWorldInPlay = true;
+			} );
+
+			Promises.AddWorldUnloadEachPromise( () => {
+				this.IsWorldInPlay = false;
 			} );
 
 			Promises.AddPostWorldUnloadEachPromise( () => {

@@ -44,6 +44,7 @@
     <Compile Include="Logic\SessionLogic_Load.cs" />
     <Compile Include="Logic\SessionLogic_Player.cs" />
     <Compile Include="Logic\SessionLogic_Exit.cs" />
+    <Compile Include="Logic\SessionLogic_Update.cs" />
     <Compile Include="Logic\SessionLogic_World.cs" />
     <Compile Include="Logic\SessionLogic_OnOff.cs" />
     <Compile Include="Logic\SessionLogic.cs" />
