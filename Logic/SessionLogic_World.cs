@@ -69,6 +69,12 @@ namespace ResetMode.Logic {
 				LogHelpers.Log( "ResetMode.SessionLogic.AddWorldToSession - World ID: " + world_id );
 			}
 			
+			if( TimeLimitAPI.GetTimersOf( "reset" ).Count > 0 ) {
+				TimeLimitAPI.TimerStop( "reset" );
+				LogHelpers.Log( "ResetMode.SessionLogic.AddWorldToSession - Existing reset timers halted." );
+				Main.NewText( "Warning: Existing reset timers removed." );
+			}
+			
 			if( !this.Data.AwaitingNextWorld ) {
 				TimeLimitAPI.TimerStart( "reset", mymod.Config.SecondsUntilResetInitially, false );
 			} else {

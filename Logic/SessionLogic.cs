@@ -69,7 +69,7 @@ namespace ResetMode.Logic {
 			var mymod = ResetModeMod.Instance;
 			if( mymod == null ) { return; }
 
-			if( LoadHelpers.IsWorldBeingPlayed() ) {
+			if( LoadHelpers.IsWorldSafelyBeingPlayed() ) {
 				mymod.Session.UpdateSession();
 			}
 		}

@@ -25,7 +25,7 @@ namespace ResetMode.Logic {
 				this.LoadRewards( mymod );
 			} );
 
-			Promises.AddWorldLoadEachPromise( delegate {
+			Promises.AddPostWorldLoadEachPromise( delegate {
 				var mymod = ResetModeMod.Instance;
 
 				if( mymod.Config.AutoStartSession ) {
