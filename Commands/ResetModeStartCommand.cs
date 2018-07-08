@@ -13,7 +13,7 @@ namespace ResetMode.Commands {
 				if( Main.netMode == 0 && !Main.dedServ ) {
 					return CommandType.World;
 				}
-				return CommandType.Console | CommandType.Server;
+				return CommandType.Console | CommandType.World;
 			}
 		}
 		public override string Command { get { return "resetmodestart"; } }
@@ -24,6 +24,11 @@ namespace ResetMode.Commands {
 		////////////////
 
 		public override void Action( CommandCaller caller, string input, string[] args ) {
+			if( Main.netMode == 1 ) {
+				LogHelpers.Log( "ResetModeStartCommand - Not supposed to run on client." );
+				return;
+			}
+
 			if( Main.netMode == 2 && caller.CommandType != CommandType.Console ) {
 				bool success;
 				bool has_priv = UserHelpers.HasBasicServerPrivilege( caller.Player, out success );
