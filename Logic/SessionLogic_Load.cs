@@ -11,18 +11,17 @@ namespace ResetMode.Logic {
 		internal void OnModLoad() {
 			Promises.AddPostModLoadPromise( () => {
 				var mymod = ResetModeMod.Instance;
-
-				this.Load( ResetModeMod.Instance );
-
 				var hook = new CustomTimerAction( delegate () {
 					if( Main.netMode == 1 ) { return; }
-					this.ExpireCurrentWorldInSession( mymod );
+					this.ExpireCurrentWorldInSession( ResetModeMod.Instance );
 				} );
 
 				TimeLimitAPI.AddCustomAction( "reset", hook );
 
+				this.Load( mymod );
 				this.LoadRewards( mymod );
 			} );
+
 
 			Promises.AddPostWorldLoadEachPromise( delegate {
 				var mymod = ResetModeMod.Instance;
@@ -36,9 +35,11 @@ namespace ResetMode.Logic {
 				this.IsWorldInPlay = true;
 			} );
 
+
 			Promises.AddWorldUnloadEachPromise( () => {
 				this.IsWorldInPlay = false;
 			} );
+
 
 			Promises.AddPostWorldUnloadEachPromise( () => {
 				var mymod = ResetModeMod.Instance;

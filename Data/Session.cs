@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.DebugHelpers;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 
@@ -28,6 +29,12 @@ namespace ResetMode.Data {
 			if( ResetModeMod.Instance.Config.DebugModeInfo ) {
 				LogHelpers.Log( "ResetMode.Data.ResetModeSessionData" );
 			}
+		}
+
+		////////////////
+
+		public override string ToString() {
+			return JsonConvert.SerializeObject( this );
 		}
 	}
 }

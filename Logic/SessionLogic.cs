@@ -49,7 +49,7 @@ namespace ResetMode.Logic {
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.Load - Success? "+success );
+				LogHelpers.Log( "ResetMode.Logic.SessionLogic.Load - Success? "+success+": "+this.Data.ToString() );
 			}
 		}
 

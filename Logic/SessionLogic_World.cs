@@ -17,7 +17,7 @@ namespace ResetMode.Logic {
 		}
 
 		public bool HasWorldEverBeenPlayed( string world_id ) {
-			return !this.Data.AllPlayedWorlds.Contains( world_id );
+			return this.Data.AllPlayedWorlds.Contains( world_id );
 		}
 
 

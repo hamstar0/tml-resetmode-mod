@@ -40,9 +40,13 @@ namespace ResetMode.Logic {
 				if( mymod.Config.DebugModeInfo ) {
 					LogHelpers.Log( "ResetMode.Logic.SessionLogic.UpdateSessionHost - Session needs world (world id: " + WorldHelpers.GetUniqueIdWithSeed()+")" );
 				}
-
-				this.BeginResetTimer( mymod );
-				this.AddWorldToSession( mymod );    // Changes world status
+				
+				if( !this.HasWorldEverBeenPlayed( WorldHelpers.GetUniqueIdWithSeed() ) ) {
+					this.BeginResetTimer( mymod );
+					this.AddWorldToSession( mymod );    // Changes world status
+				} else {
+					this.GoodExit( mymod );
+				}
 			} else if( this.IsSessionedWorldNotOurs() ) {
 				if( mymod.Config.DebugModeInfo ) {
 					LogHelpers.Log( "ResetMode.Logic.SessionLogic.UpdateSessionHost - World has expired. World id: " + WorldHelpers.GetUniqueIdWithSeed() );

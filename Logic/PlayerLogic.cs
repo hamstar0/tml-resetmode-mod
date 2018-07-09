@@ -54,19 +54,8 @@ namespace ResetMode.Logic {
 			}
 		}
 
+
 		////////////////
-
-		private void UpdatePromptStasis( ResetModeMod mymod, Player player ) {
-			if( !mymod.Session.Data.IsRunning ) { return; }
-
-			if( this.IsPromptingForReset ) {
-				player.noItems = true;
-				player.noBuilding = true;
-				player.stoned = true;
-				player.immune = true;
-				player.immuneTime = 2;
-			}
-		}
 
 		private void CheckValidation( ResetModeMod mymod, Player player ) {
 			if( !mymod.Session.Data.IsRunning ) { return; }
@@ -88,8 +77,22 @@ namespace ResetMode.Logic {
 			this.ValidatePlayer( mymod, player );
 		}
 
+
+		private void UpdatePromptStasis( ResetModeMod mymod, Player player ) {
+			if( !mymod.Session.Data.IsRunning ) { return; }
+
+			if( this.IsPromptingForReset ) {
+				player.noItems = true;
+				player.noBuilding = true;
+				player.stoned = true;
+				player.immune = true;
+				player.immuneTime = 2;
+			}
+		}
+
+
 		////////////////
-		
+
 		public void Welcome( ResetModeMod mymod, Player player ) {
 			if( Main.netMode == 0 ) {
 				InboxMessages.SetMessage( "reset_mode_welcome", "Type /resetmodestart to start Reset Mode. Type /help for a list of other available commands.", true );
