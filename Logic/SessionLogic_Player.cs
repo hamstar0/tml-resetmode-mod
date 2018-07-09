@@ -25,6 +25,7 @@ namespace ResetMode.Logic {
 			}
 
 			this.Data.PlayersValidated.Add( uid );
+			this.Save( mymod );
 		}
 	}
 }

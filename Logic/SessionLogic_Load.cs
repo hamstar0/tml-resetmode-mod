@@ -45,14 +45,10 @@ namespace ResetMode.Logic {
 				var mymod = ResetModeMod.Instance;
 
 				this.IsExiting = false;
-
-LogHelpers.Log("1");
+				
 				if( mymod.CurrentNetMode == 0 || mymod.CurrentNetMode == 2 ) {
-LogHelpers.Log("2");
 					if( mymod.Config.DeleteAllWorldsBetweenGames ) {
-LogHelpers.Log("3");
 						if( this.Data.AwaitingNextWorld ) {
-LogHelpers.Log("4");
 							this.ClearAllWorlds();
 						}
 					}

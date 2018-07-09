@@ -25,8 +25,6 @@ namespace ResetMode.Logic {
 
 		public void PromptReset( ResetModeMod mymod, Player player ) {
 			if( Main.netMode == 2 ) { throw new Exception( "Server cannot call this." ); }
-			
-			this.IsPromptingForReset = true;
 
 			int player_who = player.whoAmI;
 			string text = "Play reset mode? Your character will be reset (except Progress Points)." +
@@ -41,8 +39,7 @@ namespace ResetMode.Logic {
 				if( Main.netMode == 0 ) {
 					this.BeginSession( mymod, replayer );
 					this.RefundRewardsSpendings( mymod, replayer );
-				}
-				if( Main.netMode == 1 ) {
+				} else if( Main.netMode == 1 ) {
 					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>();
 				}
 
@@ -51,6 +48,10 @@ namespace ResetMode.Logic {
 			Action cancel_action = delegate () {
 				this.Boot( mymod, player, "choose not to play" );
 			};
+
+			////
+
+			this.IsPromptingForReset = true;
 
 			var prompt = new UIPromptDialog( new UIPromptTheme(), 600, 112, text, confirm_action, cancel_action );
 			prompt.Open();
