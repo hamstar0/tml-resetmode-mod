@@ -44,9 +44,13 @@ namespace ResetMode {
 			ResetModeMod.Instance = this;
 
 			this.LoadConfigs();
-
+			
 			Promises.AddWorldLoadEachPromise( delegate {
 				this.CurrentNetMode = Main.netMode;
+			} );
+			Promises.AddCustomPromise( "ResetModeWorldExited", () => {
+				this.CurrentNetMode = -1;
+				return true;
 			} );
 
 			this.Session.OnModLoad();

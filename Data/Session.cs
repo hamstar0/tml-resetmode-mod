@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HamstarHelpers.DebugHelpers;
+using System.Collections.Generic;
 
 
 namespace ResetMode.Data {
@@ -23,6 +24,10 @@ namespace ResetMode.Data {
 			this.CurrentSessionedWorldId = "";
 			this.AwaitingNextWorld = false;
 			this.IsRunning = false;
+
+			if( ResetModeMod.Instance.Config.DebugModeInfo ) {
+				LogHelpers.Log( "ResetMode.Data.ResetModeSessionData" );
+			}
 		}
 	}
 }

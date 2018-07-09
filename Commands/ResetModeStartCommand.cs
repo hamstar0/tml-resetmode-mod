@@ -25,7 +25,7 @@ namespace ResetMode.Commands {
 
 		public override void Action( CommandCaller caller, string input, string[] args ) {
 			if( Main.netMode == 1 ) {
-				LogHelpers.Log( "ResetModeStartCommand - Not supposed to run on client." );
+				LogHelpers.Log( "ResetMode.Commands.ResetModeStartCommand - Not supposed to run on client." );
 				return;
 			}
 
@@ -51,7 +51,7 @@ namespace ResetMode.Commands {
 					caller.Reply( "Reset mode is already in session.", Color.Red );
 				}
 			} catch( Exception e ) {
-				LogHelpers.Log( e.ToString() );
+				LogHelpers.Log( "ResetMode.Commands.ResetModeStart - Failed to start: " + e.ToString() );
 				caller.Reply( "Reset mode could not be started.", Color.Red );
 			}
 		}

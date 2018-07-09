@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.UserHelpers;
+﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.UserHelpers;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -23,7 +24,7 @@ namespace ResetMode.Commands {
 
 		public override void Action( CommandCaller caller, string input, string[] args ) {
 			if( Main.netMode == 1 ) {
-				LogHelpers.Log( "ResetModeStopCommand - Not supposed to run on client." );
+				LogHelpers.Log( "ResetMode.Commands.ResetModeStopCommand - Not supposed to run on client." );
 				return;
 			}
 

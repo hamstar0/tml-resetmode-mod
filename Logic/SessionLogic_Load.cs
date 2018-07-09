@@ -16,7 +16,6 @@ namespace ResetMode.Logic {
 
 				var hook = new CustomTimerAction( delegate () {
 					if( Main.netMode == 1 ) { return; }
-
 					this.ExpireCurrentWorldInSession( mymod );
 				} );
 
@@ -46,16 +45,21 @@ namespace ResetMode.Logic {
 
 				this.IsExiting = false;
 
-				if( mymod.Config.DeleteAllWorldsBetweenGames ) {
-					if( this.Data.AwaitingNextWorld ) {
-						if( mymod.CurrentNetMode == 0 || mymod.CurrentNetMode == 2 ) {
+LogHelpers.Log("1");
+				if( mymod.CurrentNetMode == 0 || mymod.CurrentNetMode == 2 ) {
+LogHelpers.Log("2");
+					if( mymod.Config.DeleteAllWorldsBetweenGames ) {
+LogHelpers.Log("3");
+						if( this.Data.AwaitingNextWorld ) {
+LogHelpers.Log("4");
 							this.ClearAllWorlds();
 						}
 					}
-				}
-				if( mymod.CurrentNetMode == 0 || mymod.CurrentNetMode == 2 ) {
+
 					this.Save( mymod );
 				}
+
+				Promises.TriggerCustomPromise( "ResetModeWorldExited" );
 			} );
 		}
 
@@ -65,7 +69,7 @@ namespace ResetMode.Logic {
 
 			if( rewards_mod == null || rewards_mod.Version < new Version( 1, 5, 0 ) ) {
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.SessionLogic.LoadRewards - No Rewards mod found." );
+					LogHelpers.Log( "ResetMode.Logic.SessionLogic.LoadRewards - No Rewards mod found." );
 				}
 				return;
 			}
@@ -78,7 +82,7 @@ namespace ResetMode.Logic {
 				mymod2.Session.LogRewardsPPSpending( plr, rewards );
 
 				if( mymod2.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.SessionLogic.LoadRewards - Refundable PP added: " + rewards );
+					LogHelpers.Log( "ResetMode.Logic.SessionLogic.LoadRewards - Refundable PP added: " + rewards );
 				}
 			};
 
@@ -86,10 +90,10 @@ namespace ResetMode.Logic {
 				rewards_mod.Call( "OnPointsSpent", func );
 
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.SessionLogic.LoadRewards - Success." );
+					LogHelpers.Log( "ResetMode.Logic.SessionLogic.LoadRewards - Success." );
 				}
 			} catch( Exception e ) {
-				LogHelpers.Log( "ResetMode.SessionLogic.LoadRewards - Could not hook Rewards: " + e.ToString() );
+				LogHelpers.Log( "ResetMode.Logic.SessionLogic.LoadRewards - Could not hook Rewards: " + e.ToString() );
 			}
 		}
 	}

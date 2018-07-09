@@ -1,8 +1,8 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.PlayerHelpers;
 using HamstarHelpers.Services.Messages;
-using HamstarHelpers.Services.Timers;
 using HamstarHelpers.TmlHelpers;
+using HamstarHelpers.WorldHelpers;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -76,7 +76,11 @@ namespace ResetMode.Logic {
 			if( mymod.Session.IsPlaying( mymod, player ) ) { return; }
 
 			if( mymod.Session.IsSessionedWorldNotOurs() ) {
-				mymod.Session.BadExit( mymod );
+				if( mymod.Session.HasWorldEverBeenPlayed( WorldHelpers.GetUniqueIdWithSeed() ) ) {
+					mymod.Session.GoodExit( mymod );
+				} else {
+					mymod.Session.BadExit( mymod );
+				}
 				return;
 			}
 
@@ -107,7 +111,7 @@ namespace ResetMode.Logic {
 
 		public void Boot( ResetModeMod mymod, Player player, string reason ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "PlayerLogic.Boot player: " + player.whoAmI );
+				LogHelpers.Log( "ResetMode.Logic.PlayerLogic.Boot - Player "+player.name+" (" + player.whoAmI+")" );
 			}
 
 			ErrorLogger.Log( player.name + " was booted. Reason: " + reason );
