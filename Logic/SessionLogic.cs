@@ -41,6 +41,11 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void Load( ResetModeMod mymod ) {
+			if( Main.netMode == 1 ) {
+				LogHelpers.Log( "ResetMode.Logic.SessionLogic.Save - Clients cannot load config from file" );
+				return;
+			}
+
 			bool success;
 
 			var data = DataFileHelpers.LoadJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, out success );
@@ -59,6 +64,10 @@ namespace ResetMode.Logic {
 		}
 
 		public void Save( ResetModeMod mymod ) {
+			if( Main.netMode == 1 ) {
+				LogHelpers.Log("ResetMode.Logic.SessionLogic.Save - Clients cannot save config to file");
+				return;
+			}
 			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, this.Data );
 		}
 		
