@@ -45,6 +45,11 @@ namespace ResetMode.Logic {
 
 			var data = DataFileHelpers.LoadJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, out success );
 			if( success ) {
+				// Very specific failsafe:
+				if( data.IsRunning && !data.AwaitingNextWorld && data.CurrentSessionedWorldId == "" && data.AllPlayedWorlds.Count == 0 ) {
+					data.IsRunning = false;
+				}
+
 				this.Data = data;
 			}
 

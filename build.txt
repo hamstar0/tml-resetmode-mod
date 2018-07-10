@@ -1,5 +1,5 @@
 author = hamstar
-version = 1.1.1.7
+version = 1.1.1.8
 displayName = Reset Mode
 modReferences = HamstarHelpers@1.6.6, TimeLimit@1.1.5
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*

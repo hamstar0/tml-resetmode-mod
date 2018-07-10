@@ -1,5 +1,7 @@
-﻿using HamstarHelpers.DebugHelpers;
+﻿using HamstarHelpers.Components.Network;
+using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.WorldHelpers;
+using ResetMode.NetProtocols;
 using System;
 using Terraria;
 using Terraria.IO;
@@ -66,6 +68,10 @@ namespace ResetMode.Logic {
 			this.Data.CurrentSessionedWorldId = "";
 			this.Data.PlayersValidated.Clear();
 			this.Save( mymod );
+
+			if( Main.netMode == 2 ) {
+				PacketProtocol.QuickSendToClient<SessionProtocol>( -1, -1 );
+			}
 
 			this.GoodExit( mymod );
 		}
