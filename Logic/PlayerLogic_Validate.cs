@@ -64,6 +64,7 @@ namespace ResetMode.Logic {
 			mymod.Session.AddPlayer( mymod, player );
 		}
 
+		////////////////
 
 		public void RefundRewardsSpendings( ResetModeMod mymod, Player player ) {
 			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
@@ -98,6 +99,7 @@ namespace ResetMode.Logic {
 			}
 
 			mymod.Session.Data.PlayerPPSpendings[pid] = 0;
+			mymod.Session.Save( mymod );
 
 			if( mymod.Config.ResetRewardsKills ) {
 				rewards_mod.Call( "ResetKills", player );
