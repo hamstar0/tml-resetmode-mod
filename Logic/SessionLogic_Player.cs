@@ -25,7 +25,9 @@ namespace ResetMode.Logic {
 			}
 
 			this.Data.PlayersValidated.Add( uid );
-			this.Save( mymod );
+			if( Main.netMode != 1 ) {
+				this.Save( mymod );
+			}
 		}
 	}
 }

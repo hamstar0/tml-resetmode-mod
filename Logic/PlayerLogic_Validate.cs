@@ -99,7 +99,9 @@ namespace ResetMode.Logic {
 			}
 
 			mymod.Session.Data.PlayerPPSpendings[pid] = 0;
-			mymod.Session.Save( mymod );
+			if( Main.netMode != 1 ) {
+				mymod.Session.Save( mymod );
+			}
 
 			if( mymod.Config.ResetRewardsKills ) {
 				rewards_mod.Call( "ResetKills", player );

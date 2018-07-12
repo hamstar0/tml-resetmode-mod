@@ -53,7 +53,9 @@ namespace ResetMode.Logic {
 			this.Data.AllPlayedWorlds.Add( world_id );
 			this.Data.CurrentSessionedWorldId = world_id;
 			this.Data.AwaitingNextWorld = false;
-			this.Save( mymod );
+			if( Main.netMode != 1 ) {
+				this.Save( mymod );
+			}
 
 			this.RunModCalls( mymod );
 		}
@@ -67,7 +69,9 @@ namespace ResetMode.Logic {
 			this.Data.AwaitingNextWorld = true;
 			this.Data.CurrentSessionedWorldId = "";
 			this.Data.PlayersValidated.Clear();
-			this.Save( mymod );
+			if( Main.netMode != 1 ) {
+				this.Save( mymod );
+			}
 
 			if( Main.netMode == 2 ) {
 				PacketProtocol.QuickSendToClient<SessionProtocol>( -1, -1 );
@@ -102,7 +106,9 @@ namespace ResetMode.Logic {
 				this.Data.CurrentSessionedWorldId = "";
 				this.Data.AwaitingNextWorld = true;
 
-				this.Save( mymod );
+				if( Main.netMode != 1 ) {
+					this.Save( mymod );
+				}
 			} catch( Exception e ) {
 				LogHelpers.Log( "ResetMode.Logic.SessionLogic.ClearAllWorlds - " + e.ToString() );
 			}
