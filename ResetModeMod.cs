@@ -56,7 +56,7 @@ namespace ResetMode {
 
 			this.Session.OnModLoad();
 
-			Timers.SetTimer( "ResetModePeriodicDebugInfo", 30 * 60, () => {
+			Timers.SetTimer( "ResetModePeriodicDebugInfo", 120 * 60, () => {
 				var mymod = ResetModeMod.Instance;
 				if( mymod.Config.DebugModeInfo ) {
 					LogHelpers.Log( "PERIODIC DEBUG DUMP: "+mymod.Session.Data.ToString() );

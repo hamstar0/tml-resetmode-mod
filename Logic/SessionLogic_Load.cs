@@ -79,7 +79,7 @@ namespace ResetMode.Logic {
 				mymod2.Session.LogRewardsPPSpending( plr, rewards );
 
 				if( mymod2.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.Logic.SessionLogic.LoadRewards - Refundable PP added: " + rewards );
+					LogHelpers.Log( "ResetMode.Logic.SessionLogic.LoadRewards.Action - Refundable PP added for "+plr.name+": " + rewards );
 				}
 			};
 
