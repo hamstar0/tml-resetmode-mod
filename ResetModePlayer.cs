@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.PlayerHelpers;
 using ResetMode.Data;
 using ResetMode.Logic;
 using Terraria;
@@ -56,6 +57,11 @@ namespace ResetMode {
 					mymod.ConfigJson.SaveFile();
 					ErrorLogger.Log( "Reset Mode config " + ResetModeConfigData.ConfigVersion.ToString() + " created (ModPlayer.OnEnterWorld())." );
 				}
+			}
+
+			if( mymod.Config.DebugModeInfo ) {
+				bool _;
+				ErrorLogger.Log( "ResetMode.ResetModePlayer.OnEnterWorld - " + player.name + " joined ("+PlayerIdentityHelpers.GetUniqueId(player, out _)+")" );
 			}
 
 			if( Main.netMode == 0 ) {

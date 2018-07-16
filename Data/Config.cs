@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.Components.Config;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -68,6 +69,13 @@ namespace ResetMode.Data {
 			this.VersionSinceUpdate = ResetModeConfigData.ConfigVersion.ToString();
 
 			return true;
+		}
+
+
+		////////////////
+
+		public override string ToString() {
+			return JsonConvert.SerializeObject( this );
 		}
 	}
 }

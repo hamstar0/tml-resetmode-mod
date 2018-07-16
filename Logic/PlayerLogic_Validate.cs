@@ -12,6 +12,10 @@ namespace ResetMode.Logic {
 	partial class PlayerLogic {
 		public void ValidatePlayer( ResetModeMod mymod, Player player ) {
 			if( Main.netMode == 1 ) { throw new Exception("Clients cannot call this."); }
+
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "ResetMode.Logic.PlayerLogic.ValidatePlayer - Validating "+player.name+"..." );
+			}
 			
 			if( Main.netMode == 2 ) {
 				PacketProtocol.QuickRequestToClient<PlayerResetProtocol>( player.whoAmI, -1 );
