@@ -20,7 +20,6 @@ namespace ResetMode.Logic {
 
 		private bool IsPromptingForReset = false;
 		private bool HasCheckedValidation = false;
-		private bool IsValidInstance = false;
 
 
 
@@ -36,33 +35,21 @@ namespace ResetMode.Logic {
 
 
 		////////////////
-
-		private void PreUpdateInstance( ResetModeMod mymod, Player player ) {
-			if( this.IsValidInstance ) { return; }
-			this.IsValidInstance = true;
-
-			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.Logic.PlayerLogic.PreUpdateInstance - "+player.name );
-			}
-		}
-
+		
 		public void PreUpdateUnsyncedLocal( ResetModeMod mymod, Player player ) {
 		}
 
 		public void PreUpdateSyncedSingle( ResetModeMod mymod ) {
-			this.PreUpdateInstance( mymod, Main.LocalPlayer );
 			this.CheckValidation( mymod, Main.LocalPlayer );
 			this.UpdatePromptStasis( mymod, Main.LocalPlayer );
 		}
 
 		public void PreUpdateSyncedClient( ResetModeMod mymod, Player player ) {
-			this.PreUpdateInstance( mymod, player );
 			this.UpdatePromptStasis( mymod, player );
 		}
 
 		public void PreUpdateSyncedServer( ResetModeMod mymod, Player player ) {
 			if( LoadHelpers.IsWorldSafelyBeingPlayed() ) {
-				this.PreUpdateInstance( mymod, player );
 				this.CheckValidation( mymod, player );
 			}
 		}

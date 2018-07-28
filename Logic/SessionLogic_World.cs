@@ -77,7 +77,9 @@ namespace ResetMode.Logic {
 				PacketProtocol.QuickSendToClient<SessionProtocol>( -1, -1 );
 			}
 
-			this.GoodExit( mymod );
+			if( Main.netMode != 1 ) {
+				this.GoodExit( mymod );
+			}
 		}
 
 

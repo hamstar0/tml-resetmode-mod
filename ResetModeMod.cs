@@ -56,13 +56,15 @@ namespace ResetMode {
 
 			this.Session.OnModLoad();
 
-			Timers.SetTimer( "ResetModePeriodicDebugInfo", 120 * 60, () => {
-				var mymod = ResetModeMod.Instance;
-				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "PERIODIC DEBUG DUMP: "+mymod.Session.Data.ToString() );
-				}
-				return true;
-			} );
+			if( Timers.GetTimerTickDuration( "ResetModePeriodicDebugInfo" ) == 0 ) {
+				Timers.SetTimer( "ResetModePeriodicDebugInfo", 180 * 60, () => {
+					var mymod = ResetModeMod.Instance;
+					if( mymod.Config.DebugModeInfo ) {
+						LogHelpers.Log( "PERIODIC DEBUG DUMP: " + mymod.Session.Data.ToString() );
+					}
+					return true;
+				} );
+			}
 		}
 
 		

@@ -57,6 +57,7 @@
     <Compile Include="ResetModeMod.cs" />
     <Compile Include="ResetModePlayer_Load.cs" />
     <Compile Include="ResetModePlayer.cs" />
+    <Compile Include="ResetModeWorld.cs" />
     <Compile Include="UIPromptTheme.cs" />
   </ItemGroup>
   <ItemGroup>

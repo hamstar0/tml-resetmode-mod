@@ -27,16 +27,6 @@ namespace ResetMode.Data {
 		public bool ResetRewardsKills = false;
 
 		public KeyValuePair<string, string[]>[] OnWorldEngagedCalls = new KeyValuePair<string, string[]>[0];
-		
-		////
-
-		public string _OLD_SETTINGS_BELOW_ = "";
-
-		[Obsolete( "use DeleteAllWorldsBetweenGames", true )]
-		public bool ResetAllWorldsOnLoad = false;
-
-		[Obsolete( "use DeleteAllWorldsBetweenGames", true )]
-		public bool ResetAllWorldsBetweenGames = false;
 
 
 
