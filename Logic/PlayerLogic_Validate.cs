@@ -14,7 +14,7 @@ namespace ResetMode.Logic {
 			if( Main.netMode == 1 ) { throw new Exception("Clients cannot call this."); }
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.Logic.PlayerLogic.ValidatePlayer - Validating "+player.name+"..." );
+				LogHelpers.Log( "ResetMode.PlayerLogic.ValidatePlayer - Validating "+player.name+"..." );
 			}
 			
 			if( Main.netMode == 2 ) {
@@ -74,7 +74,7 @@ namespace ResetMode.Logic {
 			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
 			if( rewards_mod == null ) {
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.Logic.PlayerLogic.RefundRewardsSpendings - No Rewards mod." );
+					LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - No Rewards mod." );
 				}
 				return;
 			}
@@ -82,7 +82,7 @@ namespace ResetMode.Logic {
 			bool success;
 			var pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
 			if( !success ) {
-				LogHelpers.Log( "ResetMode.Logic.PlayerLogic.RefundRewardsSpendings - Could not reset player Rewards; no UID for player " + player.name );
+				LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - Could not reset player Rewards; no UID for player " + player.name );
 				return;
 			}
 
@@ -93,11 +93,11 @@ namespace ResetMode.Logic {
 					rewards_mod.Call( "AddPoints", player, pp_spent );
 
 					if( mymod.Config.DebugModeInfo ) {
-						LogHelpers.Log( "ResetMode.Logic.PlayerLogic.RefundRewardsSpendings - '" + player.name + "' PP spendings of " + pp_spent + " returned" );
+						LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - '" + player.name + "' PP spendings of " + pp_spent + " returned" );
 					}
 				} else {
 					if( mymod.Config.DebugModeInfo ) {
-						LogHelpers.Log( "ResetMode.Logic.PlayerLogic.RefundRewardsSpendings - '" + player.name + "' PP could not be set" );
+						LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - '" + player.name + "' PP could not be set" );
 					}
 				}
 			}

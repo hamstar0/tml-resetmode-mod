@@ -27,11 +27,11 @@ namespace ResetMode.Logic {
 
 		public void BeginResetTimer( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.BeginResetTimer" );
+				LogHelpers.Log( "ResetMode.SessionLogic.BeginResetTimer" );
 			}
 			
 			if( TimeLimitAPI.GetTimersOf( "reset" ).Count > 0 ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.BeginResetTimer - Existing reset timers halted." );
+				LogHelpers.Log( "ResetMode.SessionLogic.BeginResetTimer - Existing reset timers halted." );
 				Main.NewText( "Warning: Existing reset timers removed." );
 			}
 			TimeLimitAPI.TimerStop( "reset" );	// Stop regardless? API failure perhaps?
@@ -47,7 +47,7 @@ namespace ResetMode.Logic {
 			string world_id = WorldHelpers.GetUniqueIdWithSeed();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.AddWorldToSession - World ID: " + world_id );
+				LogHelpers.Log( "ResetMode.SessionLogic.AddWorldToSession - World ID: " + world_id );
 			}
 
 			this.Data.AllPlayedWorlds.Add( world_id );
@@ -63,7 +63,7 @@ namespace ResetMode.Logic {
 
 		public void ExpireCurrentWorldInSession( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.ExpireWorldInSession" );
+				LogHelpers.Log( "ResetMode.SessionLogic.ExpireCurrentWorldInSession" );
 			}
 
 			this.Data.AwaitingNextWorld = true;
@@ -74,7 +74,7 @@ namespace ResetMode.Logic {
 			}
 
 			if( Main.netMode == 2 ) {
-				PacketProtocol.QuickSendToClient<SessionProtocol>( -1, -1 );
+				SessionProtocol.SyncToClients();
 			}
 
 			if( Main.netMode != 1 ) {
@@ -112,7 +112,7 @@ namespace ResetMode.Logic {
 					this.Save( mymod );
 				}
 			} catch( Exception e ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.ClearAllWorlds - " + e.ToString() );
+				LogHelpers.Log( "ResetMode.SessionLogic.ClearAllWorlds - " + e.ToString() );
 			}
 		}
 	}

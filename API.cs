@@ -30,7 +30,7 @@ namespace ResetMode {
 		////////////////
 
 		public static bool StartSession() {
-			if( Main.netMode == 1 ) { throw new Exception("Clients cannot call this."); }
+			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			var mymod = ResetModeMod.Instance;
 

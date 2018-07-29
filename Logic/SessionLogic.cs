@@ -42,7 +42,7 @@ namespace ResetMode.Logic {
 
 		public void Load( ResetModeMod mymod ) {
 			if( Main.netMode == 1 ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.Save - Clients cannot load config from file" );
+				LogHelpers.Log( "ResetMode.SessionLogic.Save - Clients cannot load config from file" );
 				return;
 			}
 
@@ -59,13 +59,13 @@ namespace ResetMode.Logic {
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.Load - Success? "+success+": "+this.Data.ToString() );
+				LogHelpers.Log( "ResetMode.SessionLogic.Load - Success? "+success+": "+this.Data.ToString() );
 			}
 		}
 
 		public void Save( ResetModeMod mymod ) {
 			if( Main.netMode == 1 ) {
-				LogHelpers.Log("ResetMode.Logic.SessionLogic.Save - Clients cannot save config to file");
+				LogHelpers.Log("ResetMode.SessionLogic.Save - Clients cannot save config to file");
 				return;
 			}
 			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, this.Data );
@@ -96,7 +96,7 @@ namespace ResetMode.Logic {
 			bool success;
 			string pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
 			if( !success ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.LogRewardsPPSpending - Invalid player UID for " + player.name );
+				LogHelpers.Log( "ResetMode.SessionLogic.LogRewardsPPSpending - Invalid player UID for " + player.name );
 				return;
 			}
 
@@ -114,7 +114,7 @@ namespace ResetMode.Logic {
 			foreach( KeyValuePair<string, string[]> kv in mymod.Config.OnWorldEngagedCalls ) {
 				string mod_name = kv.Key;
 				if( string.IsNullOrEmpty( mod_name ) ) {
-					LogHelpers.Log( "ResetMode.Logic.SessionLogic.RunModCalls - Invalid mod name for API call " );
+					LogHelpers.Log( "ResetMode.SessionLogic.RunModCalls - Invalid mod name for API call " );
 					continue;
 				}
 
@@ -122,7 +122,7 @@ namespace ResetMode.Logic {
 					mod = ModLoader.GetMod( mod_name );
 					if( mod == null ) { throw new Exception(); }
 				} catch {
-					LogHelpers.Log( "ResetMode.Logic.SessionLogic.RunModCalls - Missing or invalid mod \"" + mod_name + "\" for API call" );
+					LogHelpers.Log( "ResetMode.SessionLogic.RunModCalls - Missing or invalid mod \"" + mod_name + "\" for API call" );
 					continue;
 				}
 
@@ -133,9 +133,9 @@ namespace ResetMode.Logic {
 
 				try {
 					mod.Call( dest );
-					LogHelpers.Log( "ResetMode.Logic.SessionLogic.RunModCalls - Calling " + kv.Key + " command \"" + string.Join( " ", dest ) + '"' );
+					LogHelpers.Log( "ResetMode.SessionLogic.RunModCalls - Calling " + kv.Key + " command \"" + string.Join( " ", dest ) + '"' );
 				} catch( Exception e ) {
-					LogHelpers.Log( "ResetMode.Logic.SessionLogic.RunModCalls - World load " + kv.Key + " command error - " + e.ToString() );
+					LogHelpers.Log( "ResetMode.SessionLogic.RunModCalls - World load " + kv.Key + " command error - " + e.ToString() );
 				}
 			}
 		}

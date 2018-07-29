@@ -66,7 +66,7 @@ namespace ResetMode.Logic {
 
 			if( rewards_mod == null || rewards_mod.Version < new Version( 1, 5, 0 ) ) {
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.Logic.SessionLogic.LoadRewards - No Rewards mod found." );
+					LogHelpers.Log( "ResetMode.SessionLogic.LoadRewards - No Rewards mod found." );
 				}
 				return;
 			}
@@ -79,7 +79,7 @@ namespace ResetMode.Logic {
 				mymod2.Session.LogRewardsPPSpending( plr, rewards );
 
 				if( mymod2.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.Logic.SessionLogic.LoadRewards.Action - Refundable PP added for "+plr.name+": " + rewards );
+					LogHelpers.Log( "ResetMode.SessionLogic.LoadRewards.Action - Refundable PP added for "+plr.name+": " + rewards );
 				}
 			};
 
@@ -87,10 +87,10 @@ namespace ResetMode.Logic {
 				rewards_mod.Call( "OnPointsSpent", func );
 
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.Logic.SessionLogic.LoadRewards - Success." );
+					LogHelpers.Log( "ResetMode.SessionLogic.LoadRewards - Success." );
 				}
 			} catch( Exception e ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.LoadRewards - Could not hook Rewards: " + e.ToString() );
+				LogHelpers.Log( "ResetMode.SessionLogic.LoadRewards - Could not hook Rewards: " + e.ToString() );
 			}
 		}
 	}

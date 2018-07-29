@@ -23,24 +23,24 @@ namespace ResetMode.Logic {
 		////////////////
 
 		internal void UpdateSingle( ResetModeMod mymod ) {
-			this.UpdateHost( mymod );
+			this.UpdateGame( mymod );
 		}
 
 		internal void UpdateClient( ResetModeMod mymod ) {
 		}
 
 		internal void UpdateServer( ResetModeMod mymod ) {
-			this.UpdateHost( mymod );
+			this.UpdateGame( mymod );
 		}
 
 		////////////////
 		
-		private void UpdateHost( ResetModeMod mymod ) {
+		private void UpdateGame( ResetModeMod mymod ) {
 			if( this.IsSessionNeedingWorld() ) {
 				string world_id = WorldHelpers.GetUniqueIdWithSeed();
 
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.Logic.SessionLogic.UpdateHost - Session needs a world (current world id: " + world_id + ")" );
+					LogHelpers.Log( "ResetMode.SessionLogic.UpdateGame - Session needs a world (current world id: " + world_id + ")" );
 				}
 				
 				if( this.HasWorldEverBeenPlayed( world_id ) ) {
@@ -55,7 +55,13 @@ namespace ResetMode.Logic {
 				string world_id = WorldHelpers.GetUniqueIdWithSeed();
 
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.Logic.SessionLogic.UpdateSessionHost - World has expired (current world id: " + world_id + ")" );
+					LogHelpers.Log( "ResetMode.SessionLogic.UpdateGame - World has expired (current world id: " + world_id + ")" );
+				}
+
+				if( mymod.Config.WrongWorldForcesHardReset ) {
+					this.Data.AwaitingNextWorld = true;
+					this.Data.CurrentSessionedWorldId = "";
+					this.Save( mymod );
 				}
 
 				if( this.HasWorldEverBeenPlayed( world_id ) ) {

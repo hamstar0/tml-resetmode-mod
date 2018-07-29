@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ResetMode.Data {
 	public class ResetModeConfigData : ConfigurationDataBase {
-		public static Version ConfigVersion { get { return new Version( 1, 1, 0 ); } }
+		public static Version ConfigVersion { get { return new Version( 1, 1, 2 ); } }
 		public static string ConfigFileName { get { return "Reset Mode Config.json"; } }
 
 
@@ -22,6 +22,7 @@ namespace ResetMode.Data {
 		public bool AutoStartSession = false;
 
 		public bool DeleteAllWorldsBetweenGames = false;
+		public bool WrongWorldForcesHardReset = false;
 
 		public bool ResetRewardsSpendings = true;
 		public bool ResetRewardsKills = false;

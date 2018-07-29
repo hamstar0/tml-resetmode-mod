@@ -31,6 +31,11 @@ namespace ResetMode.Data {
 			}
 		}
 
+
+		internal ResetModeSessionData Clone() {
+			return (ResetModeSessionData)this.MemberwiseClone();
+		}
+
 		////////////////
 
 		public override string ToString() {

@@ -116,7 +116,7 @@ namespace ResetMode.Logic {
 
 		public void Boot( ResetModeMod mymod, Player player, string reason ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.Logic.PlayerLogic.Boot - Player "+player.name+" (" + player.whoAmI+")" );
+				LogHelpers.Log( "ResetMode.PlayerLogic.Boot - Player "+player.name+" (" + player.whoAmI+")" );
 			}
 
 			ErrorLogger.Log( player.name + " was booted. Reason: " + reason );

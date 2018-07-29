@@ -20,10 +20,6 @@ namespace ResetMode.NetProtocols {
 
 			mymod.ConfigJson.SetData( this.Data );
 
-			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.NetProtocols.ModSettingsProtocol.ReceiveWithClient - " + this.Data.ToString() );
-			}
-
 			Player player = Main.LocalPlayer;
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 

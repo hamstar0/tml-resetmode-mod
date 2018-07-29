@@ -17,14 +17,14 @@ namespace ResetMode.Logic {
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.StartSession" );
+				LogHelpers.Log( "ResetMode.SessionLogic.StartSession" );
 			}
 			
 			this.Data.IsRunning = true;
 			this.Save( mymod );
 
 			if( Main.netMode == 2 ) {
-				PacketProtocol.QuickSendToClient<SessionProtocol>( -1, -1 );
+				SessionProtocol.SyncToClients();
 			}
 
 			return true;
@@ -36,20 +36,20 @@ namespace ResetMode.Logic {
 
 			// Already ended?
 			if( !this.Data.IsRunning ) {
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.EndSession - Already stopped." );
+				LogHelpers.Log( "ResetMode.SessionLogic.EndSession - Already stopped." );
 				return false;
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
 				string world_id = WorldHelpers.GetUniqueIdWithSeed();
-				LogHelpers.Log( "ResetMode.Logic.SessionLogic.EndSession" );
+				LogHelpers.Log( "ResetMode.SessionLogic.EndSession" );
 			}
 
 			this.Data.ResetAll();
 			this.Save( mymod );
 
 			if( Main.netMode == 2 ) {
-				PacketProtocol.QuickSendToClient<SessionProtocol>( -1, -1 );
+				SessionProtocol.SyncToClients();
 			}
 
 			this.ResetCurrentWorldForSession( mymod );
