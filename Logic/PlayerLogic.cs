@@ -96,9 +96,9 @@ namespace ResetMode.Logic {
 		public void Welcome( ResetModeMod mymod, Player player ) {
 			if( !mymod.Config.AutoStartSession ) {
 				if( Main.netMode == 0 ) {
-					InboxMessages.SetMessage( "reset_mode_welcome", "Type /resetmodestart to start Reset Mode. Type /help for a list of other available commands.", true );
+					InboxMessages.SetMessage( "reset_mode_welcome", "Type /rm-start to start Reset Mode. Type /help for a list of other available commands.", true );
 				} else {
-					InboxMessages.SetMessage( "reset_mode_welcome", "Type resetmodestart in the server console to start Reset Mode.", true );
+					InboxMessages.SetMessage( "reset_mode_welcome", "Type rm-start in the server console to start Reset Mode.", true );
 				}
 			}
 		}

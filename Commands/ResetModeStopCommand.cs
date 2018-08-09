@@ -15,7 +15,7 @@ namespace ResetMode.Commands {
 				return CommandType.Console | CommandType.World;
 			}
 		}
-		public override string Command { get { return "resetmodestop"; } }
+		public override string Command { get { return "rm-stop"; } }
 		public override string Usage { get { return "/"+this.Command; } }
 		public override string Description { get { return "Ends reset mode."; } }
 
