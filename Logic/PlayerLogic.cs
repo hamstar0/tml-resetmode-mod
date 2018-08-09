@@ -1,8 +1,8 @@
-﻿using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.PlayerHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.PlayerHelpers;
+using HamstarHelpers.Helpers.TmlHelpers;
+using HamstarHelpers.Helpers.WorldHelpers;
 using HamstarHelpers.Services.Messages;
-using HamstarHelpers.TmlHelpers;
-using HamstarHelpers.WorldHelpers;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;

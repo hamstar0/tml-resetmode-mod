@@ -1,11 +1,15 @@
 ﻿using HamstarHelpers.Components.Network;
+using HamstarHelpers.Components.Network.Data;
 using Terraria;
 
 
 namespace ResetMode.NetProtocols {
 	class PlayerResetConfirmProtocol : PacketProtocol {
-		public override void SetServerDefaults() { }
-		public override void SetClientDefaults() { }
+		private PlayerResetConfirmProtocol( PacketProtocolDataConstructorLock ctor_lock ) { }
+
+		protected override void SetServerDefaults() { }
+		protected override void SetClientDefaults() { }
+
 
 		////////////////
 

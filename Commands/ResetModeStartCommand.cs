@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.UserHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.UserHelpers;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -17,7 +17,7 @@ namespace ResetMode.Commands {
 			}
 		}
 		public override string Command { get { return "resetmodestart"; } }
-		public override string Usage { get { return "/resetmodestart"; } }
+		public override string Usage { get { return "/"+this.Command; } }
 		public override string Description { get { return "Begins reset mode."; } }
 		
 

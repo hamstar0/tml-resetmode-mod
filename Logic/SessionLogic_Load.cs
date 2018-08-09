@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.DebugHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Services.Promises;
 using System;
 using Terraria;
@@ -56,7 +56,7 @@ namespace ResetMode.Logic {
 					this.Save( mymod );
 				}
 
-				Promises.TriggerCustomPromise( "ResetModeWorldExited" );
+				Promises.TriggerValidatedPromise( ResetModeMod.WorldExitValidator, ResetModeMod.MyValidatorKey );
 			} );
 		}
 

@@ -1,5 +1,6 @@
 ﻿using HamstarHelpers.Components.Network;
-using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.Components.Network.Data;
+using HamstarHelpers.Helpers.DebugHelpers;
 using ResetMode.Data;
 using Terraria;
 
@@ -11,9 +12,13 @@ namespace ResetMode.NetProtocols {
 
 		////////////////
 
-		public override void SetServerDefaults() {
+		private ModSettingsProtocol( PacketProtocolDataConstructorLock ctor_lock ) { }
+
+		protected override void SetServerDefaults() {
 			this.Data = ResetModeMod.Instance.Config;
 		}
+
+		////////////////
 
 		protected override void ReceiveWithClient() {
 			var mymod = ResetModeMod.Instance;

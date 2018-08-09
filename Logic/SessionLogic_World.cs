@@ -1,6 +1,5 @@
-﻿using HamstarHelpers.Components.Network;
-using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.WorldHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.WorldHelpers;
 using ResetMode.NetProtocols;
 using System;
 using Terraria;

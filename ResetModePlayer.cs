@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.PlayerHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.PlayerHelpers;
 using ResetMode.Data;
 using ResetMode.Logic;
 using Terraria;
@@ -48,7 +48,8 @@ namespace ResetMode {
 		}
 		
 		public override void OnEnterWorld( Player player ) {
-			if( player.whoAmI != this.player.whoAmI ) { return; }
+			if( player.whoAmI == Main.myPlayer ) { return; }
+			if( this.player.whoAmI == Main.myPlayer ) { return; }
 
 			var mymod = (ResetModeMod)this.mod;
 

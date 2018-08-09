@@ -1,5 +1,5 @@
 using HamstarHelpers.Components.Config;
-using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Services.Promises;
 using HamstarHelpers.Services.Timers;
 using ResetMode.Data;
@@ -12,6 +12,16 @@ using Terraria.ModLoader;
 namespace ResetMode {
 	partial class ResetModeMod : Mod {
 		public static ResetModeMod Instance { get; private set; }
+
+		internal readonly static object MyValidatorKey;
+		internal readonly static PromiseValidator WorldExitValidator;
+
+		////////////////
+
+		static ResetModeMod() {
+			ResetModeMod.MyValidatorKey = new object();
+			ResetModeMod.WorldExitValidator = new PromiseValidator( ResetModeMod.MyValidatorKey );
+		}
 
 
 
@@ -49,7 +59,8 @@ namespace ResetMode {
 			Promises.AddWorldLoadEachPromise( delegate {
 				this.CurrentNetMode = Main.netMode;
 			} );
-			Promises.AddCustomPromise( "ResetModeWorldExited", () => {
+
+			Promises.AddValidatedPromise( ResetModeMod.WorldExitValidator, () => {
 				this.CurrentNetMode = -1;
 				return true;
 			} );

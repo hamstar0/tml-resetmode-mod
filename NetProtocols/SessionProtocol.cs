@@ -1,6 +1,7 @@
 ﻿using HamstarHelpers.Components.Network;
-using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.PlayerHelpers;
+using HamstarHelpers.Components.Network.Data;
+using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.PlayerHelpers;
 using ResetMode.Data;
 using System.Collections.Generic;
 using Terraria;
@@ -26,13 +27,14 @@ namespace ResetMode.NetProtocols {
 
 		////////////////
 
-		public SessionProtocol()  { }
+		private SessionProtocol( PacketProtocolDataConstructorLock ctor_lock ) { }
 
 		private SessionProtocol( Player player ) {
 			this.PrepareDataForPlayer( player );
 		}
-		
-		public override void SetServerDefaults() { }
+
+		protected override void SetServerDefaults() { }
+
 
 		////////////////
 

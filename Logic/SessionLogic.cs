@@ -1,7 +1,7 @@
-﻿using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.MiscHelpers;
-using HamstarHelpers.PlayerHelpers;
-using HamstarHelpers.TmlHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.MiscHelpers;
+using HamstarHelpers.Helpers.PlayerHelpers;
+using HamstarHelpers.Helpers.TmlHelpers;
 using ResetMode.Data;
 using System;
 using System.Collections.Generic;
