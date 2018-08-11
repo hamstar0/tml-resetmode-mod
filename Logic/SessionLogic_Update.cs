@@ -7,7 +7,18 @@ namespace ResetMode.Logic {
 	partial class SessionLogic {
 		internal void Update() {
 			var mymod = ResetModeMod.Instance;
-			
+
+			if( mymod.Config.DebugModeInfo ) {
+				string world_id = WorldHelpers.GetUniqueIdWithSeed();
+
+				DebugHelpers.Print( "ResetModeSessionUpdate",
+					"Is running? "+ this.Data.IsRunning
+					+ ", Exiting? "+this.IsExiting
+					+ ", Needs world? " + this.IsSessionNeedingWorld()
+					+ ", World id: " + world_id
+					+ ", Been played? " + this.HasWorldEverBeenPlayed( world_id ), 20 );
+			}
+
 			if( this.Data.IsRunning && !this.IsExiting ) {
 				if( Main.netMode == 0 ) {
 					this.UpdateSingle( mymod );
@@ -36,9 +47,9 @@ namespace ResetMode.Logic {
 		////////////////
 		
 		private void UpdateGame( ResetModeMod mymod ) {
-			if( this.IsSessionNeedingWorld() ) {
-				string world_id = WorldHelpers.GetUniqueIdWithSeed();
+			string world_id = WorldHelpers.GetUniqueIdWithSeed();
 
+			if( this.IsSessionNeedingWorld() ) {
 				if( mymod.Config.DebugModeInfo ) {
 					LogHelpers.Log( "ResetMode.SessionLogic.UpdateGame - Session needs a world (current world id: " + world_id + ")" );
 				}
@@ -52,8 +63,6 @@ namespace ResetMode.Logic {
 					this.AddWorldToSession( mymod );    // Changes world status
 				}
 			} else if( this.IsSessionedWorldNotOurs() ) {
-				string world_id = WorldHelpers.GetUniqueIdWithSeed();
-
 				if( mymod.Config.DebugModeInfo ) {
 					LogHelpers.Log( "ResetMode.SessionLogic.UpdateGame - World has expired (current world id: " + world_id + ")" );
 				}

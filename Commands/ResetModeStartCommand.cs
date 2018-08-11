@@ -46,7 +46,7 @@ namespace ResetMode.Commands {
 
 			try {
 				if( mymod.Session.StartSession( mymod ) ) {
-					caller.Reply( "Reset mode begun! This will continue until for each new world /resetmodeend is called.", Color.YellowGreen );
+					caller.Reply( "Reset mode begun! This will continue until for each new world /rm-stop is called.", Color.YellowGreen );
 				} else {
 					caller.Reply( "Reset mode is already in session.", Color.Red );
 				}

@@ -1,7 +1,7 @@
 using HamstarHelpers.Components.Config;
 using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Services.DataDumper;
 using HamstarHelpers.Services.Promises;
-using HamstarHelpers.Services.Timers;
 using ResetMode.Data;
 using ResetMode.Logic;
 using System;
@@ -67,15 +67,9 @@ namespace ResetMode {
 
 			this.Session.OnModLoad();
 
-			if( Timers.GetTimerTickDuration( "ResetModePeriodicDebugInfo" ) == 0 ) {
-				Timers.SetTimer( "ResetModePeriodicDebugInfo", 180 * 60, () => {
-					var mymod = ResetModeMod.Instance;
-					if( mymod.Config.DebugModeInfo ) {
-						LogHelpers.Log( "PERIODIC DEBUG DUMP: " + mymod.Session.Data.ToString() );
-					}
-					return true;
-				} );
-			}
+			DataDumper.SetDumpSource( "ResetMode", () => {
+				return ResetModeMod.Instance.Session.Data.ToString();
+			} );
 		}
 
 		
