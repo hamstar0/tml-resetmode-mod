@@ -3,6 +3,7 @@ using HamstarHelpers.Components.Network.Data;
 using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
 using ResetMode.Data;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Terraria;
 
@@ -22,7 +23,7 @@ namespace ResetMode.NetProtocols {
 
 		////////////////
 
-		public ResetModeSessionData Data;
+		public ResetModeSessionData NewData;
 
 
 		////////////////
@@ -48,16 +49,16 @@ namespace ResetMode.NetProtocols {
 				return;
 			}
 
-			this.Data = mymod.Session.Data.Clone();
-			this.Data.PlayersValidated = new HashSet<string>();
-			this.Data.PlayerPPSpendings = new Dictionary<string, float>();
+			this.NewData = mymod.Session.Data.Clone();
+			this.NewData.PlayersValidated = new HashSet<string>();
+			this.NewData.PlayerPPSpendings = new ConcurrentDictionary<string, float>();
 
 			if( mymod.Session.Data.PlayersValidated.Contains( uid ) ) {
-				this.Data.PlayersValidated.Add( uid );
+				this.NewData.PlayersValidated.Add( uid );
 			}
 
 			if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( uid ) ) {
-				this.Data.PlayerPPSpendings[ uid ] = this.Data.PlayerPPSpendings[ uid ];
+				this.NewData.PlayerPPSpendings[ uid ] = mymod.Session.Data.PlayerPPSpendings[ uid ];
 			}
 		}
 
@@ -80,7 +81,7 @@ namespace ResetMode.NetProtocols {
 		protected override void ReceiveWithClient() {
 			var mymod = ResetModeMod.Instance;
 
-			mymod.Session.SetData( mymod, this.Data );
+			mymod.Session.SetData( mymod, this.NewData );
 
 			Player player = Main.LocalPlayer;
 			var myplayer = player.GetModPlayer<ResetModePlayer>();

@@ -1,12 +1,13 @@
 ﻿using HamstarHelpers.Helpers.DebugHelpers;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 
 namespace ResetMode.Data {
 	public class ResetModeSessionData {
 		public ISet<string> PlayersValidated = new HashSet<string>();
-		public IDictionary<string, float> PlayerPPSpendings = new Dictionary<string, float>();
+		public ConcurrentDictionary<string, float> PlayerPPSpendings = new ConcurrentDictionary<string, float>();
 
 		public ISet<string> AllPlayedWorlds = new HashSet<string>();
 		public string CurrentSessionedWorldId = "";

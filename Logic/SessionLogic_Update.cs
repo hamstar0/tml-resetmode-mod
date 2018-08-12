@@ -55,9 +55,8 @@ namespace ResetMode.Logic {
 				}
 				
 				if( this.HasWorldEverBeenPlayed( world_id ) ) {
-					if( Main.netMode != 2 ) {   // Servers should just indefinitely boot people until closed; stopgap measure
-						this.GoodExit( mymod );
-					}
+					//if( Main.netMode != 2 ) {   // Servers should just indefinitely boot people until closed; stopgap measure
+					this.GoodExit( mymod );
 				} else {
 					this.BeginResetTimer( mymod );
 					this.AddWorldToSession( mymod );    // Changes world status
