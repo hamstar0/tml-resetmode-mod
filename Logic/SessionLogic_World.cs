@@ -65,6 +65,7 @@ namespace ResetMode.Logic {
 				LogHelpers.Log( "ResetMode.SessionLogic.ExpireCurrentWorldInSession" );
 			}
 
+try {
 			this.Data.AwaitingNextWorld = true;
 			this.Data.CurrentSessionedWorldId = "";
 			this.Data.PlayersValidated.Clear();
@@ -77,8 +78,10 @@ namespace ResetMode.Logic {
 			}
 
 			if( Main.netMode != 1 ) {
+LogHelpers.Log("???");
 				this.GoodExit( mymod );
 			}
+} catch( Exception e ) { LogHelpers.Log("?!? "+e.ToString()); }
 		}
 
 
@@ -111,7 +114,7 @@ namespace ResetMode.Logic {
 					this.Save( mymod );
 				}
 			} catch( Exception e ) {
-				LogHelpers.Log( "ResetMode.SessionLogic.ClearAllWorlds - " + e.ToString() );
+				LogHelpers.Log( "!ResetMode.SessionLogic.ClearAllWorlds - " + e.ToString() );
 			}
 		}
 	}

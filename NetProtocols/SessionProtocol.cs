@@ -44,7 +44,7 @@ namespace ResetMode.NetProtocols {
 			bool success;
 			string uid = PlayerIdentityHelpers.GetUniqueId( player, out success );
 			if( !success ) {
-				LogHelpers.Log( "Could not get player id." );
+				LogHelpers.Log( "!ResetMode.SessionProtocol.PrepareDataForPlayer - Could not get player id. (" + player.name+" ("+player.whoAmI+") active? "+player.active+")" );
 				return;
 			}
 
@@ -65,6 +65,11 @@ namespace ResetMode.NetProtocols {
 		////////////////
 
 		protected override bool ReceiveRequestWithServer( int from_who ) {
+			if( Main.player[from_who] == null || !Main.player[from_who].active ) {
+				LogHelpers.Log( "!ResetMode.SessionProtocol.ReceiveRequestWithServer - Player not available." );
+				return true;
+			}
+
 			this.PrepareDataForPlayer( Main.player[ from_who ] );
 
 			return false;

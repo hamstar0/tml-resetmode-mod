@@ -44,6 +44,7 @@ namespace ResetMode.Logic {
 				LogHelpers.Log( "ResetMode.SessionLogic.EndSession" );
 			}
 
+			this.IsExiting = false;
 			this.Data.ResetAll();
 			this.Save( mymod );
 

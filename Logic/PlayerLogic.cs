@@ -82,11 +82,7 @@ namespace ResetMode.Logic {
 			if( !mymod.Session.Data.IsRunning ) { return; }
 
 			if( this.IsPromptingForReset ) {
-				player.noItems = true;
-				player.noBuilding = true;
-				player.stoned = true;
-				player.immune = true;
-				player.immuneTime = 2;
+				PlayerHelpers.LockdownPlayerPerTick( player );
 			}
 		}
 

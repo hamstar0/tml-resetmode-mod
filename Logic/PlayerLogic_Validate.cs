@@ -82,7 +82,7 @@ namespace ResetMode.Logic {
 			bool success;
 			var pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
 			if( !success ) {
-				LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - Could not reset player Rewards; no UID for player " + player.name );
+				LogHelpers.Log( "!ResetMode.PlayerLogic.RefundRewardsSpendings - Could not reset player Rewards; no UID for player " + player.name );
 				return;
 			}
 
@@ -97,7 +97,7 @@ namespace ResetMode.Logic {
 					}
 				} else {
 					if( mymod.Config.DebugModeInfo ) {
-						LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - '" + player.name + "' PP could not be set" );
+						LogHelpers.Log( "!ResetMode.PlayerLogic.RefundRewardsSpendings - '" + player.name + "' PP could not be set" );
 					}
 				}
 			}

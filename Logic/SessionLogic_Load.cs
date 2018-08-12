@@ -90,7 +90,7 @@ namespace ResetMode.Logic {
 					LogHelpers.Log( "ResetMode.SessionLogic.LoadRewards - Success." );
 				}
 			} catch( Exception e ) {
-				LogHelpers.Log( "ResetMode.SessionLogic.LoadRewards - Could not hook Rewards: " + e.ToString() );
+				LogHelpers.Log( "!ResetMode.SessionLogic.LoadRewards - Could not hook Rewards: " + e.ToString() );
 			}
 		}
 	}

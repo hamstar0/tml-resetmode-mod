@@ -61,8 +61,10 @@ namespace ResetMode {
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
-				bool _;
-				ErrorLogger.Log( "ResetMode.ResetModePlayer.OnEnterWorld - " + player.name + " joined ("+PlayerIdentityHelpers.GetUniqueId(player, out _)+")" );
+				bool success;
+				string uid = PlayerIdentityHelpers.GetUniqueId( player, out success );
+
+				ErrorLogger.Log( "ResetMode.ResetModePlayer.OnEnterWorld - " + player.name + " joined ("+uid+"; "+success+")" );
 			}
 
 			if( Main.netMode == 0 ) {

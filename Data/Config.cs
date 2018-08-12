@@ -33,11 +33,6 @@ namespace ResetMode.Data {
 
 		////////////////
 
-		public static readonly int _1_0_0_SecondsUntilResetInitially = 60 * 60 * 45;	// 45 hours
-		public static readonly int _1_0_0_SecondsUntilResetSubsequently = 60 * 60 * 30;	// 30 hours
-
-		////////////////
-
 		public bool UpdateToLatestVersion() {
 			var new_config = new ResetModeConfigData();
 
@@ -47,14 +42,6 @@ namespace ResetMode.Data {
 
 			if( vers_since >= ResetModeConfigData.ConfigVersion ) {
 				return false;
-			}
-			if( vers_since < new Version( 1, 0, 1 ) ) {
-				if( this.SecondsUntilResetInitially == ResetModeConfigData._1_0_0_SecondsUntilResetInitially ) {
-					this.SecondsUntilResetInitially = new_config.SecondsUntilResetInitially;
-				}
-				if( this.SecondsUntilResetSubsequently == ResetModeConfigData._1_0_0_SecondsUntilResetSubsequently ) {
-					this.SecondsUntilResetSubsequently = new_config.SecondsUntilResetSubsequently;
-				}
 			}
 
 			this.VersionSinceUpdate = ResetModeConfigData.ConfigVersion.ToString();
