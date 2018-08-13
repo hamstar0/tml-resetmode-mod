@@ -48,6 +48,7 @@
     <Compile Include="Logic\SessionLogic_World.cs" />
     <Compile Include="Logic\SessionLogic_OnOff.cs" />
     <Compile Include="Logic\SessionLogic.cs" />
+    <Compile Include="NetProtocols\PlayerEjectProtocol.cs" />
     <Compile Include="NetProtocols\SessionProtocol.cs" />
     <Compile Include="NetProtocols\PlayerResetConfirmProtocol.cs" />
     <Compile Include="NetProtocols\PlayerResetProtocol.cs" />

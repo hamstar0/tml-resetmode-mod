@@ -1,9 +1,12 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
+﻿using HamstarHelpers.Components.Network;
+using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
 using HamstarHelpers.Helpers.TmlHelpers;
 using HamstarHelpers.Helpers.WorldHelpers;
 using HamstarHelpers.Services.Messages;
 using Microsoft.Xna.Framework;
+using ResetMode.NetProtocols;
+using System;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -58,6 +61,10 @@ namespace ResetMode.Logic {
 		////////////////
 
 		private void CheckValidation( ResetModeMod mymod, Player player ) {
+			if( Main.netMode == 1 ) {
+				throw new Exception( "!ResetMode.PlayerLogic.CheckValidation - No clients." );
+			}
+			
 			if( !mymod.Session.Data.IsRunning ) { return; }
 			if( this.HasCheckedValidation ) { return; }
 			
@@ -65,10 +72,14 @@ namespace ResetMode.Logic {
 			if( mymod.Session.IsPlaying( mymod, player ) ) { return; }
 
 			if( mymod.Session.IsSessionedWorldNotOurs() ) {
-				if( mymod.Session.HasWorldEverBeenPlayed( WorldHelpers.GetUniqueIdWithSeed() ) ) {
-					mymod.Session.GoodExit( mymod );
-				} else {
-					mymod.Session.BadExit( mymod );
+				if( mymod.Config.DebugModeInfo ) {
+					LogHelpers.Log( "ResetMode.PlayerLogic.CheckValidation - Playing sessioned world that isn't ours; ejecting player " + player.name + "..." );
+				}
+
+				if( Main.netMode == 0 ) {
+					PlayerEjectProtocol.Eject( player );
+				} else if( Main.netMode == 2 ) {
+					PacketProtocol.QuickRequestToClient<PlayerEjectProtocol>( player.whoAmI, -1 );
 				}
 				return;
 			}
