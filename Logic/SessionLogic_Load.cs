@@ -44,6 +44,10 @@ namespace ResetMode.Logic {
 			Promises.AddPostWorldUnloadEachPromise( () => {
 				var mymod = ResetModeMod.Instance;
 
+				if( mymod.Config.DebugModeInfo ) {
+					LogHelpers.Log( "ResetMode.SessionLogic.OnModLoad (in promise) - Unloading world..." );
+				}
+
 				this.IsExiting = false;
 				
 				if( mymod.CurrentNetMode == 0 || mymod.CurrentNetMode == 2 ) {

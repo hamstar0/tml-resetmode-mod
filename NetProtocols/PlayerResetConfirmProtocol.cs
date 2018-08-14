@@ -18,7 +18,7 @@ namespace ResetMode.NetProtocols {
 			Player player = Main.player[ from_who ];
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
-			myplayer.Logic.BeginSession( mymod, player );
+			myplayer.Logic.BeginSessionForPlayer( mymod, player );
 			myplayer.Logic.RefundRewardsSpendings( mymod, player );
 
 			PacketProtocol.QuickRequestToClient<PlayerResetConfirmProtocol>( from_who, -1 );
@@ -31,7 +31,7 @@ namespace ResetMode.NetProtocols {
 			Player player = Main.LocalPlayer;
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
-			myplayer.Logic.BeginSession( mymod, player );
+			myplayer.Logic.BeginSessionForPlayer( mymod, player );
 			myplayer.Logic.RefundRewardsSpendings( mymod, player );
 
 			return true;

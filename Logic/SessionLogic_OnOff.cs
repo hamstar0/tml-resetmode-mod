@@ -9,6 +9,8 @@ namespace ResetMode.Logic {
 	partial class SessionLogic {
 		public bool StartSession( ResetModeMod mymod ) {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
+
+			//this.IsExiting = false;	// Careful!
 			
 			// Already running?
 			if( this.Data.IsRunning ) {

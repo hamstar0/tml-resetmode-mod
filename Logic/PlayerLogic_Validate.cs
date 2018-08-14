@@ -41,7 +41,7 @@ namespace ResetMode.Logic {
 				PlayerModHelpers.ModdedExtensionsReset( replayer );
 
 				if( Main.netMode == 0 ) {
-					this.BeginSession( mymod, replayer );
+					this.BeginSessionForPlayer( mymod, replayer );
 					this.RefundRewardsSpendings( mymod, replayer );
 				} else if( Main.netMode == 1 ) {
 					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>();
@@ -64,8 +64,12 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public void BeginSession( ResetModeMod mymod, Player player ) {
+		public void BeginSessionForPlayer( ResetModeMod mymod, Player player ) {
 			mymod.Session.AddPlayer( mymod, player );
+
+			if( Main.netMode == 2 ) {
+				PacketProtocol.QuickSendToClient<SessionProtocol>( player.whoAmI, -1 );
+			}
 		}
 
 		////////////////

@@ -2,6 +2,7 @@
 using HamstarHelpers.Helpers.MiscHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
 using HamstarHelpers.Helpers.TmlHelpers;
+using HamstarHelpers.Services.Timers;
 using ResetMode.Data;
 using System;
 using System.Collections.Generic;
@@ -23,13 +24,16 @@ namespace ResetMode.Logic {
 		public bool IsExiting = false;
 		public bool IsWorldInPlay = false;
 
+		private Func<bool> OnTickGet;
+
 
 
 		////////////////
 
 		internal SessionLogic() {
 			this.Data = new ResetModeSessionData();
-			
+
+			this.OnTickGet = Timers.MainOnTickGet();
 			Main.OnTick += SessionLogic._Update;
 		}
 
@@ -83,9 +87,11 @@ namespace ResetMode.Logic {
 		private static void _Update() {
 			var mymod = ResetModeMod.Instance;
 			if( mymod == null ) { return; }
-			
-			if( LoadHelpers.IsWorldSafelyBeingPlayed() && mymod.Session.IsWorldInPlay ) {
-				mymod.Session.Update();
+
+			if( mymod.Session.OnTickGet() ) {
+				if( LoadHelpers.IsWorldSafelyBeingPlayed() && mymod.Session.IsWorldInPlay ) {
+					mymod.Session.Update();
+				}
 			}
 		}
 
