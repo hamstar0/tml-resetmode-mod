@@ -71,10 +71,12 @@ namespace ResetMode {
 			}
 
 			if( Main.netMode == 0 ) {
-				this.OnSingleConnect();
+				Promises.AddCurrentPlayerLoadOncePromise( () => {
+					this.OnSingleConnect();
+				} );
 			}
 			if( Main.netMode == 1 ) {
-				Promises.AddSafeWorldLoadOncePromise( () => {
+				Promises.AddCurrentPlayerLoadOncePromise( () => {
 					this.OnCurrentClientConnect();
 				} );
 			}
