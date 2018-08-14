@@ -2,6 +2,7 @@
 using HamstarHelpers.Components.UI.Elements.Dialogs;
 using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
+using HamstarHelpers.Services.Promises;
 using ResetMode.NetProtocols;
 using System;
 using Terraria;
@@ -68,7 +69,11 @@ namespace ResetMode.Logic {
 			mymod.Session.AddPlayer( mymod, player );
 
 			if( Main.netMode == 2 ) {
-				PacketProtocol.QuickSendToClient<SessionProtocol>( player.whoAmI, -1 );
+				int who = player.whoAmI;
+
+				Promises.AddSafeWorldLoadOncePromise( () => {
+					PacketProtocol.QuickSendToClient<SessionProtocol>( who, -1 );
+				} );
 			}
 		}
 

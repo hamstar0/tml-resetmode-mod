@@ -1,5 +1,6 @@
 ﻿using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
+using HamstarHelpers.Services.Promises;
 using ResetMode.Data;
 using ResetMode.Logic;
 using Terraria;
@@ -42,7 +43,9 @@ namespace ResetMode {
 
 			if( Main.netMode == 2 ) {
 				if( to_who == -1 && from_who == this.player.whoAmI ) {
-					this.OnServerConnect();
+					Promises.AddSafeWorldLoadOncePromise( () => {
+						this.OnServerConnect();
+					} );
 				}
 			}
 		}
@@ -71,7 +74,9 @@ namespace ResetMode {
 				this.OnSingleConnect();
 			}
 			if( Main.netMode == 1 ) {
-				this.OnClientConnect();
+				Promises.AddSafeWorldLoadOncePromise( () => {
+					this.OnClientConnect();
+				} );
 			}
 		}
 

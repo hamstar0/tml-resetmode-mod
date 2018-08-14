@@ -52,9 +52,11 @@ namespace ResetMode {
 
 
 		public override void Load() {
+LogHelpers.Log("1");
 			ResetModeMod.Instance = this;
 
 			this.LoadConfigs();
+LogHelpers.Log("2");
 			
 			Promises.AddWorldLoadEachPromise( delegate {
 				this.CurrentNetMode = Main.netMode;
@@ -64,8 +66,10 @@ namespace ResetMode {
 				this.CurrentNetMode = -1;
 				return true;
 			} );
-
+LogHelpers.Log("3");
+			
 			this.Session.OnModLoad();
+LogHelpers.Log("4");
 
 			DataDumper.SetDumpSource( "ResetMode", () => {
 				return ResetModeMod.Instance.Session.Data.ToString();

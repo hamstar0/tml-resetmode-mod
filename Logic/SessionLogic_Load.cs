@@ -9,7 +9,9 @@ using TimeLimit;
 namespace ResetMode.Logic {
 	partial class SessionLogic {
 		internal void OnModLoad() {
+LogHelpers.Log("3a");
 			Promises.AddPostModLoadPromise( () => {
+LogHelpers.Log(" Aa");
 				var mymod = ResetModeMod.Instance;
 				var hook = new CustomTimerAction( delegate () {
 					if( Main.netMode == 1 ) { return; }
@@ -20,10 +22,12 @@ namespace ResetMode.Logic {
 
 				this.Load( mymod );
 				this.LoadRewards( mymod );
+LogHelpers.Log(" Ab");
 			} );
 
 
 			Promises.AddPostWorldLoadEachPromise( delegate {
+LogHelpers.Log(" Ba");
 				var mymod = ResetModeMod.Instance;
 
 				if( mymod.Config.AutoStartSession ) {
@@ -33,15 +37,18 @@ namespace ResetMode.Logic {
 				}
 
 				this.IsWorldInPlay = true;
+LogHelpers.Log(" Bb");
 			} );
 
 
 			Promises.AddWorldUnloadEachPromise( () => {
+LogHelpers.Log(" C");
 				this.IsWorldInPlay = false;
 			} );
 
 
 			Promises.AddPostWorldUnloadEachPromise( () => {
+LogHelpers.Log(" Da");
 				var mymod = ResetModeMod.Instance;
 
 				if( mymod.Config.DebugModeInfo ) {
@@ -61,7 +68,9 @@ namespace ResetMode.Logic {
 				}
 
 				Promises.TriggerValidatedPromise( ResetModeMod.WorldExitValidator, ResetModeMod.MyValidatorKey );
+LogHelpers.Log(" Db");
 			} );
+LogHelpers.Log("3b");
 		}
 
 
