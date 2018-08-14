@@ -44,7 +44,7 @@ namespace ResetMode {
 			if( Main.netMode == 2 ) {
 				if( to_who == -1 && from_who == this.player.whoAmI ) {
 					Promises.AddSafeWorldLoadOncePromise( () => {
-						this.OnServerConnect();
+						this.OnServerConnect( Main.player[from_who] );
 					} );
 				}
 			}
@@ -75,7 +75,7 @@ namespace ResetMode {
 			}
 			if( Main.netMode == 1 ) {
 				Promises.AddSafeWorldLoadOncePromise( () => {
-					this.OnClientConnect();
+					this.OnCurrentClientConnect();
 				} );
 			}
 		}

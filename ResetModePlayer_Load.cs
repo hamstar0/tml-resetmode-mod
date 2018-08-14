@@ -1,6 +1,7 @@
 ﻿using HamstarHelpers.Components.Network;
 using HamstarHelpers.Helpers.DebugHelpers;
 using ResetMode.NetProtocols;
+using Terraria;
 using Terraria.ModLoader;
 
 
@@ -11,12 +12,12 @@ namespace ResetMode {
 			this.FinishSessionSync();
 		}
 
-		private void OnClientConnect() {
+		private void OnCurrentClientConnect() {
 			PacketProtocol.QuickRequestToServer<ModSettingsProtocol>();
 			PacketProtocol.QuickRequestToServer<SessionProtocol>();
 		}
 
-		private void OnServerConnect() {
+		private void OnServerConnect( Player player ) {
 			this.HasModSettings = true;
 			this.HasSessionData = true;
 		}
