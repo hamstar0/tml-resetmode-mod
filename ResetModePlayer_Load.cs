@@ -1,5 +1,7 @@
-﻿using HamstarHelpers.Components.Network;
+﻿using HamstarHelpers.Components.Errors;
+using HamstarHelpers.Components.Network;
 using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Services.Promises;
 using ResetMode.NetProtocols;
 using Terraria;
 using Terraria.ModLoader;
@@ -20,6 +22,7 @@ namespace ResetMode {
 		private void OnServerConnect( Player player ) {
 			this.HasModSettings = true;
 			this.HasSessionData = true;
+			this.IsSynced = true;
 		}
 
 
@@ -28,29 +31,28 @@ namespace ResetMode {
 		public void FinishModSettingsSync() {
 			this.HasModSettings = true;
 
-			this.PostAnySync();
+			this.FinishLocalSync();
 		}
 		
 		public void FinishSessionSync() {
 			this.HasSessionData = true;
 
-			this.PostAnySync();
+			this.FinishLocalSync();
 		}
 
 		////////////////
 		
-		public void PostAnySync() {
-			if( this.IsSynced() && !this.HasEnteredWorld ) {
-				this.HasEnteredWorld = true;
-				
+		public void FinishLocalSync() {
+			if( Main.netMode == 2 ) { throw new HamstarException("Server not allowed."); }
+			if( !this.HasModSettings || !this.HasSessionData ) { return; }
+			if( this.IsSyncing ) { return; }
+
+			this.IsSyncing = true;
+			
+			Promises.AddWorldInPlayOncePromise( () => {
+				this.IsSynced = true;
 				this.Logic.OnEnterWorld( (ResetModeMod)this.mod, this.player );
-			}
-		}
-
-		////////////////
-
-		public bool IsSynced() {
-			return this.HasModSettings && this.HasSessionData;
+			} );
 		}
 	}
 }

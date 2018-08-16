@@ -13,7 +13,8 @@ namespace ResetMode {
 		
 		public bool HasModSettings { get; private set; }
 		public bool HasSessionData { get; private set; }
-		private bool HasEnteredWorld = false;
+		private bool IsSyncing = false;
+		private bool IsSynced = false;
 
 
 
@@ -25,14 +26,16 @@ namespace ResetMode {
 			this.Logic = new PlayerLogic();
 			this.HasModSettings = false;
 			this.HasSessionData = false;
-			this.HasEnteredWorld = false;
+			this.IsSyncing = false;
+			this.IsSynced = false;
 		}
 
 		public override void clientClone( ModPlayer client_clone ) {
 			var clone = (ResetModePlayer)client_clone;
 			clone.HasModSettings = this.HasModSettings;
 			clone.HasSessionData = this.HasSessionData;
-			clone.HasEnteredWorld = this.HasEnteredWorld;
+			clone.IsSyncing = this.IsSyncing;
+			clone.IsSynced = this.IsSynced;
 		}
 
 
@@ -59,7 +62,7 @@ namespace ResetMode {
 			if( Main.netMode == 0 ) {
 				if( !mymod.ConfigJson.LoadFile() ) {
 					mymod.ConfigJson.SaveFile();
-					ErrorLogger.Log( "Reset Mode config " + ResetModeConfigData.ConfigVersion.ToString() + " created (ModPlayer.OnEnterWorld())." );
+					ErrorLogger.Log( "Reset Mode config "+ResetModeConfigData.ConfigVersion.ToString()+" created (ModPlayer.OnEnterWorld())." );
 				}
 			}
 
@@ -67,19 +70,17 @@ namespace ResetMode {
 				bool success;
 				string uid = PlayerIdentityHelpers.GetUniqueId( player, out success );
 
-				ErrorLogger.Log( "ResetMode.ResetModePlayer.OnEnterWorld - " + player.name + " joined ("+uid+"; "+success+")" );
+				ErrorLogger.Log( "ResetMode.ResetModePlayer.OnEnterWorld - "+player.name+" joined ("+uid+"; "+success+")" );
 			}
 
-			if( Main.netMode == 0 ) {
-				Promises.AddCurrentPlayerLoadOncePromise( () => {
+			Promises.AddWorldInPlayOncePromise( () => {
+				if( Main.netMode == 0 ) {
 					this.OnSingleConnect();
-				} );
-			}
-			if( Main.netMode == 1 ) {
-				Promises.AddCurrentPlayerLoadOncePromise( () => {
+				}
+				if( Main.netMode == 1 ) {
 					this.OnCurrentClientConnect();
-				} );
-			}
+				}
+			} );
 		}
 
 
@@ -92,17 +93,17 @@ namespace ResetMode {
 
 			var mymod = (ResetModeMod)this.mod;
 
-			if( this.IsSynced() ) {
+			if( this.IsSynced ) {
 				if( Main.netMode == 0 ) {
 					this.Logic.PreUpdateSyncedSingle( mymod );
 				} else if( Main.netMode == 1 ) {
-					this.Logic.PreUpdateSyncedClient( mymod, this.player );
+					this.Logic.PreUpdateSyncedCurrentClient( mymod );
 				} else {
-					this.Logic.PreUpdateSyncedServer( mymod, this.player );
+					this.Logic.PreUpdateSyncedServerForClient( mymod, this.player );
 				}
 			} else {
 				if( Main.netMode != 2 ) {
-					this.Logic.PreUpdateUnsyncedLocal( mymod, this.player );
+					this.Logic.PreUpdateUnsyncedLocal( mymod );
 				}
 			}
 		}

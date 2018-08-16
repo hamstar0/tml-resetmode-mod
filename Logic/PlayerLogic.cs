@@ -39,7 +39,7 @@ namespace ResetMode.Logic {
 
 		////////////////
 		
-		public void PreUpdateUnsyncedLocal( ResetModeMod mymod, Player player ) {
+		public void PreUpdateUnsyncedLocal( ResetModeMod mymod ) {
 		}
 
 		public void PreUpdateSyncedSingle( ResetModeMod mymod ) {
@@ -47,11 +47,11 @@ namespace ResetMode.Logic {
 			this.UpdatePromptStasis( mymod, Main.LocalPlayer );
 		}
 
-		public void PreUpdateSyncedClient( ResetModeMod mymod, Player player ) {
-			this.UpdatePromptStasis( mymod, player );
+		public void PreUpdateSyncedCurrentClient( ResetModeMod mymod ) {
+			this.UpdatePromptStasis( mymod, Main.LocalPlayer );
 		}
 
-		public void PreUpdateSyncedServer( ResetModeMod mymod, Player player ) {
+		public void PreUpdateSyncedServerForClient( ResetModeMod mymod, Player player ) {
 			if( LoadHelpers.IsWorldSafelyBeingPlayed() ) {
 				this.CheckValidation( mymod, player );
 			}

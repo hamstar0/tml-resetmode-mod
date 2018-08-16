@@ -8,7 +8,7 @@ namespace ResetMode.NetProtocols {
 		private PlayerResetConfirmProtocol( PacketProtocolDataConstructorLock ctor_lock ) { }
 
 		protected override void SetClientDefaults() { }
-		protected override void SetServerDefaults() { }
+		protected override void SetServerDefaults( int to_who ) { }
 
 
 		////////////////

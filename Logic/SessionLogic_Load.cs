@@ -1,5 +1,6 @@
 ﻿using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Services.Promises;
+using Newtonsoft.Json;
 using System;
 using Terraria;
 using Terraria.ModLoader;
@@ -42,13 +43,13 @@ LogHelpers.Log(" Bb");
 
 
 			Promises.AddWorldUnloadEachPromise( () => {
-LogHelpers.Log(" C");
+LogHelpers.Log(" C "+JsonConvert.SerializeObject(this.Data));
 				this.IsWorldInPlay = false;
 			} );
 
 
 			Promises.AddPostWorldUnloadEachPromise( () => {
-LogHelpers.Log(" Da");
+LogHelpers.Log(" Da "+JsonConvert.SerializeObject(this.Data));
 				var mymod = ResetModeMod.Instance;
 
 				if( mymod.Config.DebugModeInfo ) {
@@ -68,7 +69,7 @@ LogHelpers.Log(" Da");
 				}
 
 				Promises.TriggerValidatedPromise( ResetModeMod.WorldExitValidator, ResetModeMod.MyValidatorKey );
-LogHelpers.Log(" Db");
+LogHelpers.Log(" Db "+JsonConvert.SerializeObject(this.Data));
 			} );
 LogHelpers.Log("3b");
 		}

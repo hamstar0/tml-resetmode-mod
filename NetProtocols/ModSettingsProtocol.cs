@@ -14,7 +14,7 @@ namespace ResetMode.NetProtocols {
 
 		private ModSettingsProtocol( PacketProtocolDataConstructorLock ctor_lock ) { }
 
-		protected override void SetServerDefaults() {
+		protected override void SetServerDefaults( int to_who ) {
 			this.Data = ResetModeMod.Instance.Config;
 		}
 

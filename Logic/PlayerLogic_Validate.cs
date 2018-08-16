@@ -71,7 +71,7 @@ namespace ResetMode.Logic {
 			if( Main.netMode == 2 ) {
 				int who = player.whoAmI;
 
-				Promises.AddSafeWorldLoadOncePromise( () => {
+				Promises.AddWorldInPlayOncePromise( () => {
 					PacketProtocol.QuickSendToClient<SessionProtocol>( who, -1 );
 				} );
 			}
