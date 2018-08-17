@@ -2,7 +2,6 @@
 using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
 using HamstarHelpers.Helpers.TmlHelpers;
-using HamstarHelpers.Helpers.WorldHelpers;
 using HamstarHelpers.Services.Messages;
 using Microsoft.Xna.Framework;
 using ResetMode.NetProtocols;
@@ -52,7 +51,7 @@ namespace ResetMode.Logic {
 		}
 
 		public void PreUpdateSyncedServerForClient( ResetModeMod mymod, Player player ) {
-			if( LoadHelpers.IsWorldSafelyBeingPlayed() ) {
+			if( LoadHelpers.IsWorldSafelyBeingPlayed() && LoadHelpers.IsPlayerLoaded(player) ) {
 				this.CheckValidation( mymod, player );
 			}
 		}
