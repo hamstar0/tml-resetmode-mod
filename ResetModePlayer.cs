@@ -67,10 +67,9 @@ namespace ResetMode {
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
-				bool success;
-				string uid = PlayerIdentityHelpers.GetUniqueId( player, out success );
+				string uid = PlayerIdentityHelpers.GetProperUniqueId( player );
 
-				ErrorLogger.Log( "ResetMode.ResetModePlayer.OnEnterWorld - "+player.name+" joined ("+uid+"; "+success+")" );
+				ErrorLogger.Log( "ResetMode.ResetModePlayer.OnEnterWorld - "+player.name+" joined ("+uid+")" );
 			}
 
 			Promises.AddWorldInPlayOncePromise( () => {

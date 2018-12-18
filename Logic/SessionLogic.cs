@@ -99,12 +99,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void LogRewardsPPSpending( Player player, float pp ) {
-			bool success;
-			string pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
-			if( !success ) {
-				LogHelpers.Log( "!ResetMode.SessionLogic.LogRewardsPPSpending - Invalid player UID for " + player.name );
-				return;
-			}
+			string pid = PlayerIdentityHelpers.GetProperUniqueId( player );
 
 			if( this.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
 				this.Data.PlayerPPSpendings[pid] += pp;

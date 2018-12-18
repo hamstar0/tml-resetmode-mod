@@ -88,12 +88,7 @@ namespace ResetMode.Logic {
 				return;
 			}
 			
-			bool success;
-			var pid = PlayerIdentityHelpers.GetUniqueId( player, out success );
-			if( !success ) {
-				LogHelpers.Log( "!ResetMode.PlayerLogic.RefundRewardsSpendings - Could not reset player Rewards; no UID for player " + player.name );
-				return;
-			}
+			var pid = PlayerIdentityHelpers.GetProperUniqueId( player );
 
 			if( mymod.Config.ResetRewardsSpendings ) {
 				if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( pid ) ) {

@@ -12,13 +12,30 @@ using Terraria;
 
 namespace ResetMode.NetProtocols {
 	class SessionProtocol : PacketProtocol {
+		protected class MyFactory : Factory<SessionProtocol> {
+			public Player Player;
+
+			public MyFactory( Player player ) {
+				this.Player = player;
+			}
+
+			protected override void Initialize( SessionProtocol data ) {
+				data.PrepareDataForPlayer( this.Player );
+			}
+		}
+
+
+
+		////////////////
+		
 		public static void SyncToClients() {
 			for( int i=0; i<Main.player.Length; i++ ) {
 				Player plr = Main.player[i];
 				if( plr == null || !plr.active ) { continue; }
 
-				var protocol = new SessionProtocol( plr );
-				
+				var factory = new MyFactory( plr );
+				SessionProtocol protocol = factory.Create();
+
 				protocol.SendToClient( i, -1 );
 			}
 		}
@@ -31,11 +48,7 @@ namespace ResetMode.NetProtocols {
 
 		////////////////
 
-		private SessionProtocol( PacketProtocolDataConstructorLock ctor_lock ) { }
-
-		private SessionProtocol( Player player ) {
-			this.PrepareDataForPlayer( player );
-		}
+		protected SessionProtocol( PacketProtocolDataConstructorLock ctor_lock ) : base( ctor_lock ) { }
 
 		protected override void SetServerDefaults( int to_who ) {
 			Player plr = Main.player[ to_who ];
@@ -73,12 +86,7 @@ namespace ResetMode.NetProtocols {
 			var mymod = ResetModeMod.Instance;
 
 			try {
-				bool success;
-				string uid = PlayerIdentityHelpers.GetUniqueId( player, out success );
-				if( !success ) {
-					LogHelpers.Log( "!ResetMode.SessionProtocol.PrepareDataForPlayer - Could not get player id. (" + player.name + " (" + player.whoAmI + ") active? " + player.active + ")" );
-					return;
-				}
+				string uid = PlayerIdentityHelpers.GetProperUniqueId( player );
 
 				this.NewData = mymod.Session.Data.Clone();
 				this.NewData.PlayersValidated = new HashSet<string>();

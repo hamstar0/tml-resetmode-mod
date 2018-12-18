@@ -4,8 +4,8 @@ using Terraria;
 
 
 namespace ResetMode.NetProtocols {
-	class PlayerResetConfirmProtocol : PacketProtocol {
-		private PlayerResetConfirmProtocol( PacketProtocolDataConstructorLock ctor_lock ) { }
+	class PlayerResetConfirmProtocol : PacketProtocol { //PacketProtocolRequestToEither {
+		protected PlayerResetConfirmProtocol( PacketProtocolDataConstructorLock ctor_lock ) : base( ctor_lock ) { }
 
 		protected override void SetClientDefaults() { }
 		protected override void SetServerDefaults( int to_who ) { }

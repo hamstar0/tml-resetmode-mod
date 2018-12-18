@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 
 namespace ResetMode.NetProtocols {
-	class PlayerEjectProtocol : PacketProtocol {
+	class PlayerEjectProtocol : PacketProtocol { //PacketProtocolRequestToClient {	TODO
 		public static void Eject( Player player ) {
 			var mymod = ResetModeMod.Instance;
 
@@ -23,7 +23,7 @@ namespace ResetMode.NetProtocols {
 
 		////////////////
 
-		private PlayerEjectProtocol( PacketProtocolDataConstructorLock ctor_lock ) { }
+		protected PlayerEjectProtocol( PacketProtocolDataConstructorLock ctor_lock ) : base( ctor_lock ) { }
 
 		protected override void SetClientDefaults() { }
 

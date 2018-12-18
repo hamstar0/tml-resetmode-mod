@@ -6,21 +6,21 @@ using Terraria;
 
 
 namespace ResetMode.NetProtocols {
-	class ModSettingsProtocol : PacketProtocol {
+	class ModSettingsProtocol : PacketProtocolRequestToServer {
 		public ResetModeConfigData Data;
 
 
 		////////////////
 
-		private ModSettingsProtocol( PacketProtocolDataConstructorLock ctor_lock ) { }
+		protected ModSettingsProtocol( PacketProtocolDataConstructorLock ctor_lock ) : base( ctor_lock ) { }
 
-		protected override void SetServerDefaults( int to_who ) {
+		protected override void InitializeServerSendData( int to_who ) {
 			this.Data = ResetModeMod.Instance.Config;
 		}
 
 		////////////////
 
-		protected override void ReceiveWithClient() {
+		protected override void ReceiveReply() {
 			var mymod = ResetModeMod.Instance;
 
 			mymod.ConfigJson.SetData( this.Data );

@@ -29,13 +29,9 @@ namespace ResetMode.Commands {
 			}
 
 			if( Main.netMode == 2 && caller.CommandType != CommandType.Console ) {
-				bool success;
-				bool has_priv = UserHelpers.HasBasicServerPrivilege( caller.Player, out success );
+				bool has_priv = UserHelpers.HasBasicServerPrivilege( caller.Player );
 
-				if( !success ) {
-					caller.Reply( "Could not validate.", Color.Yellow );
-					return;
-				} else if( !has_priv ) {
+				if( !has_priv ) {
 					caller.Reply( "Access denied.", Color.Red );
 					return;
 				}
