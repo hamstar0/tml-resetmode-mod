@@ -1,5 +1,4 @@
 ﻿using HamstarHelpers.Components.Network;
-using HamstarHelpers.Components.Network.Data;
 using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.WorldHelpers;
 using Terraria;
@@ -7,32 +6,36 @@ using Terraria.ModLoader;
 
 
 namespace ResetMode.NetProtocols {
-	class PlayerEjectProtocol : PacketProtocol { //PacketProtocolRequestToClient {	TODO
+	class PlayerEjectProtocol : PacketProtocolRequestToClient { //PacketProtocolRequestToClient {	TODO
 		public static void Eject( Player player ) {
 			var mymod = ResetModeMod.Instance;
 
 			if( mymod.Session.HasWorldEverBeenPlayed( WorldHelpers.GetUniqueIdWithSeed() ) ) {
 				ErrorLogger.Log( "Ejecting player " + Main.LocalPlayer.name + " via good exit..." );
-				mymod.Session.GoodExit( mymod );
+				mymod.Session.GoodExit();
 			} else {
 				ErrorLogger.Log( "Ejecting player " + Main.LocalPlayer.name + " via bad exit..." );
-				mymod.Session.BadExit( mymod );
+				mymod.Session.BadExit();
 			}
 		}
 
 
 		////////////////
 
-		protected PlayerEjectProtocol( PacketProtocolDataConstructorLock ctor_lock ) : base( ctor_lock ) { }
+		private PlayerEjectProtocol() { }
 
-		protected override void SetClientDefaults() { }
-
+		protected override void InitializeClientSendData() { }
+		
 
 		////////////////
 
-		protected override bool ReceiveRequestWithClient() {
-			PlayerEjectProtocol.Eject( Main.LocalPlayer );
-			return true;
+		//protected override bool ReceiveRequestWithClient() {
+		//	PlayerEjectProtocol.Eject( Main.LocalPlayer );
+		//	return true;
+		//}
+
+		protected override void ReceiveReply( int fromWho ) {
+			PlayerEjectProtocol.Eject( Main.player[fromWho] );
 		}
 	}
 }

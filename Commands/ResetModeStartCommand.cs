@@ -16,23 +16,23 @@ namespace ResetMode.Commands {
 				return CommandType.Console | CommandType.World;
 			}
 		}
-		public override string Command { get { return "rm-start"; } }
-		public override string Usage { get { return "/"+this.Command; } }
-		public override string Description { get { return "Begins reset mode."; } }
+		public override string Command => "rm-start";
+		public override string Usage => "/"+this.Command;
+		public override string Description => "Begins reset mode.";
 		
 
 		////////////////
 
 		public override void Action( CommandCaller caller, string input, string[] args ) {
 			if( Main.netMode == 1 ) {
-				LogHelpers.Log( "!ResetMode.Commands.ResetModeStartCommand - Not supposed to run on client." );
+				LogHelpers.Warn( "Not supposed to run on client." );
 				return;
 			}
 
 			if( Main.netMode == 2 && caller.CommandType != CommandType.Console ) {
-				bool has_priv = UserHelpers.HasBasicServerPrivilege( caller.Player );
+				bool hasPriv = UserHelpers.HasBasicServerPrivilege( caller.Player );
 
-				if( !has_priv ) {
+				if( !hasPriv ) {
 					caller.Reply( "Access denied.", Color.Red );
 					return;
 				}
@@ -41,7 +41,7 @@ namespace ResetMode.Commands {
 			var mymod = (ResetModeMod)this.mod;
 
 			try {
-				if( mymod.Session.StartSession( mymod ) ) {
+				if( mymod.Session.StartSession() ) {
 					caller.Reply( "Reset mode begun! This will continue until for each new world /rm-stop is called.", Color.YellowGreen );
 				} else {
 					caller.Reply( "Reset mode is already in session.", Color.Red );

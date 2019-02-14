@@ -27,9 +27,10 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public void OnEnterWorld( ResetModeMod mymod, Player player ) {
+		public void OnEnterWorld( Player player ) {
+			var mymod = ResetModeMod.Instance;
 			if( mymod.Session.IsSessionNeedingWorld() ) {
-				this.Welcome( mymod, player );
+				this.Welcome( player );
 			} else if( !mymod.Session.IsSessionedWorldNotOurs() ) {
 				this.Instruct( player );
 			}
@@ -38,28 +39,31 @@ namespace ResetMode.Logic {
 
 		////////////////
 		
-		public void PreUpdateUnsyncedLocal( ResetModeMod mymod ) {
+		public void PreUpdateUnsyncedLocal() { }
+
+		public void PreUpdateSyncedSingle() {
+			var mymod = ResetModeMod.Instance;
+			this.CheckValidation( Main.LocalPlayer );
+			this.UpdatePromptStasis( Main.LocalPlayer );
 		}
 
-		public void PreUpdateSyncedSingle( ResetModeMod mymod ) {
-			this.CheckValidation( mymod, Main.LocalPlayer );
-			this.UpdatePromptStasis( mymod, Main.LocalPlayer );
+		public void PreUpdateSyncedCurrentClient() {
+			var mymod = ResetModeMod.Instance;
+			this.UpdatePromptStasis( Main.LocalPlayer );
 		}
 
-		public void PreUpdateSyncedCurrentClient( ResetModeMod mymod ) {
-			this.UpdatePromptStasis( mymod, Main.LocalPlayer );
-		}
-
-		public void PreUpdateSyncedServerForClient( ResetModeMod mymod, Player player ) {
+		public void PreUpdateSyncedServerForClient( Player player ) {
+			var mymod = ResetModeMod.Instance;
 			if( LoadHelpers.IsWorldSafelyBeingPlayed() && LoadHelpers.IsPlayerLoaded(player) ) {
-				this.CheckValidation( mymod, player );
+				this.CheckValidation( player );
 			}
 		}
 
 
 		////////////////
 
-		private void CheckValidation( ResetModeMod mymod, Player player ) {
+		private void CheckValidation( Player player ) {
+			var mymod = ResetModeMod.Instance;
 			if( Main.netMode == 1 ) {
 				throw new Exception( "!ResetMode.PlayerLogic.CheckValidation - No clients." );
 			}
@@ -68,7 +72,7 @@ namespace ResetMode.Logic {
 			if( this.HasCheckedValidation ) { return; }
 			
 			if( mymod.Session.IsSessionNeedingWorld() ) { return; }
-			if( mymod.Session.IsPlaying( mymod, player ) ) { return; }
+			if( mymod.Session.IsPlaying( player ) ) { return; }
 
 			if( mymod.Session.IsSessionedWorldNotOurs() ) {
 				if( mymod.Config.DebugModeInfo ) {
@@ -78,17 +82,18 @@ namespace ResetMode.Logic {
 				if( Main.netMode == 0 ) {
 					PlayerEjectProtocol.Eject( player );
 				} else if( Main.netMode == 2 ) {
-					PacketProtocol.QuickRequestToClient<PlayerEjectProtocol>( player.whoAmI, -1 );
+					PacketProtocolRequestToClient.QuickRequest<PlayerEjectProtocol>( player.whoAmI, -1, -1 );
 				}
 				return;
 			}
 
 			this.HasCheckedValidation = true;
-			this.ValidatePlayer( mymod, player );
+			this.ValidatePlayer( player );
 		}
 
 
-		private void UpdatePromptStasis( ResetModeMod mymod, Player player ) {
+		private void UpdatePromptStasis( Player player ) {
+			var mymod = ResetModeMod.Instance;
 			if( !mymod.Session.Data.IsRunning ) { return; }
 
 			if( this.IsPromptingForReset ) {
@@ -99,7 +104,8 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public void Welcome( ResetModeMod mymod, Player player ) {
+		public void Welcome( Player player ) {
+			var mymod = ResetModeMod.Instance;
 			if( !mymod.Config.AutoStartSession ) {
 				if( Main.netMode == 0 ) {
 					InboxMessages.SetMessage( "reset_mode_welcome", "Type /rm-start to start Reset Mode. Type /help for a list of other available commands.", true );
@@ -120,7 +126,8 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public void Boot( ResetModeMod mymod, Player player, string reason ) {
+		public void Boot( Player player, string reason ) {
+			var mymod = ResetModeMod.Instance;
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Log( "ResetMode.PlayerLogic.Boot - Player "+player.name+" (" + player.whoAmI+")" );
 			}

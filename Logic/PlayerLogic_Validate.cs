@@ -11,62 +11,64 @@ using Terraria.ModLoader;
 
 namespace ResetMode.Logic {
 	partial class PlayerLogic {
-		public void ValidatePlayer( ResetModeMod mymod, Player player ) {
-			if( Main.netMode == 1 ) { throw new Exception("Clients cannot call this."); }
+		public void ValidatePlayer( Player player ) {
+			var mymod = ResetModeMod.Instance;
+			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Log( "ResetMode.PlayerLogic.ValidatePlayer - Validating "+player.name+"..." );
 			}
 			
 			if( Main.netMode == 2 ) {
-				PacketProtocol.QuickRequestToClient<PlayerResetProtocol>( player.whoAmI, -1 );
+				PacketProtocolRequestToClient.QuickRequest<PlayerResetProtocol>( player.whoAmI, -1, -1 );
 			} else if( Main.netMode == 0 ) {
-				this.PromptReset( mymod, player );
+				this.PromptReset( player );
 			}
 		}
 
 
 		////////////////
 
-		public void PromptReset( ResetModeMod mymod, Player player ) {
+		public void PromptReset( Player player ) {
 			if( Main.netMode == 2 ) { throw new Exception( "Server cannot call this." ); }
 
-			int player_who = player.whoAmI;
+			int playerWho = player.whoAmI;
 			string text = "Play reset mode? Your character will be reset (except Progress Points)." +
 				"\nNote: Playing this character on another world will force it to reset here.";
 
-			Action confirm_action = delegate () {
-				Player replayer = Main.player[ player_who ];
+			Action confirmAction = delegate () {
+				Player replayer = Main.player[ playerWho ];
 
 				PlayerHelpers.FullVanillaReset( replayer );
 				PlayerModHelpers.ModdedExtensionsReset( replayer );
 
 				if( Main.netMode == 0 ) {
-					this.BeginSessionForPlayer( mymod, replayer );
-					this.RefundRewardsSpendings( mymod, replayer );
+					this.BeginSessionForPlayer( replayer );
+					this.RefundRewardsSpendings( replayer );
 				} else if( Main.netMode == 1 ) {
-					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>();
+					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>( -1 );
 				}
 
 				this.IsPromptingForReset = false;
 			};
-			Action cancel_action = delegate () {
-				this.Boot( mymod, player, "choose not to play" );
+			Action cancelAction = delegate () {
+				this.Boot( player, "choose not to play" );
 			};
 
 			////
 
 			this.IsPromptingForReset = true;
 
-			var prompt = new UIPromptDialog( new UIPromptTheme(), 600, 112, text, confirm_action, cancel_action );
+			var prompt = new UIPromptDialog( new UIPromptTheme(), 600, 112, text, confirmAction, cancelAction );
 			prompt.Open();
 		}
 
 
 		////////////////
 
-		public void BeginSessionForPlayer( ResetModeMod mymod, Player player ) {
-			mymod.Session.AddPlayer( mymod, player );
+		public void BeginSessionForPlayer( Player player ) {
+			var mymod = ResetModeMod.Instance;
+			mymod.Session.AddPlayer( player );
 
 			if( Main.netMode == 2 ) {
 				int who = player.whoAmI;
@@ -79,11 +81,12 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public void RefundRewardsSpendings( ResetModeMod mymod, Player player ) {
-			Mod rewards_mod = ModLoader.GetMod( "Rewards" );
-			if( rewards_mod == null ) {
+		public void RefundRewardsSpendings( Player player ) {
+			var mymod = ResetModeMod.Instance;
+			Mod rewardsMod = ModLoader.GetMod( "Rewards" );
+			if( rewardsMod == null ) {
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - No Rewards mod." );
+					LogHelpers.Alert( "No Rewards mod." );
 				}
 				return;
 			}
@@ -94,7 +97,7 @@ namespace ResetMode.Logic {
 				if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
 					float pp_spent = mymod.Session.Data.PlayerPPSpendings[pid];
 
-					rewards_mod.Call( "AddPoints", player, pp_spent );
+					rewardsMod.Call( "AddPoints", player, pp_spent );
 
 					if( mymod.Config.DebugModeInfo ) {
 						LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - '" + player.name + "' PP spendings of " + pp_spent + " returned" );
@@ -108,11 +111,11 @@ namespace ResetMode.Logic {
 
 			mymod.Session.Data.PlayerPPSpendings[pid] = 0;
 			if( Main.netMode != 1 ) {
-				mymod.Session.Save( mymod );
+				mymod.Session.Save();
 			}
 
 			if( mymod.Config.ResetRewardsKills ) {
-				rewards_mod.Call( "ResetKills", player );
+				rewardsMod.Call( "ResetKills", player );
 			}
 		}
 	}

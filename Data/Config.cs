@@ -6,8 +6,8 @@ using System.Collections.Generic;
 
 namespace ResetMode.Data {
 	public class ResetModeConfigData : ConfigurationDataBase {
-		public static Version ConfigVersion { get { return new Version( 1, 1, 2 ); } }
-		public static string ConfigFileName { get { return "Reset Mode Config.json"; } }
+		public static Version ConfigVersion => new Version( 1, 1, 2 );
+		public static string ConfigFileName => "Reset Mode Config.json";
 
 
 		////////////////
@@ -34,13 +34,13 @@ namespace ResetMode.Data {
 		////////////////
 
 		public bool UpdateToLatestVersion() {
-			var new_config = new ResetModeConfigData();
+			var newConfig = new ResetModeConfigData();
 
-			var vers_since = this.VersionSinceUpdate != "" ?
+			var versSince = this.VersionSinceUpdate != "" ?
 				new Version( this.VersionSinceUpdate ) :
 				new Version();
 
-			if( vers_since >= ResetModeConfigData.ConfigVersion ) {
+			if( versSince >= ResetModeConfigData.ConfigVersion ) {
 				return false;
 			}
 

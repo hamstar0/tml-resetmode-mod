@@ -9,12 +9,12 @@ using Terraria.ModLoader;
 
 namespace ResetMode {
 	partial class ResetModeMod : Mod {
-		public static string GithubUserName { get { return "hamstar0"; } }
-		public static string GithubProjectName { get { return "tml-resetmode-mod"; } }
+		public static string GithubUserName => "hamstar0";
+		public static string GithubProjectName => "tml-resetmode-mod";
 
-		public static string ConfigFileRelativePath {
-			get { return JsonConfig<ResetModeConfigData>.ConfigSubfolder + Path.DirectorySeparatorChar + ResetModeConfigData.ConfigFileName; }
-		}
+		public static string ConfigFileRelativePath =>
+			JsonConfig<ResetModeConfigData>.ConfigSubfolder + Path.DirectorySeparatorChar + ResetModeConfigData.ConfigFileName;
+
 		public static void ReloadConfigFromFile() {
 			if( Main.netMode != 0 ) {
 				throw new Exception( "Cannot reload configs outside of single player." );
@@ -30,10 +30,10 @@ namespace ResetMode {
 				throw new Exception( "Cannot reset to default configs outside of single player." );
 			}
 
-			var new_config = new ResetModeConfigData();
+			var newConfig = new ResetModeConfigData();
 			//new_config.SetDefaults();
 
-			ResetModeMod.Instance.ConfigJson.SetData( new_config );
+			ResetModeMod.Instance.ConfigJson.SetData( newConfig );
 			ResetModeMod.Instance.ConfigJson.SaveFile();
 		}
 	}

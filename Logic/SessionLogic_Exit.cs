@@ -8,7 +8,8 @@ using TimeLimit;
 
 namespace ResetMode.Logic {
 	partial class SessionLogic {
-		public void GoodExit( ResetModeMod mymod ) {
+		public void GoodExit() {
+			var mymod = ResetModeMod.Instance;
 			if( Main.netMode == 1 ) {
 				throw new HamstarException( "Single or server only." );
 			}
@@ -34,7 +35,8 @@ namespace ResetMode.Logic {
 		}
 
 
-		public void BadExit( ResetModeMod mymod ) {
+		public void BadExit() {
+			var mymod = ResetModeMod.Instance;
 			if( Main.netMode == 1 ) {
 				throw new HamstarException("Single or server only.");
 			}
@@ -43,7 +45,7 @@ namespace ResetMode.Logic {
 			mymod.Session.IsExiting = true;
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.SessionLogic.BadExit" );
+				LogHelpers.Alert( "" );
 			}
 
 			string msg = "World not valid for reset mode. Exiting...";

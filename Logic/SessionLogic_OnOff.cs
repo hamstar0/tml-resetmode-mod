@@ -7,7 +7,8 @@ using Terraria;
 
 namespace ResetMode.Logic {
 	partial class SessionLogic {
-		public bool StartSession( ResetModeMod mymod ) {
+		public bool StartSession() {
+			var mymod = ResetModeMod.Instance;
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			//this.IsExiting = false;	// Careful!
@@ -23,7 +24,7 @@ namespace ResetMode.Logic {
 			}
 			
 			this.Data.IsRunning = true;
-			this.Save( mymod );
+			this.Save();
 
 			if( Main.netMode == 2 ) {
 				SessionProtocol.SyncToClients();
@@ -33,29 +34,30 @@ namespace ResetMode.Logic {
 		}
 
 		
-		public bool EndSession( ResetModeMod mymod ) {
+		public bool EndSession() {
+			var mymod = ResetModeMod.Instance;
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			// Already ended?
 			if( !this.Data.IsRunning ) {
-				LogHelpers.Log( "ResetMode.SessionLogic.EndSession - Already stopped." );
+				LogHelpers.Alert( "Already stopped." );
 				return false;
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
 				string world_id = WorldHelpers.GetUniqueIdWithSeed();
-				LogHelpers.Log( "ResetMode.SessionLogic.EndSession" );
+				LogHelpers.Alert( "" );
 			}
 
 			this.IsExiting = false;
 			this.Data.ResetAll();
-			this.Save( mymod );
+			this.Save();
 
 			if( Main.netMode == 2 ) {
 				SessionProtocol.SyncToClients();
 			}
 
-			this.ResetCurrentWorldForSession( mymod );
+			this.ResetCurrentWorldForSession();
 
 			return true;
 		}

@@ -12,8 +12,8 @@ using Terraria.ModLoader;
 
 namespace ResetMode.Logic {
 	partial class SessionLogic {
-		public static string DataFileNameOnly { get { return "Session"; } }
-		public static string RelativePath { get { return "Reset Mode Sessions"; } }
+		public static string DataFileNameOnly => "Session";
+		public static string RelativePath => "Reset Mode Sessions";
 
 
 
@@ -44,7 +44,8 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public void Load( ResetModeMod mymod ) {
+		public void Load() {
+			var mymod = ResetModeMod.Instance;
 			if( Main.netMode == 1 ) {
 				LogHelpers.Log( "!ResetMode.SessionLogic.Save - Clients cannot load config from file" );
 				return;
@@ -67,7 +68,8 @@ namespace ResetMode.Logic {
 			}
 		}
 
-		public void Save( ResetModeMod mymod ) {
+		public void Save() {
+			var mymod = ResetModeMod.Instance;
 			if( Main.netMode == 1 ) {
 				LogHelpers.Log("!ResetMode.SessionLogic.Save - Clients cannot save config to file");
 				return;
@@ -77,7 +79,7 @@ namespace ResetMode.Logic {
 		
 		////////////////
 
-		internal void SetData( ResetModeMod mymod, ResetModeSessionData data ) {
+		internal void SetData( ResetModeSessionData data ) {
 			this.Data = data;
 		}
 
@@ -109,7 +111,8 @@ namespace ResetMode.Logic {
 		}
 
 		
-		public void RunModCalls( ResetModeMod mymod ) {
+		public void RunModCalls() {
+			var mymod = ResetModeMod.Instance;
 			Mod mod;
 
 			foreach( KeyValuePair<string, string[]> kv in mymod.Config.OnWorldEngagedCalls ) {

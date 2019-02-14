@@ -1,13 +1,12 @@
 ﻿using HamstarHelpers.Components.Network;
-using HamstarHelpers.Components.Network.Data;
 using Terraria;
 
 
 namespace ResetMode.NetProtocols {
-	class PlayerResetProtocol : PacketProtocol {	//PacketProtocolRequestToClient {
-		protected PlayerResetProtocol( PacketProtocolDataConstructorLock ctor_lock ) : base( ctor_lock ) { }
+	class PlayerResetProtocol : PacketProtocolRequestToClient {
+		private PlayerResetProtocol() { }
 
-		protected override void SetClientDefaults() { }
+		protected override void InitializeClientSendData() { }
 
 		////////////////
 
@@ -15,9 +14,15 @@ namespace ResetMode.NetProtocols {
 			Player player = Main.LocalPlayer;
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
-			myplayer.Logic.PromptReset( ResetModeMod.Instance, Main.LocalPlayer );
+			myplayer.Logic.PromptReset( Main.LocalPlayer );
 
 			return true;
+		}
+
+		////
+
+		protected override void ReceiveReply( int fromWho ) {
+			throw new System.NotImplementedException();
 		}
 	}
 }

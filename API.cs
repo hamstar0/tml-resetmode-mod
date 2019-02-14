@@ -23,8 +23,7 @@ namespace ResetMode {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			var mymod = ResetModeMod.Instance;
-
-			mymod.Session.Save( mymod );
+			mymod.Session.Save();
 		}
 
 		////////////////
@@ -33,16 +32,14 @@ namespace ResetMode {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			var mymod = ResetModeMod.Instance;
-
-			return mymod.Session.StartSession( mymod );
+			return mymod.Session.StartSession( );
 		}
 
 		public static bool StopSession() {
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			var mymod = ResetModeMod.Instance;
-
-			mymod.Session.EndSession( mymod );
+			mymod.Session.EndSession();
 
 			return true;
 		}

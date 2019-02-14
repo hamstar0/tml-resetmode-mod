@@ -1,6 +1,5 @@
 ﻿using HamstarHelpers.Components.Errors;
 using HamstarHelpers.Components.Network;
-using HamstarHelpers.Components.Network.Data;
 using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
 using ResetMode.Data;
@@ -12,33 +11,16 @@ using Terraria;
 
 namespace ResetMode.NetProtocols {
 	class SessionProtocol : PacketProtocol {
-		protected class MyFactory : Factory<SessionProtocol> {
-			public Player Player;
-
-			public MyFactory( Player player ) {
-				this.Player = player;
-			}
-
-			protected override void Initialize( SessionProtocol data ) {
-				data.PrepareDataForPlayer( this.Player );
-			}
-		}
-
-
-
-		////////////////
-		
 		public static void SyncToClients() {
 			for( int i=0; i<Main.player.Length; i++ ) {
 				Player plr = Main.player[i];
 				if( plr == null || !plr.active ) { continue; }
-
-				var factory = new MyFactory( plr );
-				SessionProtocol protocol = factory.Create();
-
+				
+				var protocol = new SessionProtocol( plr );
 				protocol.SendToClient( i, -1 );
 			}
 		}
+
 
 
 		////////////////
@@ -46,15 +28,22 @@ namespace ResetMode.NetProtocols {
 		public ResetModeSessionData NewData;
 
 
+
 		////////////////
 
-		protected SessionProtocol( PacketProtocolDataConstructorLock ctor_lock ) : base( ctor_lock ) { }
+		private SessionProtocol() { }
+
+		protected SessionProtocol( Player player ) {
+			this.PrepareDataForPlayer( player );
+		}
+
+		////
 
 		protected override void SetServerDefaults( int to_who ) {
 			Player plr = Main.player[ to_who ];
 
 			if( plr == null || !plr.active ) {
-				LogHelpers.Log( "!ResetMode.SessionProtocol.ReceiveRequestWithServer - Player (" + to_who + ": " + ( plr == null ? "null" : plr.name ) + ") not available." );
+				LogHelpers.Warn( "Player (" + to_who + ": " + ( plr == null ? "null" : plr.name ) + ") not available." );
 				return;
 			}
 
@@ -71,7 +60,7 @@ namespace ResetMode.NetProtocols {
 
 			var mymod = ResetModeMod.Instance;
 
-			mymod.Session.SetData( mymod, this.NewData );
+			mymod.Session.SetData( this.NewData );
 
 			Player player = Main.LocalPlayer;
 			var myplayer = player.GetModPlayer<ResetModePlayer>();

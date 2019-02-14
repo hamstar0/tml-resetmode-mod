@@ -6,8 +6,7 @@ namespace ResetMode {
 	class ResetModeWorld : ModWorld {
 		public override TagCompound Save() {
 			var mymod = ResetModeMod.Instance;
-
-			mymod.Session.Save( mymod );
+			mymod.Session.Save();
 
 			return base.Save();
 		}

@@ -21,11 +21,11 @@ namespace ResetMode.Logic {
 
 			if( this.Data.IsRunning && !this.IsExiting ) {
 				if( Main.netMode == 0 ) {
-					this.UpdateSingle( mymod );
+					this.UpdateSingle();
 				} else if( Main.netMode == 1 ) {
-					this.UpdateClient( mymod );
+					this.UpdateClient();
 				} else {
-					this.UpdateServer( mymod );
+					this.UpdateServer();
 				}
 			}
 		}
@@ -33,20 +33,21 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		internal void UpdateSingle( ResetModeMod mymod ) {
-			this.UpdateGame( mymod );
+		internal void UpdateSingle() {
+			this.UpdateGame();
 		}
 
-		internal void UpdateClient( ResetModeMod mymod ) {
+		internal void UpdateClient() {
 		}
 
-		internal void UpdateServer( ResetModeMod mymod ) {
-			this.UpdateGame( mymod );
+		internal void UpdateServer() {
+			this.UpdateGame();
 		}
 
 		////////////////
 		
-		private void UpdateGame( ResetModeMod mymod ) {
+		private void UpdateGame() {
+			var mymod = ResetModeMod.Instance;
 			string world_id = WorldHelpers.GetUniqueIdWithSeed();
 
 			if( this.IsSessionNeedingWorld() ) {
@@ -56,10 +57,10 @@ namespace ResetMode.Logic {
 				
 				if( this.HasWorldEverBeenPlayed( world_id ) ) {
 					//if( Main.netMode != 2 ) {   // Servers should just indefinitely boot people until closed; stopgap measure
-					this.GoodExit( mymod );
+					this.GoodExit();
 				} else {
-					this.BeginResetTimer( mymod );
-					this.AddWorldToSession( mymod );    // Changes world status
+					this.BeginResetTimer();
+					this.AddWorldToSession();    // Changes world status
 				}
 			} else if( this.IsSessionedWorldNotOurs() ) {
 				if( mymod.Config.DebugModeInfo ) {
@@ -69,13 +70,13 @@ namespace ResetMode.Logic {
 				if( mymod.Config.WrongWorldForcesHardReset ) {
 					this.Data.AwaitingNextWorld = true;
 					this.Data.CurrentSessionedWorldId = "";
-					this.Save( mymod );
+					this.Save();
 				}
 
 				if( this.HasWorldEverBeenPlayed( world_id ) ) {
-					this.GoodExit( mymod );
+					this.GoodExit();
 				} else {
-					this.BadExit( mymod );
+					this.BadExit();
 				}
 			}
 		}

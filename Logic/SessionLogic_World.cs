@@ -24,13 +24,14 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		public void BeginResetTimer( ResetModeMod mymod ) {
+		public void BeginResetTimer() {
+			var mymod = ResetModeMod.Instance;
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.SessionLogic.BeginResetTimer" );
+				LogHelpers.Alert( "" );
 			}
 			
 			if( TimeLimitAPI.GetTimersOf( "reset" ).Count > 0 ) {
-				LogHelpers.Log( "ResetMode.SessionLogic.BeginResetTimer - Existing reset timers halted." );
+				LogHelpers.Alert( "Existing reset timers halted." );
 				Main.NewText( "Warning: Existing reset timers removed." );
 			}
 			TimeLimitAPI.TimerStop( "reset" );	// Stop regardless? API failure perhaps?
@@ -42,27 +43,28 @@ namespace ResetMode.Logic {
 			}
 		}
 			
-		public void AddWorldToSession( ResetModeMod mymod ) {
-			string world_id = WorldHelpers.GetUniqueIdWithSeed();
+		public void AddWorldToSession() {
+			var mymod = ResetModeMod.Instance;
+			string worldId = WorldHelpers.GetUniqueIdWithSeed();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.SessionLogic.AddWorldToSession - World ID: " + world_id );
+				LogHelpers.Alert( "World ID: " + worldId );
 			}
 
-			this.Data.AllPlayedWorlds.Add( world_id );
-			this.Data.CurrentSessionedWorldId = world_id;
+			this.Data.AllPlayedWorlds.Add( worldId );
+			this.Data.CurrentSessionedWorldId = worldId;
 			this.Data.AwaitingNextWorld = false;
 			if( Main.netMode != 1 ) {
-				this.Save( mymod );
+				this.Save();
 			}
 
-			this.RunModCalls( mymod );
+			this.RunModCalls();
 		}
 
 
 		public void ExpireCurrentWorldInSession( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.SessionLogic.ExpireCurrentWorldInSession" );
+				LogHelpers.Alert( "" );
 			}
 
 try {
@@ -70,7 +72,7 @@ try {
 			this.Data.CurrentSessionedWorldId = "";
 			this.Data.PlayersValidated.Clear();
 			if( Main.netMode != 1 ) {
-				this.Save( mymod );
+				this.Save();
 			}
 
 			if( Main.netMode == 2 ) {
@@ -79,13 +81,13 @@ try {
 
 			if( Main.netMode != 1 ) {
 LogHelpers.Log("???");
-				this.GoodExit( mymod );
+				this.GoodExit();
 			}
 } catch( Exception e ) { LogHelpers.Log("?!? "+e.ToString()); }
 		}
 
 
-		public void ResetCurrentWorldForSession( ResetModeMod mymod ) {
+		public void ResetCurrentWorldForSession() {
 			this.Data.PlayersValidated.Clear();
 			this.Data.CurrentSessionedWorldId = "";
 
@@ -96,8 +98,6 @@ LogHelpers.Log("???");
 		////////////////
 
 		public void ClearAllWorlds() {
-			var mymod = ResetModeMod.Instance;
-
 			try {
 				Main.LoadWorlds();
 
@@ -111,10 +111,10 @@ LogHelpers.Log("???");
 				this.Data.AwaitingNextWorld = true;
 
 				if( Main.netMode != 1 ) {
-					this.Save( mymod );
+					this.Save();
 				}
 			} catch( Exception e ) {
-				LogHelpers.Log( "!ResetMode.SessionLogic.ClearAllWorlds - " + e.ToString() );
+				LogHelpers.Warn( e.ToString() );
 			}
 		}
 	}

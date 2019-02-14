@@ -15,8 +15,8 @@ namespace ResetMode {
 		}
 
 		private void OnCurrentClientConnect() {
-			PacketProtocol.QuickRequestToServer<ModSettingsProtocol>();
-			PacketProtocol.QuickRequestToServer<SessionProtocol>();
+			PacketProtocolRequestToServer.QuickRequest<ModSettingsProtocol>( -1 );
+			PacketProtocol.QuickRequestToServer<SessionProtocol>( -1 );
 		}
 
 		private void OnServerConnect( Player player ) {
@@ -51,7 +51,7 @@ namespace ResetMode {
 			
 			Promises.AddWorldInPlayOncePromise( () => {
 				this.IsSynced = true;
-				this.Logic.OnEnterWorld( (ResetModeMod)this.mod, this.player );
+				this.Logic.OnEnterWorld( this.player );
 			} );
 		}
 	}

@@ -1,5 +1,7 @@
 using HamstarHelpers.Components.Config;
+using HamstarHelpers.Components.Errors;
 using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.DotNetHelpers;
 using HamstarHelpers.Services.DataDumper;
 using HamstarHelpers.Services.Promises;
 using ResetMode.Data;
@@ -28,7 +30,7 @@ namespace ResetMode {
 		////////////////
 
 		internal JsonConfig<ResetModeConfigData> ConfigJson;
-		public ResetModeConfigData Config { get { return ConfigJson.Data; } }
+		public ResetModeConfigData Config => ConfigJson.Data;
 		
 		public SessionLogic Session { get; internal set; }
 
@@ -38,12 +40,6 @@ namespace ResetMode {
 		////////////////
 
 		public ResetModeMod() {
-			this.Properties = new ModProperties() {
-				Autoload = true,
-				AutoloadGores = true,
-				AutoloadSounds = true
-			};
-			
 			this.ConfigJson = new JsonConfig<ResetModeConfigData>( ResetModeConfigData.ConfigFileName,
 				ConfigurationDataBase.RelativePath, new ResetModeConfigData() );
 
@@ -52,11 +48,9 @@ namespace ResetMode {
 
 
 		public override void Load() {
-LogHelpers.Log("1");
 			ResetModeMod.Instance = this;
 
 			this.LoadConfigs();
-LogHelpers.Log("2");
 			
 			Promises.AddWorldLoadEachPromise( delegate {
 				this.CurrentNetMode = Main.netMode;
@@ -66,10 +60,8 @@ LogHelpers.Log("2");
 				this.CurrentNetMode = -1;
 				return true;
 			} );
-LogHelpers.Log("3");
 			
 			this.Session.OnModLoad();
-LogHelpers.Log("4");
 
 			DataDumper.SetDumpSource( "ResetMode", () => {
 				return ResetModeMod.Instance.Session.Data.ToString();
@@ -85,7 +77,7 @@ LogHelpers.Log("4");
 
 		private void LoadConfigs() {
 			if( !this.ConfigJson.LoadFile() ) {
-				LogHelpers.Log( "ResetMode.ResetModeMod.LoadConfigs - Reset Mode missing/invalid config created anew." );
+				LogHelpers.Alert( "Reset Mode missing/invalid config created anew." );
 				this.ConfigJson.SaveFile();
 			}
 
@@ -99,15 +91,22 @@ LogHelpers.Log("4");
 		////////////////
 
 		public override object Call( params object[] args ) {
-			if( args.Length == 0 ) { throw new Exception( "Undefined call type." ); }
+			if( args == null || args.Length == 0 ) { throw new HamstarException( "Undefined call type." ); }
 
-			string call_type = args[0] as string;
-			if( args == null ) { throw new Exception( "Invalid call type." ); }
+			string callType = args[0] as string;
+			if( callType == null ) { throw new HamstarException( "Invalid call type." ); }
 
-			var new_args = new object[args.Length - 1];
-			Array.Copy( args, 1, new_args, 0, args.Length - 1 );
+			var methodInfo = typeof( ResetModeAPI ).GetMethod( callType );
+			if( methodInfo == null ) { throw new HamstarException( "Invalid call type " + callType ); }
 
-			return ResetModeAPI.Call( call_type, new_args );
+			var newArgs = new object[args.Length - 1];
+			Array.Copy( args, 1, newArgs, 0, args.Length - 1 );
+
+			try {
+				return ReflectionHelpers.SafeCall( methodInfo, null, newArgs );
+			} catch( Exception e ) {
+				throw new HamstarException( "Bad API call.", e );
+			}
 		}
 	}
 }

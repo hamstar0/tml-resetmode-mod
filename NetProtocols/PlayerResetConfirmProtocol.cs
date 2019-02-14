@@ -1,27 +1,26 @@
 ﻿using HamstarHelpers.Components.Network;
-using HamstarHelpers.Components.Network.Data;
 using Terraria;
 
 
 namespace ResetMode.NetProtocols {
 	class PlayerResetConfirmProtocol : PacketProtocol { //PacketProtocolRequestToEither {
-		protected PlayerResetConfirmProtocol( PacketProtocolDataConstructorLock ctor_lock ) : base( ctor_lock ) { }
+		private PlayerResetConfirmProtocol() { }
 
 		protected override void SetClientDefaults() { }
-		protected override void SetServerDefaults( int to_who ) { }
+		protected override void SetServerDefaults( int toWho ) { }
 
 
 		////////////////
 
-		protected override bool ReceiveRequestWithServer( int from_who ) {
+		protected override bool ReceiveRequestWithServer( int fromWho ) {
 			var mymod = (ResetModeMod)ResetModeMod.Instance;
-			Player player = Main.player[ from_who ];
+			Player player = Main.player[ fromWho ];
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
-			myplayer.Logic.BeginSessionForPlayer( mymod, player );
-			myplayer.Logic.RefundRewardsSpendings( mymod, player );
+			myplayer.Logic.BeginSessionForPlayer( player );
+			myplayer.Logic.RefundRewardsSpendings( player );
 
-			PacketProtocol.QuickRequestToClient<PlayerResetConfirmProtocol>( from_who, -1 );
+			PacketProtocol.QuickRequestToClient<PlayerResetConfirmProtocol>( fromWho, -1, 0 );
 
 			return true;
 		}
@@ -31,8 +30,8 @@ namespace ResetMode.NetProtocols {
 			Player player = Main.LocalPlayer;
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
-			myplayer.Logic.BeginSessionForPlayer( mymod, player );
-			myplayer.Logic.RefundRewardsSpendings( mymod, player );
+			myplayer.Logic.BeginSessionForPlayer( player );
+			myplayer.Logic.RefundRewardsSpendings( player );
 
 			return true;
 		}

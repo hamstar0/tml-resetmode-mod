@@ -15,9 +15,9 @@ namespace ResetMode.Commands {
 				return CommandType.Console | CommandType.World;
 			}
 		}
-		public override string Command { get { return "rm-stop"; } }
-		public override string Usage { get { return "/"+this.Command; } }
-		public override string Description { get { return "Ends reset mode."; } }
+		public override string Command => "rm-stop";
+		public override string Usage => "/"+this.Command;
+		public override string Description => "Ends reset mode.";
 
 
 		////////////////
@@ -29,9 +29,9 @@ namespace ResetMode.Commands {
 			}
 
 			if( Main.netMode == 2 && caller.CommandType != CommandType.Console ) {
-				bool has_priv = UserHelpers.HasBasicServerPrivilege( caller.Player );
+				bool hasPriv = UserHelpers.HasBasicServerPrivilege( caller.Player );
 
-				if( !has_priv ) {
+				if( !hasPriv ) {
 					caller.Reply( "Access denied.", Color.Red );
 					return;
 				}

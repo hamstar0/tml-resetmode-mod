@@ -20,7 +20,7 @@ namespace ResetMode {
 
 		////////////////
 
-		public override bool CloneNewInstances { get { return false; } }
+		public override bool CloneNewInstances => false;
 
 		public override void Initialize() {
 			this.Logic = new PlayerLogic();
@@ -30,8 +30,8 @@ namespace ResetMode {
 			this.IsSynced = false;
 		}
 
-		public override void clientClone( ModPlayer client_clone ) {
-			var clone = (ResetModePlayer)client_clone;
+		public override void clientClone( ModPlayer clientClone ) {
+			var clone = (ResetModePlayer)clientClone;
 			clone.HasModSettings = this.HasModSettings;
 			clone.HasSessionData = this.HasSessionData;
 			clone.IsSyncing = this.IsSyncing;
@@ -41,13 +41,13 @@ namespace ResetMode {
 
 		////////////////
 
-		public override void SyncPlayer( int to_who, int from_who, bool new_player ) {
+		public override void SyncPlayer( int toWho, int fromWho, bool newPlayer ) {
 			var mymod = (ResetModeMod)this.mod;
 
 			if( Main.netMode == 2 ) {
-				if( to_who == -1 && from_who == this.player.whoAmI ) {
+				if( toWho == -1 && fromWho == this.player.whoAmI ) {
 					Promises.AddSafeWorldLoadOncePromise( () => {
-						this.OnServerConnect( Main.player[from_who] );
+						this.OnServerConnect( Main.player[fromWho] );
 					} );
 				}
 			}
@@ -69,7 +69,7 @@ namespace ResetMode {
 			if( mymod.Config.DebugModeInfo ) {
 				string uid = PlayerIdentityHelpers.GetProperUniqueId( player );
 
-				ErrorLogger.Log( "ResetMode.ResetModePlayer.OnEnterWorld - "+player.name+" joined ("+uid+")" );
+				LogHelpers.Alert( player.name+" joined ("+uid+")" );
 			}
 
 			Promises.AddWorldInPlayOncePromise( () => {
@@ -94,15 +94,15 @@ namespace ResetMode {
 
 			if( this.IsSynced ) {
 				if( Main.netMode == 0 ) {
-					this.Logic.PreUpdateSyncedSingle( mymod );
+					this.Logic.PreUpdateSyncedSingle();
 				} else if( Main.netMode == 1 ) {
-					this.Logic.PreUpdateSyncedCurrentClient( mymod );
+					this.Logic.PreUpdateSyncedCurrentClient();
 				} else {
-					this.Logic.PreUpdateSyncedServerForClient( mymod, this.player );
+					this.Logic.PreUpdateSyncedServerForClient( this.player );
 				}
 			} else {
 				if( Main.netMode != 2 ) {
-					this.Logic.PreUpdateUnsyncedLocal( mymod );
+					this.Logic.PreUpdateUnsyncedLocal();
 				}
 			}
 		}
