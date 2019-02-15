@@ -39,20 +39,31 @@ namespace ResetMode.NetProtocols {
 
 		////
 
-		protected override void SetServerDefaults( int to_who ) {
-			Player plr = Main.player[ to_who ];
+		protected override void SetServerDefaults( int toWho ) {
+			Player plr = Main.player[toWho];
 
-			if( plr == null || !plr.active ) {
-				LogHelpers.Warn( "Player (" + to_who + ": " + ( plr == null ? "null" : plr.name ) + ") not available." );
+			if( plr == null /*|| !plr.active*/ ) {
+				LogHelpers.Warn( "Player (" + toWho + ": " + ( plr == null ? "null" : plr.name ) + ") not available." );
+				return;
+			}
+
+			string uid = PlayerIdentityHelpers.GetProperUniqueId( plr );
+			if( uid == null ) {
 				return;
 			}
 
 			this.PrepareDataForPlayer( plr );
 		}
 
+		////////////////
+
+		protected override bool ReceiveRequestWithServer( int fromWho ) {
+			return this.NewData == null;
+		}
+
 
 		////////////////
-		
+
 		protected override void ReceiveWithClient() {
 			if( this.NewData == null ) {
 				throw new HamstarException( "Invalid NewData." );
@@ -73,23 +84,32 @@ namespace ResetMode.NetProtocols {
 
 		private void PrepareDataForPlayer( Player player ) {
 			var mymod = ResetModeMod.Instance;
+			string uid = null;
 
 			try {
-				string uid = PlayerIdentityHelpers.GetProperUniqueId( player );
+				uid = PlayerIdentityHelpers.GetProperUniqueId( player );
 
 				this.NewData = mymod.Session.Data.Clone();
 				this.NewData.PlayersValidated = new HashSet<string>();
 				this.NewData.PlayerPPSpendings = new ConcurrentDictionary<string, float>();
+			} catch( Exception e ) {
+				LogHelpers.Warn( "Error 1: " + e.ToString() );
+			}
 
+			try {
 				if( mymod.Session.Data.PlayersValidated.Contains( uid ) ) {
 					this.NewData.PlayersValidated.Add( uid );
 				}
+			} catch( Exception e ) {
+				LogHelpers.Warn( "Error 2: " + e.ToString() );
+			}
 
+			try {
 				if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( uid ) ) {
-					this.NewData.PlayerPPSpendings[uid] = mymod.Session.Data.PlayerPPSpendings[uid];
+					this.NewData.PlayerPPSpendings[ uid ] = mymod.Session.Data.PlayerPPSpendings[ uid ];
 				}
 			} catch( Exception e ) {
-				LogHelpers.Log( "!ResetMode.SessionProtocol.PrepareDataForPlayer - Error: " + e.ToString() );
+				LogHelpers.Warn( "Error 3a: " + e.ToString() );
 			}
 		}
 	}

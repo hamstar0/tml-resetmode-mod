@@ -1,39 +1,47 @@
 ﻿using HamstarHelpers.Components.Network;
+using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.PlayerHelpers;
 using Terraria;
 
 
 namespace ResetMode.NetProtocols {
-	class PlayerResetConfirmProtocol : PacketProtocol { //PacketProtocolRequestToEither {
+	class PlayerResetConfirmProtocol : PacketProtocolRequestToServer {
 		private PlayerResetConfirmProtocol() { }
-
-		protected override void SetClientDefaults() { }
-		protected override void SetServerDefaults( int toWho ) { }
+		
+		protected override void InitializeServerSendData( int toWho ) { }
 
 
 		////////////////
 
 		protected override bool ReceiveRequestWithServer( int fromWho ) {
-			var mymod = (ResetModeMod)ResetModeMod.Instance;
 			Player player = Main.player[ fromWho ];
-			var myplayer = player.GetModPlayer<ResetModePlayer>();
+			if( player == null ) {
+				LogHelpers.Warn( "Invalid player (who:"+fromWho+")" );
+				return true;
+			}
 
+			string uid = PlayerIdentityHelpers.GetProperUniqueId( player );
+			if( uid == null ) {
+				LogHelpers.Warn( "Missing player UID for player "+player.name+" ("+fromWho+")" );
+				return true;
+			}
+
+			var mymod = (ResetModeMod)ResetModeMod.Instance;
+			var myplayer = player.GetModPlayer<ResetModePlayer>();
+			
 			myplayer.Logic.BeginSessionForPlayer( player );
 			myplayer.Logic.RefundRewardsSpendings( player );
 
-			PacketProtocol.QuickRequestToClient<PlayerResetConfirmProtocol>( fromWho, -1, 0 );
-
-			return true;
+			return false;
 		}
 
-		protected override bool ReceiveRequestWithClient() {
+		protected override void ReceiveReply() {
 			var mymod = (ResetModeMod)ResetModeMod.Instance;
 			Player player = Main.LocalPlayer;
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
 			myplayer.Logic.BeginSessionForPlayer( player );
 			myplayer.Logic.RefundRewardsSpendings( player );
-
-			return true;
 		}
 	}
 }

@@ -1,6 +1,5 @@
 ﻿using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Services.Promises;
-using Newtonsoft.Json;
 using System;
 using Terraria;
 using Terraria.ModLoader;

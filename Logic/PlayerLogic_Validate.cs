@@ -91,11 +91,11 @@ namespace ResetMode.Logic {
 				return;
 			}
 			
-			var pid = PlayerIdentityHelpers.GetProperUniqueId( player );
+			var uid = PlayerIdentityHelpers.GetProperUniqueId( player );
 
 			if( mymod.Config.ResetRewardsSpendings ) {
-				if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
-					float pp_spent = mymod.Session.Data.PlayerPPSpendings[pid];
+				if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( uid ) ) {
+					float pp_spent = mymod.Session.Data.PlayerPPSpendings[uid];
 
 					rewardsMod.Call( "AddPoints", player, pp_spent );
 
@@ -109,7 +109,7 @@ namespace ResetMode.Logic {
 				}
 			}
 
-			mymod.Session.Data.PlayerPPSpendings[pid] = 0;
+			mymod.Session.Data.PlayerPPSpendings[uid] = 0;
 			if( Main.netMode != 1 ) {
 				mymod.Session.Save();
 			}

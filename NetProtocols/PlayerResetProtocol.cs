@@ -16,13 +16,11 @@ namespace ResetMode.NetProtocols {
 
 			myplayer.Logic.PromptReset( Main.LocalPlayer );
 
-			return true;
+			return false;
 		}
 
 		////
 
-		protected override void ReceiveReply( int fromWho ) {
-			throw new System.NotImplementedException();
-		}
+		protected override void ReceiveReply( int fromWho ) { }
 	}
 }
