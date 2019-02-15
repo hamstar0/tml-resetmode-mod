@@ -27,7 +27,7 @@ namespace ResetMode.NetProtocols {
 			Player player = Main.LocalPlayer;
 			var myplayer = player.GetModPlayer<ResetModePlayer>();
 
-			myplayer.FinishModSettingsSync();
+			myplayer.FinishModSettingsSyncWithLocal();
 		}
 	}
 }

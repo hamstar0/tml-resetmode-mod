@@ -2,7 +2,6 @@
 using HamstarHelpers.Components.UI.Elements.Dialogs;
 using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
-using HamstarHelpers.Services.Promises;
 using ResetMode.NetProtocols;
 using System;
 using Terraria;
@@ -11,12 +10,12 @@ using Terraria.ModLoader;
 
 namespace ResetMode.Logic {
 	partial class PlayerLogic {
-		public void ValidatePlayer( Player player ) {
+		public void ValidatePlayerOnHost( Player player ) {
 			var mymod = ResetModeMod.Instance;
 			if( Main.netMode == 1 ) { throw new Exception( "Clients cannot call this." ); }
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.PlayerLogic.ValidatePlayer - Validating "+player.name+"..." );
+				LogHelpers.Alert( "Validating "+player.name+"..." );
 			}
 			
 			if( Main.netMode == 2 ) {
@@ -49,7 +48,7 @@ namespace ResetMode.Logic {
 					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>( -1 );
 				}
 
-				this.IsPromptingForReset = false;
+				this.IsPromptingForResetOnLocal = false;
 			};
 			Action cancelAction = delegate () {
 				this.Boot( player, "choose not to play" );
@@ -57,7 +56,7 @@ namespace ResetMode.Logic {
 
 			////
 
-			this.IsPromptingForReset = true;
+			this.IsPromptingForResetOnLocal = true;
 
 			var prompt = new UIPromptDialog( new UIPromptTheme(), 600, 112, text, confirmAction, cancelAction );
 			prompt.Open();
@@ -71,11 +70,8 @@ namespace ResetMode.Logic {
 			mymod.Session.AddPlayer( player );
 
 			if( Main.netMode == 2 ) {
-				int who = player.whoAmI;
-
-				Promises.AddWorldInPlayOncePromise( () => {
-					PacketProtocol.QuickSendToClient<SessionProtocol>( who, -1 );
-				} );
+				//Promises.AddWorldInPlayOncePromise( () => {
+				PacketProtocol.QuickSendToClient<SessionProtocol>( player.whoAmI, -1 );
 			}
 		}
 
@@ -100,11 +96,11 @@ namespace ResetMode.Logic {
 					rewardsMod.Call( "AddPoints", player, pp_spent );
 
 					if( mymod.Config.DebugModeInfo ) {
-						LogHelpers.Log( "ResetMode.PlayerLogic.RefundRewardsSpendings - '" + player.name + "' PP spendings of " + pp_spent + " returned" );
+						LogHelpers.Alert( player.name + "' PP spendings of " + pp_spent + " returned" );
 					}
 				} else {
 					if( mymod.Config.DebugModeInfo ) {
-						LogHelpers.Log( "!ResetMode.PlayerLogic.RefundRewardsSpendings - '" + player.name + "' PP could not be set" );
+						LogHelpers.Warn( player.name + "' PP could not be set" );
 					}
 				}
 			}

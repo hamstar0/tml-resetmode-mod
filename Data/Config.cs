@@ -6,15 +6,15 @@ using System.Collections.Generic;
 
 namespace ResetMode.Data {
 	public class ResetModeConfigData : ConfigurationDataBase {
-		public static Version ConfigVersion => new Version( 1, 1, 2 );
 		public static string ConfigFileName => "Reset Mode Config.json";
 
 
 		////////////////
 
-		public string VersionSinceUpdate = ResetModeConfigData.ConfigVersion.ToString();
+		public string VersionSinceUpdate = "";
 
 		public bool DebugModeInfo = false;
+		public bool DebugModeRealTimeInfo = false;
 
 		public int SecondsUntilResetInitially = 60 * 45;	// 45 minutes
 		public int SecondsUntilResetSubsequently = 60 * 30;	// 30 minutes
@@ -33,20 +33,30 @@ namespace ResetMode.Data {
 
 		////////////////
 
-		public bool UpdateToLatestVersion() {
+		public void SetDefaults() { }
+
+		////
+
+		public bool CanUpdateVersion() {
+			if( this.VersionSinceUpdate == "" ) { return true; }
+			var versSince = new Version( this.VersionSinceUpdate );
+			return versSince < ResetModeMod.Instance.Version;
+		}
+
+		public void UpdateToLatestVersion() {
+			var mymod = ResetModeMod.Instance;
 			var newConfig = new ResetModeConfigData();
+			newConfig.SetDefaults();
 
 			var versSince = this.VersionSinceUpdate != "" ?
 				new Version( this.VersionSinceUpdate ) :
 				new Version();
 
-			if( versSince >= ResetModeConfigData.ConfigVersion ) {
-				return false;
+			if( this.VersionSinceUpdate == "" ) {
+				this.SetDefaults();
 			}
 
-			this.VersionSinceUpdate = ResetModeConfigData.ConfigVersion.ToString();
-
-			return true;
+			this.VersionSinceUpdate = mymod.Version.ToString();
 		}
 
 

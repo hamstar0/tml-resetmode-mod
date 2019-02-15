@@ -18,7 +18,7 @@ namespace ResetMode.Logic {
 			mymod.Session.IsExiting = true;
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.SessionLogic.GoodExit" );
+				LogHelpers.Alert();
 			}
 
 			string msg = "This world is now expired. Please switch to the next world to continue.";
@@ -45,7 +45,7 @@ namespace ResetMode.Logic {
 			mymod.Session.IsExiting = true;
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( "" );
+				LogHelpers.Alert();
 			}
 
 			string msg = "World not valid for reset mode. Exiting...";

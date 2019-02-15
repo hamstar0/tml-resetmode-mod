@@ -27,7 +27,7 @@ namespace ResetMode.Logic {
 		public void BeginResetTimer() {
 			var mymod = ResetModeMod.Instance;
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( "" );
+				LogHelpers.Alert();
 			}
 			
 			if( TimeLimitAPI.GetTimersOf( "reset" ).Count > 0 ) {
@@ -64,10 +64,9 @@ namespace ResetMode.Logic {
 
 		public void ExpireCurrentWorldInSession( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( "" );
+				LogHelpers.Alert();
 			}
-
-try {
+			
 			this.Data.AwaitingNextWorld = true;
 			this.Data.CurrentSessionedWorldId = "";
 			this.Data.PlayersValidated.Clear();
@@ -80,10 +79,8 @@ try {
 			}
 
 			if( Main.netMode != 1 ) {
-LogHelpers.Log("???");
 				this.GoodExit();
 			}
-} catch( Exception e ) { LogHelpers.Log("?!? "+e.ToString()); }
 		}
 
 

@@ -28,7 +28,7 @@ namespace ResetMode.Data {
 			this.IsRunning = false;
 
 			if( ResetModeMod.Instance.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.Data.ResetModeSessionData.ResetAll" );
+				LogHelpers.Alert();
 			}
 		}
 

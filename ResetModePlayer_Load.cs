@@ -1,7 +1,6 @@
 ﻿using HamstarHelpers.Components.Errors;
 using HamstarHelpers.Components.Network;
 using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Services.Promises;
 using ResetMode.NetProtocols;
 using Terraria;
 using Terraria.ModLoader;
@@ -9,12 +8,12 @@ using Terraria.ModLoader;
 
 namespace ResetMode {
 	partial class ResetModePlayer : ModPlayer {
-		private void OnSingleConnect() {
-			this.FinishModSettingsSync();
-			this.FinishSessionSync();
+		private void OnSingleEnterWorld() {
+			this.FinishModSettingsSyncWithLocal();
+			this.FinishSessionSyncWithLocal();
 		}
 
-		private void OnCurrentClientConnect() {
+		private void OnCurrentClientEnterWorld() {
 			PacketProtocolRequestToServer.QuickRequest<ModSettingsProtocol>( -1 );
 			PacketProtocol.QuickRequestToServer<SessionProtocol>( -1 );
 		}
@@ -28,13 +27,13 @@ namespace ResetMode {
 
 		////////////////
 
-		public void FinishModSettingsSync() {
+		public void FinishModSettingsSyncWithLocal() {
 			this.HasModSettings = true;
-
+			
 			this.FinishLocalSync();
 		}
 		
-		public void FinishSessionSync() {
+		public void FinishSessionSyncWithLocal() {
 			this.HasSessionData = true;
 
 			this.FinishLocalSync();
@@ -45,14 +44,11 @@ namespace ResetMode {
 		public void FinishLocalSync() {
 			if( Main.netMode == 2 ) { throw new HamstarException("Server not allowed."); }
 			if( !this.HasModSettings || !this.HasSessionData ) { return; }
-			if( this.IsSyncing ) { return; }
 
-			this.IsSyncing = true;
-			
-			Promises.AddWorldInPlayOncePromise( () => {
-				this.IsSynced = true;
-				this.Logic.OnEnterWorld( this.player );
-			} );
+			if( this.IsSynced ) { return; }
+			this.IsSynced = true;
+
+			this.Logic.OnFinishLocalSync( this.player );
 		}
 	}
 }

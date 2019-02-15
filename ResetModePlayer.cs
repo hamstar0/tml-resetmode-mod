@@ -1,7 +1,5 @@
 ﻿using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
-using HamstarHelpers.Services.Promises;
-using ResetMode.Data;
 using ResetMode.Logic;
 using Terraria;
 using Terraria.ModLoader;
@@ -13,8 +11,7 @@ namespace ResetMode {
 		
 		public bool HasModSettings { get; private set; }
 		public bool HasSessionData { get; private set; }
-		private bool IsSyncing = false;
-		private bool IsSynced = false;
+		internal bool IsSynced = false;
 
 
 
@@ -26,7 +23,6 @@ namespace ResetMode {
 			this.Logic = new PlayerLogic();
 			this.HasModSettings = false;
 			this.HasSessionData = false;
-			this.IsSyncing = false;
 			this.IsSynced = false;
 		}
 
@@ -34,7 +30,6 @@ namespace ResetMode {
 			var clone = (ResetModePlayer)clientClone;
 			clone.HasModSettings = this.HasModSettings;
 			clone.HasSessionData = this.HasSessionData;
-			clone.IsSyncing = this.IsSyncing;
 			clone.IsSynced = this.IsSynced;
 		}
 
@@ -46,9 +41,7 @@ namespace ResetMode {
 
 			if( Main.netMode == 2 ) {
 				if( toWho == -1 && fromWho == this.player.whoAmI ) {
-					Promises.AddSafeWorldLoadOncePromise( () => {
-						this.OnServerConnect( Main.player[fromWho] );
-					} );
+					this.OnServerConnect( Main.player[fromWho] );
 				}
 			}
 		}
@@ -62,7 +55,7 @@ namespace ResetMode {
 			if( Main.netMode == 0 ) {
 				if( !mymod.ConfigJson.LoadFile() ) {
 					mymod.ConfigJson.SaveFile();
-					ErrorLogger.Log( "Reset Mode config "+ResetModeConfigData.ConfigVersion.ToString()+" created (ModPlayer.OnEnterWorld())." );
+					LogHelpers.Alert( "Reset Mode config "+mymod.Version.ToString()+" created." );
 				}
 			}
 
@@ -71,15 +64,13 @@ namespace ResetMode {
 
 				LogHelpers.Alert( player.name+" joined ("+uid+")" );
 			}
-
-			Promises.AddWorldInPlayOncePromise( () => {
-				if( Main.netMode == 0 ) {
-					this.OnSingleConnect();
-				}
-				if( Main.netMode == 1 ) {
-					this.OnCurrentClientConnect();
-				}
-			} );
+			
+			if( Main.netMode == 0 ) {
+				this.OnSingleEnterWorld();
+			}
+			if( Main.netMode == 1 ) {
+				this.OnCurrentClientEnterWorld();
+			}
 		}
 
 
@@ -98,7 +89,7 @@ namespace ResetMode {
 				} else if( Main.netMode == 1 ) {
 					this.Logic.PreUpdateSyncedCurrentClient();
 				} else {
-					this.Logic.PreUpdateSyncedServerForClient( this.player );
+					this.Logic.PreUpdateSyncedServerForPlayer( this.player );
 				}
 			} else {
 				if( Main.netMode != 2 ) {

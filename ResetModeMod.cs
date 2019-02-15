@@ -81,8 +81,10 @@ namespace ResetMode {
 				this.ConfigJson.SaveFile();
 			}
 
-			if( this.Config.UpdateToLatestVersion() ) {
-				ErrorLogger.Log( "Reset Mode updated to " + ResetModeConfigData.ConfigVersion.ToString() );
+			if( this.Config.CanUpdateVersion() ) {
+				this.Config.UpdateToLatestVersion();
+
+				ErrorLogger.Log( "Reset Mode updated to " + this.Version.ToString() );
 				this.ConfigJson.SaveFile();
 			}
 		}

@@ -8,15 +8,21 @@ namespace ResetMode.Logic {
 		internal void Update() {
 			var mymod = ResetModeMod.Instance;
 
-			if( mymod.Config.DebugModeInfo ) {
-				string world_id = WorldHelpers.GetUniqueIdWithSeed();
+			if( mymod.Config.DebugModeRealTimeInfo ) {
+				string worldId = WorldHelpers.GetUniqueIdWithSeed();
+				var myplayer = Main.LocalPlayer.GetModPlayer<ResetModePlayer>();
 
-				DebugHelpers.Print( "ResetModeSessionUpdate",
+				DebugHelpers.Print( "ResetModeSession",
 					"Is running? "+ this.Data.IsRunning
 					+ ", Exiting? "+this.IsExiting
 					+ ", Needs world? " + this.IsSessionNeedingWorld()
-					+ ", World id: " + world_id
-					+ ", Been played? " + this.HasWorldEverBeenPlayed( world_id ), 20 );
+					+ ", World id: " + worldId
+					+ ", Been played? " + this.HasWorldEverBeenPlayed( worldId ), 20 );
+				DebugHelpers.Print( "ResetModePlayer",
+					"IsPromptingForResetOnLocal? " + myplayer.Logic.IsPromptingForResetOnLocal
+					+ ", IsSynced? " + myplayer.IsSynced
+					+ ", HasModSettings? "+myplayer.HasModSettings
+					+ ", HasSessionData? "+myplayer.HasSessionData, 20 );
 			}
 
 			if( this.Data.IsRunning && !this.IsExiting ) {
@@ -48,14 +54,14 @@ namespace ResetMode.Logic {
 		
 		private void UpdateGame() {
 			var mymod = ResetModeMod.Instance;
-			string world_id = WorldHelpers.GetUniqueIdWithSeed();
+			string worldId = WorldHelpers.GetUniqueIdWithSeed();
 
 			if( this.IsSessionNeedingWorld() ) {
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.SessionLogic.UpdateGame - Session needs a world (current world id: " + world_id + ")" );
+					LogHelpers.Alert( "Session needs a world (current world id: " + worldId + ")" );
 				}
 				
-				if( this.HasWorldEverBeenPlayed( world_id ) ) {
+				if( this.HasWorldEverBeenPlayed( worldId ) ) {
 					//if( Main.netMode != 2 ) {   // Servers should just indefinitely boot people until closed; stopgap measure
 					this.GoodExit();
 				} else {
@@ -64,7 +70,7 @@ namespace ResetMode.Logic {
 				}
 			} else if( this.IsSessionedWorldNotOurs() ) {
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.SessionLogic.UpdateGame - World has expired (current world id: " + world_id + ")" );
+					LogHelpers.Alert( "World has expired (current world id: " + worldId + ")" );
 				}
 
 				if( mymod.Config.WrongWorldForcesHardReset ) {
@@ -73,7 +79,7 @@ namespace ResetMode.Logic {
 					this.Save();
 				}
 
-				if( this.HasWorldEverBeenPlayed( world_id ) ) {
+				if( this.HasWorldEverBeenPlayed( worldId ) ) {
 					this.GoodExit();
 				} else {
 					this.BadExit();

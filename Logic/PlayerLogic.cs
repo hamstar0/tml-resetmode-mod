@@ -20,14 +20,14 @@ namespace ResetMode.Logic {
 
 		////////////////
 
-		private bool IsPromptingForReset = false;
-		private bool HasCheckedValidation = false;
+		internal bool IsPromptingForResetOnLocal = false;
+		internal bool HasCheckedValidationOnHost = false;
 
 
 
 		////////////////
 
-		public void OnEnterWorld( Player player ) {
+		public void OnFinishLocalSync( Player player ) {
 			var mymod = ResetModeMod.Instance;
 			if( mymod.Session.IsSessionNeedingWorld() ) {
 				this.Welcome( player );
@@ -43,40 +43,39 @@ namespace ResetMode.Logic {
 
 		public void PreUpdateSyncedSingle() {
 			var mymod = ResetModeMod.Instance;
-			this.CheckValidation( Main.LocalPlayer );
-			this.UpdatePromptStasis( Main.LocalPlayer );
+			this.CheckValidationOnHost( Main.LocalPlayer );
+			this.UpdatePromptStasisState( Main.LocalPlayer );
 		}
 
 		public void PreUpdateSyncedCurrentClient() {
 			var mymod = ResetModeMod.Instance;
-			this.UpdatePromptStasis( Main.LocalPlayer );
+			this.UpdatePromptStasisState( Main.LocalPlayer );
 		}
 
-		public void PreUpdateSyncedServerForClient( Player player ) {
-			var mymod = ResetModeMod.Instance;
-			if( LoadHelpers.IsWorldSafelyBeingPlayed() && LoadHelpers.IsPlayerLoaded(player) ) {
-				this.CheckValidation( player );
+		public void PreUpdateSyncedServerForPlayer( Player player ) {
+			if( PlayerIdentityHelpers.GetProperUniqueId( player ) != null ) {
+				this.CheckValidationOnHost( player );
 			}
 		}
 
 
 		////////////////
 
-		private void CheckValidation( Player player ) {
-			var mymod = ResetModeMod.Instance;
+		private void CheckValidationOnHost( Player player ) {
 			if( Main.netMode == 1 ) {
 				throw new Exception( "!ResetMode.PlayerLogic.CheckValidation - No clients." );
 			}
 			
+			var mymod = ResetModeMod.Instance;
 			if( !mymod.Session.Data.IsRunning ) { return; }
-			if( this.HasCheckedValidation ) { return; }
+			if( this.HasCheckedValidationOnHost ) { return; }
 			
 			if( mymod.Session.IsSessionNeedingWorld() ) { return; }
 			if( mymod.Session.IsPlaying( player ) ) { return; }
 
 			if( mymod.Session.IsSessionedWorldNotOurs() ) {
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "ResetMode.PlayerLogic.CheckValidation - Playing sessioned world that isn't ours; ejecting player " + player.name + "..." );
+					LogHelpers.Alert( "Playing sessioned world that isn't ours; ejecting player " + player.name + "..." );
 				}
 
 				if( Main.netMode == 0 ) {
@@ -87,16 +86,16 @@ namespace ResetMode.Logic {
 				return;
 			}
 
-			this.HasCheckedValidation = true;
-			this.ValidatePlayer( player );
+			this.HasCheckedValidationOnHost = true;
+			this.ValidatePlayerOnHost( player );
 		}
 
 
-		private void UpdatePromptStasis( Player player ) {
+		private void UpdatePromptStasisState( Player player ) {
 			var mymod = ResetModeMod.Instance;
 			if( !mymod.Session.Data.IsRunning ) { return; }
 
-			if( this.IsPromptingForReset ) {
+			if( this.IsPromptingForResetOnLocal ) {
 				PlayerHelpers.LockdownPlayerPerTick( player );
 			}
 		}
@@ -129,7 +128,7 @@ namespace ResetMode.Logic {
 		public void Boot( Player player, string reason ) {
 			var mymod = ResetModeMod.Instance;
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.PlayerLogic.Boot - Player "+player.name+" (" + player.whoAmI+")" );
+				LogHelpers.Alert( "Player "+player.name+" (" + player.whoAmI+")" );
 			}
 
 			ErrorLogger.Log( player.name + " was booted. Reason: " + reason );

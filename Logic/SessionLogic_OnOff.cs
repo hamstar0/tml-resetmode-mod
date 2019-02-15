@@ -15,12 +15,12 @@ namespace ResetMode.Logic {
 			
 			// Already running?
 			if( this.Data.IsRunning ) {
-				LogHelpers.Log( "!ResetMode.SessionLogic.StartSession - Session already running" );
+				LogHelpers.Warn( "Session already running" );
 				return false;
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "ResetMode.SessionLogic.StartSession" );
+				LogHelpers.Alert();
 			}
 			
 			this.Data.IsRunning = true;
@@ -46,7 +46,7 @@ namespace ResetMode.Logic {
 
 			if( mymod.Config.DebugModeInfo ) {
 				string world_id = WorldHelpers.GetUniqueIdWithSeed();
-				LogHelpers.Alert( "" );
+				LogHelpers.Alert();
 			}
 
 			this.IsExiting = false;
