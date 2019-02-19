@@ -36,18 +36,7 @@ namespace ResetMode.Logic {
 				"\nNote: Playing this character on another world will force it to reset here.";
 
 			Action confirmAction = delegate () {
-				Player replayer = Main.player[ playerWho ];
-
-				PlayerHelpers.FullVanillaReset( replayer );
-				PlayerModHelpers.ModdedExtensionsReset( replayer );
-
-				if( Main.netMode == 0 ) {
-					this.BeginSessionForPlayer( replayer );
-					this.RefundRewardsSpendings( replayer );
-				} else if( Main.netMode == 1 ) {
-					PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>( -1 );
-				}
-
+				this.ResetPlayer( Main.player[playerWho] );
 				this.IsPromptingForResetOnLocal = false;
 			};
 			Action cancelAction = delegate () {
@@ -60,6 +49,21 @@ namespace ResetMode.Logic {
 
 			var prompt = new UIPromptDialog( new UIPromptTheme(), 600, 112, text, confirmAction, cancelAction );
 			prompt.Open();
+		}
+
+
+		////////////////
+
+		private void ResetPlayer( Player replayer ) {
+			PlayerHelpers.FullVanillaReset( replayer );
+			PlayerModHelpers.ModdedExtensionsReset( replayer );
+
+			if( Main.netMode == 0 ) {
+				this.BeginSessionForPlayer( replayer );
+				this.RefundRewardsSpendings( replayer );
+			} else if( Main.netMode == 1 ) {
+				PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>( -1 );
+			}
 		}
 
 
@@ -91,12 +95,12 @@ namespace ResetMode.Logic {
 
 			if( mymod.Config.ResetRewardsSpendings ) {
 				if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( uid ) ) {
-					float pp_spent = mymod.Session.Data.PlayerPPSpendings[uid];
+					float ppSpent = mymod.Session.Data.PlayerPPSpendings[uid];
 
-					rewardsMod.Call( "AddPoints", player, pp_spent );
+					rewardsMod.Call( "AddPoints", player, ppSpent );
 
 					if( mymod.Config.DebugModeInfo ) {
-						LogHelpers.Alert( player.name + "' PP spendings of " + pp_spent + " returned" );
+						LogHelpers.Alert( player.name + "' PP spendings of " + ppSpent + " returned" );
 					}
 				} else {
 					if( mymod.Config.DebugModeInfo ) {

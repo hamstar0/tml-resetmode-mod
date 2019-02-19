@@ -96,10 +96,17 @@ namespace ResetMode {
 			if( args == null || args.Length == 0 ) { throw new HamstarException( "Undefined call type." ); }
 
 			string callType = args[0] as string;
-			if( callType == null ) { throw new HamstarException( "Invalid call type." ); }
+			if( callType == null ) {
+				LogHelpers.Alert( "Invalid call binding: " + args[0] );
+				return null;
+			}
 
 			var methodInfo = typeof( ResetModeAPI ).GetMethod( callType );
-			if( methodInfo == null ) { throw new HamstarException( "Invalid call type " + callType ); }
+			if( methodInfo == null ) {
+				LogHelpers.Alert( "Invalid call type " + callType + " with args:\n"
+					+ string.Join( ",\n", args.SafeSelect( a => a == null ? "null" : a.ToString() ) ) );
+				return null;
+			}
 
 			var newArgs = new object[args.Length - 1];
 			Array.Copy( args, 1, newArgs, 0, args.Length - 1 );
