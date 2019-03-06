@@ -17,8 +17,8 @@ namespace ResetMode.Logic {
 			return this.Data.CurrentSessionedWorldId != WorldHelpers.GetUniqueIdWithSeed();
 		}
 
-		public bool HasWorldEverBeenPlayed( string world_id ) {
-			return this.Data.AllPlayedWorlds.Contains( world_id );
+		public bool HasWorldEverBeenPlayed( string worldId ) {
+			return this.Data.AllPlayedWorlds.Contains( worldId );
 		}
 
 
@@ -99,8 +99,8 @@ namespace ResetMode.Logic {
 				Main.LoadWorlds();
 
 				while( Main.WorldList.Count > 0 ) {
-					WorldFileData world_data = Main.WorldList[0];
-					WorldFileHelpers.EraseWorld( world_data, false );
+					WorldFileData worldData = Main.WorldList[0];
+					WorldFileHelpers.EraseWorld( worldData, false );
 				}
 
 				this.Data.PlayersValidated.Clear();

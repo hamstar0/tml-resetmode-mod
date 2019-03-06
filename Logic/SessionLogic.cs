@@ -20,6 +20,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public ResetModeSessionData Data { get; private set; }
+		internal ResetModeSessionData DataOnLoad;
 
 		public bool IsExiting = false;
 		public bool IsWorldInPlay = false;
@@ -60,6 +61,7 @@ namespace ResetMode.Logic {
 					data.IsRunning = false;
 				}
 
+				this.DataOnLoad = data.Clone();
 				this.Data = data;
 			}
 
@@ -116,17 +118,17 @@ namespace ResetMode.Logic {
 			Mod mod;
 
 			foreach( KeyValuePair<string, string[]> kv in mymod.Config.OnWorldEngagedCalls ) {
-				string mod_name = kv.Key;
-				if( string.IsNullOrEmpty( mod_name ) ) {
+				string modName = kv.Key;
+				if( string.IsNullOrEmpty( modName ) ) {
 					LogHelpers.Warn( "Invalid mod name for API call " );
 					continue;
 				}
 
 				try {
-					mod = ModLoader.GetMod( mod_name );
+					mod = ModLoader.GetMod( modName );
 					if( mod == null ) { throw new Exception(); }
 				} catch {
-					LogHelpers.Warn( "Missing or invalid mod \"" + mod_name + "\" for API call" );
+					LogHelpers.Warn( "Missing or invalid mod \"" + modName + "\" for API call" );
 					continue;
 				}
 

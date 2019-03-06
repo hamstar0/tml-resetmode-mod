@@ -4,6 +4,7 @@ using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
 using ResetMode.NetProtocols;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -56,7 +57,7 @@ namespace ResetMode.Logic {
 
 		private void ResetPlayer( Player replayer ) {
 			PlayerHelpers.FullVanillaReset( replayer );
-			PlayerModHelpers.ModdedExtensionsReset( replayer );
+			PlayerModHelpers.ModdedExtensionsReset( replayer, new HashSet<string>() { "Rewards" } );
 
 			if( Main.netMode == 0 ) {
 				this.BeginSessionForPlayer( replayer );

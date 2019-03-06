@@ -37,6 +37,7 @@ namespace ResetMode {
 		internal int CurrentNetMode = -1;
 
 
+
 		////////////////
 
 		public ResetModeMod() {

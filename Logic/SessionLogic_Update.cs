@@ -70,7 +70,7 @@ namespace ResetMode.Logic {
 				}
 			} else if( this.IsSessionedWorldNotOurs() ) {
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Alert( "World has expired (current world id: " + worldId + ")" );
+					LogHelpers.Alert( "World has expired (current world id: " + worldId + "). Session data: "+this.Data.ToString() );
 				}
 
 				if( mymod.Config.WrongWorldForcesHardReset ) {

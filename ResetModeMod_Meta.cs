@@ -31,7 +31,7 @@ namespace ResetMode {
 			}
 
 			var newConfig = new ResetModeConfigData();
-			//new_config.SetDefaults();
+			newConfig.SetDefaults();
 
 			ResetModeMod.Instance.ConfigJson.SetData( newConfig );
 			ResetModeMod.Instance.ConfigJson.SaveFile();

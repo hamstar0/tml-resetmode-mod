@@ -1,7 +1,7 @@
 author = hamstar
-version = 1.1.4.1
+version = 1.1.4.2
 displayName = Reset Mode
-modReferences = HamstarHelpers@4.2.1, TimeLimit@1.1.7
+modReferences = HamstarHelpers@4.2.3.1, TimeLimit@1.1.7
 buildIgnore = *.csproj, *.user, *.bat, obj\*, bin\*, .vs\*, .git\*
 languageVersion = 6
 homepage = https://forums.terraria.org/index.php?threads/reset-mode-cycle-worlds-one-after-the-other.66944/
