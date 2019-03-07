@@ -10,7 +10,7 @@ namespace ResetMode.NetProtocols {
 		public static void Eject( Player player ) {
 			var mymod = ResetModeMod.Instance;
 
-			if( mymod.Session.HasWorldEverBeenPlayed( WorldHelpers.GetUniqueIdWithSeed() ) ) {
+			if( mymod.Session.HasWorldEverBeenPlayed( WorldHelpers.GetUniqueId(true) ) ) {
 				ErrorLogger.Log( "Ejecting player " + Main.LocalPlayer.name + " via good exit..." );
 				mymod.Session.GoodExit();
 			} else {

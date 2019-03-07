@@ -9,7 +9,7 @@ namespace ResetMode.Logic {
 			var mymod = ResetModeMod.Instance;
 
 			if( mymod.Config.DebugModeRealTimeInfo ) {
-				string worldId = WorldHelpers.GetUniqueIdWithSeed();
+				string worldId = WorldHelpers.GetUniqueId(true);
 				var myplayer = Main.LocalPlayer.GetModPlayer<ResetModePlayer>();
 
 				DebugHelpers.Print( "ResetModeSession",
@@ -54,7 +54,7 @@ namespace ResetMode.Logic {
 		
 		private void UpdateGame() {
 			var mymod = ResetModeMod.Instance;
-			string worldId = WorldHelpers.GetUniqueIdWithSeed();
+			string worldId = WorldHelpers.GetUniqueId(true);
 
 			if( this.IsSessionNeedingWorld() ) {
 				if( mymod.Config.DebugModeInfo ) {
@@ -74,6 +74,9 @@ namespace ResetMode.Logic {
 				}
 
 				if( mymod.Config.WrongWorldForcesHardReset ) {
+					if( mymod.Config.DebugModeInfo ) {
+						LogHelpers.Alert( "WrongWorldForcesHardReset == true. Sets AwaitingNextWorld=true, CurrentSessionedWorldId=\"\"" );
+					}
 					this.Data.AwaitingNextWorld = true;
 					this.Data.CurrentSessionedWorldId = "";
 					this.Save();

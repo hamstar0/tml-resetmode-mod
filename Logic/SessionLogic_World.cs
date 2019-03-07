@@ -14,7 +14,7 @@ namespace ResetMode.Logic {
 		}
 
 		public bool IsSessionedWorldNotOurs() {
-			return this.Data.CurrentSessionedWorldId != WorldHelpers.GetUniqueIdWithSeed();
+			return this.Data.CurrentSessionedWorldId != WorldHelpers.GetUniqueId(true);
 		}
 
 		public bool HasWorldEverBeenPlayed( string worldId ) {
@@ -45,10 +45,10 @@ namespace ResetMode.Logic {
 			
 		public void AddWorldToSession() {
 			var mymod = ResetModeMod.Instance;
-			string worldId = WorldHelpers.GetUniqueIdWithSeed();
+			string worldId = WorldHelpers.GetUniqueId(true);
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( "World ID: " + worldId );
+				LogHelpers.Alert( "Sets AllPlayedWorlds.Add(<world id>), CurrentSessionedWorldId=<world id>, AwaitingNextWorld=false (worldId: "+worldId+")" );
 			}
 
 			this.Data.AllPlayedWorlds.Add( worldId );
@@ -64,7 +64,7 @@ namespace ResetMode.Logic {
 
 		public void ExpireCurrentWorldInSession( ResetModeMod mymod ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert();
+				LogHelpers.Alert( "Sets AwaitingNextWorld=true, CurrentSessionedWorldId=\"\", PlayersValidated.Clear()" );
 			}
 			
 			this.Data.AwaitingNextWorld = true;
@@ -95,6 +95,10 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void ClearAllWorlds() {
+			if( ResetModeMod.Instance.Config.DebugModeInfo ) {
+				LogHelpers.Alert( "Deletes all world files, Sets PlayersValidated.Clear(), CurrentSessionedWorldId=\"\", AwaitingNextWorld=true" );
+			}
+
 			try {
 				Main.LoadWorlds();
 

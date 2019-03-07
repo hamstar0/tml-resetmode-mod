@@ -45,8 +45,8 @@ namespace ResetMode.Logic {
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
-				string world_id = WorldHelpers.GetUniqueIdWithSeed();
-				LogHelpers.Alert();
+				string worldId = WorldHelpers.GetUniqueId(true);
+				LogHelpers.Alert( "Sets ALL session data to defaults, stops all TimeLimit \"reset\" commands (world id: " + worldId + ")" );
 			}
 
 			this.IsExiting = false;

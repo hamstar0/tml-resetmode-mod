@@ -20,13 +20,18 @@ namespace ResetMode {
 			ResetModeSessionData sessData = mymod.Session.Data;
 
 			if( sessData.IsRunning ) {
-				if( sessData.CurrentSessionedWorldId == "" && !sessData.AwaitingNextWorld ) {
-					LogHelpers.LogOnce( "!" + DebugHelpers.GetCurrentContext(1) + " - Invalid world session state - No world id\n"
-						+ mymod.Session.DataOnLoad.ToString() );
-				}
-				if( sessData.CurrentSessionedWorldId != WorldHelpers.GetUniqueIdWithSeed() && !sessData.AwaitingNextWorld ) {
-					LogHelpers.LogOnce( "!" + DebugHelpers.GetCurrentContext( 1 ) + " - Invalid world session state - Mismatched world id\n"
-						+ mymod.Session.DataOnLoad.ToString() );
+				if( !sessData.AwaitingNextWorld ) {
+					string worldId = WorldHelpers.GetUniqueId(true);
+
+					if( sessData.CurrentSessionedWorldId == "" ) {
+						LogHelpers.LogOnce( "!" + DebugHelpers.GetCurrentContext( 1 ) + " - Invalid world session state - "
+							+"No world id (world id: "+worldId+")\n"
+							+ mymod.Session.DataOnLoad.ToString() );
+					} else if( sessData.CurrentSessionedWorldId != worldId ) {
+						LogHelpers.LogOnce( "!" + DebugHelpers.GetCurrentContext( 1 ) + " - Invalid world session state - "
+							+"Mismatched world id ("+sessData.CurrentSessionedWorldId+" vs "+worldId+")\n"
+							+ mymod.Session.DataOnLoad.ToString() );
+					}
 				}
 			}
 		}
