@@ -55,13 +55,13 @@ namespace ResetMode.NetProtocols {
 			this.PrepareDataForPlayer( plr );
 		}
 
+
 		////////////////
 
 		protected override bool ReceiveRequestWithServer( int fromWho ) {
 			return this.NewData == null;
 		}
-
-
+		
 		////////////////
 
 		protected override void ReceiveWithClient() {

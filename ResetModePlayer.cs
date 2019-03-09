@@ -1,14 +1,17 @@
 ﻿using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
+using HamstarHelpers.Services.Timers;
+using Microsoft.Xna.Framework;
 using ResetMode.Logic;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 
 namespace ResetMode {
 	partial class ResetModePlayer : ModPlayer {
 		public PlayerLogic Logic;
-		
+
 		public bool HasModSettings { get; private set; }
 		public bool HasSessionData { get; private set; }
 		internal bool IsSynced = false;
@@ -45,7 +48,7 @@ namespace ResetMode {
 				}
 			}
 		}
-		
+
 		public override void OnEnterWorld( Player player ) {
 			if( player.whoAmI != Main.myPlayer ) { return; }
 			if( this.player.whoAmI != Main.myPlayer ) { return; }
@@ -55,46 +58,86 @@ namespace ResetMode {
 			if( Main.netMode == 0 ) {
 				if( !mymod.ConfigJson.LoadFile() ) {
 					mymod.ConfigJson.SaveFile();
-					LogHelpers.Alert( "Reset Mode config "+mymod.Version.ToString()+" created." );
+					LogHelpers.Alert( "Reset Mode config " + mymod.Version.ToString() + " created." );
 				}
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
 				string uid = PlayerIdentityHelpers.GetProperUniqueId( player );
 
-				LogHelpers.Alert( player.name+" joined ("+uid+")" );
+				LogHelpers.Alert( player.name + " joined (" + uid + ")" );
 			}
-			
+
 			if( Main.netMode == 0 ) {
 				this.OnSingleEnterWorld();
 			}
 			if( Main.netMode == 1 ) {
 				this.OnCurrentClientEnterWorld();
 			}
+
+			Timers.SetTimer( "ResetModeDebugSync", 10 * 60, () => {
+				if( !this.HasModSettings ) {
+					Main.NewText( "Failed to sync mod settings", Color.Red );
+					LogHelpers.Warn( "Failed to sync mod settings (so far?)" );
+				}
+				if( !this.HasSessionData ) {
+					Main.NewText( "Failed to sync session data", Color.Red );
+					LogHelpers.Warn( "Failed to sync session data (so far?)" );
+				}
+				if( !this.IsSynced ) {
+					Main.NewText( "Failed to sync", Color.Red );
+					LogHelpers.Warn( "Failed to sync (so far?)" );
+				}
+				return false;
+			} );
 		}
 
 
 		////////////////
 
 		public override void PreUpdate() {
-			if( Main.netMode != 2 ) {
-				if( this.player.whoAmI != Main.myPlayer ) { return; }
+			switch( Main.netMode ) {
+			case NetmodeID.SinglePlayer:
+				this.PreUpdateSingle();
+				break;
+			case NetmodeID.MultiplayerClient:
+				this.PreUpdateClient();
+				break;
+			case NetmodeID.Server:
+				this.PreUpdateServer();
+				break;
 			}
+		}
+
+		////
+
+		private void PreUpdateSingle() {
+			var mymod = (ResetModeMod)this.mod;
+
+			if( this.IsSynced ) {
+				this.Logic.PreUpdateSyncedSingle();
+			} else {
+				this.Logic.PreUpdateUnsyncedLocal();
+			}
+		}
+
+		private void PreUpdateClient() {
+			if( this.player.whoAmI != Main.myPlayer ) { return; }
 
 			var mymod = (ResetModeMod)this.mod;
 
 			if( this.IsSynced ) {
-				if( Main.netMode == 0 ) {
-					this.Logic.PreUpdateSyncedSingle();
-				} else if( Main.netMode == 1 ) {
-					this.Logic.PreUpdateSyncedCurrentClient();
-				} else {
-					this.Logic.PreUpdateSyncedServerForPlayer( this.player );
-				}
+				this.Logic.PreUpdateSyncedCurrentClient();
 			} else {
-				if( Main.netMode != 2 ) {
-					this.Logic.PreUpdateUnsyncedLocal();
-				}
+				this.Logic.PreUpdateUnsyncedLocal();
+			}
+		}
+
+		private void PreUpdateServer() {
+			var mymod = (ResetModeMod)this.mod;
+
+			if( this.IsSynced ) {
+				this.Logic.PreUpdateSyncedServerForPlayer( this.player );
 			}
 		}
 	}

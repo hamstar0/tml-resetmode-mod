@@ -1,12 +1,13 @@
 ﻿using HamstarHelpers.Components.Network;
 using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.WorldHelpers;
+using HamstarHelpers.Services.Timers;
 using Terraria;
 using Terraria.ModLoader;
 
 
 namespace ResetMode.NetProtocols {
-	class PlayerEjectProtocol : PacketProtocolRequestToClient { //PacketProtocolRequestToClient {	TODO
+	class PlayerEjectProtocol : PacketProtocolRequestToClient {
 		public static void Eject( Player player ) {
 			var mymod = ResetModeMod.Instance;
 
@@ -25,17 +26,20 @@ namespace ResetMode.NetProtocols {
 		private PlayerEjectProtocol() { }
 
 		protected override void InitializeClientSendData() { }
-		
+
 
 		////////////////
 
-		//protected override bool ReceiveRequestWithClient() {
-		//	PlayerEjectProtocol.Eject( Main.LocalPlayer );
-		//	return true;
-		//}
+		protected override bool ReceiveRequestWithClient() {
+			Timers.SetTimer( "PlayerEjectProtocolDelay", 3, () => {
+				PlayerEjectProtocol.Eject( Main.LocalPlayer );
+				return false;
+			} );
+			return false;
+		}
 
 		protected override void ReceiveReply( int fromWho ) {
-			PlayerEjectProtocol.Eject( Main.player[fromWho] );
+			//PlayerEjectProtocol.Eject( Main.player[fromWho] );
 		}
 	}
 }
