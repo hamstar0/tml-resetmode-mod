@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.Components.Network;
+using HamstarHelpers.Helpers.TmlHelpers;
 using Terraria;
 
 
@@ -12,9 +13,9 @@ namespace ResetMode.NetProtocols {
 
 		protected override bool ReceiveRequestWithClient() {
 			Player player = Main.LocalPlayer;
-			var myplayer = player.GetModPlayer<ResetModePlayer>();
+			var myplayer = (ResetModePlayer)TmlHelpers.SafelyGetModPlayer( player, ResetModeMod.Instance, "ResetModePlayer" );
 
-			myplayer.Logic.PromptReset( Main.LocalPlayer );
+			myplayer.Logic.PromptReset( player );
 
 			return false;
 		}

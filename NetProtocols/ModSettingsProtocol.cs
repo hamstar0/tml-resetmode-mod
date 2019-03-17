@@ -1,5 +1,6 @@
 ﻿using HamstarHelpers.Components.Network;
 using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.TmlHelpers;
 using ResetMode.Data;
 using Terraria;
 
@@ -25,7 +26,7 @@ namespace ResetMode.NetProtocols {
 			mymod.ConfigJson.SetData( this.Data );
 
 			Player player = Main.LocalPlayer;
-			var myplayer = player.GetModPlayer<ResetModePlayer>();
+			var myplayer = (ResetModePlayer)TmlHelpers.SafelyGetModPlayer( player, ResetModeMod.Instance, "ResetModePlayer" );
 
 			myplayer.FinishModSettingsSyncWithLocal();
 		}

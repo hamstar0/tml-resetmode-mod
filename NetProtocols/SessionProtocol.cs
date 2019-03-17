@@ -2,6 +2,7 @@
 using HamstarHelpers.Components.Network;
 using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
+using HamstarHelpers.Helpers.TmlHelpers;
 using ResetMode.Data;
 using System;
 using System.Collections.Concurrent;
@@ -74,7 +75,7 @@ namespace ResetMode.NetProtocols {
 			mymod.Session.SetData( this.NewData );
 
 			Player player = Main.LocalPlayer;
-			var myplayer = player.GetModPlayer<ResetModePlayer>();
+			var myplayer = (ResetModePlayer)TmlHelpers.SafelyGetModPlayer( player, ResetModeMod.Instance, "ResetModePlayer" );
 
 			myplayer.FinishSessionSyncWithLocal();
 		}

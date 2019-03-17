@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.TmlHelpers;
 using HamstarHelpers.Helpers.WorldHelpers;
 using Terraria;
 
@@ -10,7 +11,7 @@ namespace ResetMode.Logic {
 
 			if( mymod.Config.DebugModeRealTimeInfo ) {
 				string worldId = WorldHelpers.GetUniqueId(true);
-				var myplayer = Main.LocalPlayer.GetModPlayer<ResetModePlayer>();
+				var myplayer = (ResetModePlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, mymod, "ResetModePlayer" );
 
 				DebugHelpers.Print( "ResetModeSession",
 					"Is running? "+ this.Data.IsRunning
