@@ -1,21 +1,27 @@
-﻿using HamstarHelpers.Components.Network;
-using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.WorldHelpers;
+﻿using HamstarHelpers.Components.Protocols.Packet.Interfaces;
+using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.World;
 using HamstarHelpers.Services.Timers;
 using Terraria;
-using Terraria.ModLoader;
 
 
 namespace ResetMode.NetProtocols {
 	class PlayerEjectProtocol : PacketProtocolRequestToClient {
+		public static void QuickRequest( int targetClientWho ) {
+			PacketProtocolRequestToClient.QuickRequest<PlayerEjectProtocol>( targetClientWho, -1, -1 );
+		}
+
+
+		////
+
 		public static void Eject( Player player ) {
 			var mymod = ResetModeMod.Instance;
 
-			if( mymod.Session.HasWorldEverBeenPlayed( WorldHelpers.GetUniqueId(true) ) ) {
-				ErrorLogger.Log( "Ejecting player " + Main.LocalPlayer.name + " via good exit..." );
+			if( mymod.Session.HasWorldEverBeenPlayed( WorldHelpers.GetUniqueIdForCurrentWorld(true) ) ) {
+				LogHelpers.Log( "Ejecting player " + Main.LocalPlayer.name + " via good exit..." );
 				mymod.Session.GoodExit();
 			} else {
-				ErrorLogger.Log( "Ejecting player " + Main.LocalPlayer.name + " via bad exit..." );
+				LogHelpers.Log( "Ejecting player " + Main.LocalPlayer.name + " via bad exit..." );
 				mymod.Session.BadExit();
 			}
 		}

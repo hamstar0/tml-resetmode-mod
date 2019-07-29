@@ -1,22 +1,24 @@
-﻿using HamstarHelpers.Components.Config;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.Serialization;
+using Terraria.ModLoader.Config;
 
 
 namespace ResetMode.Data {
-	public class ResetModeConfigData : ConfigurationDataBase {
-		public static string ConfigFileName => "Reset Mode Config.json";
+	public class ResetModeConfig : ModConfig {
+		public override ConfigScope Mode => ConfigScope.ServerSide;
 
 
-		////////////////
-
-		public string VersionSinceUpdate = "";
+		////
 
 		public bool DebugModeInfo = false;
 		public bool DebugModeRealTimeInfo = false;
 
-		public int SecondsUntilResetInitially = 60 * 45;	// 45 minutes
+		[DefaultValue( 60 * 45 )]
+		public int SecondsUntilResetInitially = 60 * 45;    // 45 minutes
+		[DefaultValue( 60 * 30 )]
 		public int SecondsUntilResetSubsequently = 60 * 30;	// 30 minutes
 
 		public bool AutoStartSession = false;
@@ -24,6 +26,7 @@ namespace ResetMode.Data {
 		public bool DeleteAllWorldsBetweenGames = false;
 		public bool WrongWorldForcesHardReset = false;
 
+		[DefaultValue( true )]
 		public bool ResetRewardsSpendings = true;
 		public bool ResetRewardsKills = false;
 
@@ -33,30 +36,13 @@ namespace ResetMode.Data {
 
 		////////////////
 
-		public void SetDefaults() { }
 
-		////
-
-		public bool CanUpdateVersion() {
-			if( this.VersionSinceUpdate == "" ) { return true; }
-			var versSince = new Version( this.VersionSinceUpdate );
-			return versSince < ResetModeMod.Instance.Version;
-		}
-
-		public void UpdateToLatestVersion() {
-			var mymod = ResetModeMod.Instance;
-			var newConfig = new ResetModeConfigData();
-			newConfig.SetDefaults();
-
-			var versSince = this.VersionSinceUpdate != "" ?
-				new Version( this.VersionSinceUpdate ) :
-				new Version();
-
-			if( this.VersionSinceUpdate == "" ) {
-				this.SetDefaults();
+		[OnDeserialized]
+		internal void OnDeserializedMethod( StreamingContext context ) {
+			if( this.OnWorldEngagedCalls != null ) {
+				return;
 			}
-
-			this.VersionSinceUpdate = mymod.Version.ToString();
+			this.OnWorldEngagedCalls = new KeyValuePair<string, string[]>[0];
 		}
 
 

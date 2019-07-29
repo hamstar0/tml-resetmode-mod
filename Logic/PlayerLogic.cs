@@ -1,8 +1,7 @@
-﻿using HamstarHelpers.Components.Network;
-using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.PlayerHelpers;
-using HamstarHelpers.Helpers.TmlHelpers;
-using HamstarHelpers.Services.Messages;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.Players;
+using HamstarHelpers.Helpers.TModLoader;
+using HamstarHelpers.Services.Messages.Inbox;
 using Microsoft.Xna.Framework;
 using ResetMode.NetProtocols;
 using System;
@@ -53,7 +52,7 @@ namespace ResetMode.Logic {
 		}
 
 		public void PreUpdateSyncedServerForPlayer( Player player ) {
-			if( PlayerIdentityHelpers.GetProperUniqueId( player ) != null ) {
+			if( PlayerIdentityHelpers.GetUniqueId( player ) != null ) {
 				this.CheckValidationOnHost( player );
 			}
 		}
@@ -81,7 +80,7 @@ namespace ResetMode.Logic {
 				if( Main.netMode == 0 ) {
 					PlayerEjectProtocol.Eject( player );
 				} else if( Main.netMode == 2 ) {
-					PacketProtocolRequestToClient.QuickRequest<PlayerEjectProtocol>( player.whoAmI, -1, -1 );
+					PlayerEjectProtocol.QuickRequest( player.whoAmI );
 				}
 				return;
 			}
@@ -131,7 +130,7 @@ namespace ResetMode.Logic {
 				LogHelpers.Alert( "Player "+player.name+" (" + player.whoAmI+")" );
 			}
 
-			ErrorLogger.Log( player.name + " was booted. Reason: " + reason );
+			LogHelpers.Log( player.name + " was booted. Reason: " + reason );
 			TmlHelpers.ExitToMenu( true );
 		}
 	}

@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

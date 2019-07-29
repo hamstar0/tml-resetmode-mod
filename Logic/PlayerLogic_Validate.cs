@@ -1,7 +1,6 @@
-﻿using HamstarHelpers.Components.Network;
-using HamstarHelpers.Components.UI.Elements.Dialogs;
-using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.PlayerHelpers;
+﻿using HamstarHelpers.Components.UI.Elements.Dialogs;
+using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.Players;
 using ResetMode.NetProtocols;
 using System;
 using System.Collections.Generic;
@@ -20,7 +19,7 @@ namespace ResetMode.Logic {
 			}
 			
 			if( Main.netMode == 2 ) {
-				PacketProtocolRequestToClient.QuickRequest<PlayerResetProtocol>( player.whoAmI, -1, -1 );
+				PlayerResetProtocol.QuickRequest( player.whoAmI );
 			} else if( Main.netMode == 0 ) {
 				this.PromptReset( player );
 			}
@@ -36,19 +35,20 @@ namespace ResetMode.Logic {
 			string text = "Play reset mode? Your character will be reset (except Progress Points)." +
 				"\nNote: Playing this character on another world will force it to reset here.";
 
-			Action confirmAction = delegate () {
-				this.ResetPlayer( Main.player[playerWho] );
-				this.IsPromptingForResetOnLocal = false;
-			};
-			Action cancelAction = delegate () {
-				this.Boot( player, "choose not to play" );
+			Action<bool> confirmAction = ( confirm ) => {
+				if( confirm ) {
+					this.ResetPlayer( Main.player[playerWho] );
+					this.IsPromptingForResetOnLocal = false;
+				} else {
+					this.Boot( player, "choose not to play" );
+				}
 			};
 
 			////
 
 			this.IsPromptingForResetOnLocal = true;
 
-			var prompt = new UIPromptDialog( new UIPromptTheme(), 600, 112, text, confirmAction, cancelAction );
+			var prompt = new UIPromptDialog( new UIPromptTheme(), 600, 112, text, confirmAction );
 			prompt.Open();
 		}
 
@@ -63,7 +63,7 @@ namespace ResetMode.Logic {
 				this.BeginSessionForPlayer( replayer );
 				this.RefundRewardsSpendings( replayer );
 			} else if( Main.netMode == 1 ) {
-				PacketProtocol.QuickRequestToServer<PlayerResetConfirmProtocol>( -1 );
+				PlayerResetConfirmProtocol.QuickRequest();
 			}
 		}
 
@@ -75,8 +75,7 @@ namespace ResetMode.Logic {
 			mymod.Session.AddPlayer( player );
 
 			if( Main.netMode == 2 ) {
-				//Promises.AddWorldInPlayOncePromise( () => {
-				PacketProtocol.QuickSendToClient<SessionProtocol>( player.whoAmI, -1 );
+				SessionProtocol.SyncToClient( player.whoAmI );
 			}
 		}
 
@@ -92,7 +91,7 @@ namespace ResetMode.Logic {
 				return;
 			}
 			
-			var uid = PlayerIdentityHelpers.GetProperUniqueId( player );
+			var uid = PlayerIdentityHelpers.GetUniqueId( player );
 
 			if( mymod.Config.ResetRewardsSpendings ) {
 				if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( uid ) ) {

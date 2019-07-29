@@ -1,5 +1,5 @@
 ﻿using HamstarHelpers.Components.Errors;
-using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.Debug;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Localization;
@@ -11,7 +11,7 @@ namespace ResetMode.Logic {
 		public void GoodExit() {
 			var mymod = ResetModeMod.Instance;
 			if( Main.netMode == 1 ) {
-				throw new HamstarException( "Single or server only." );
+				throw new ModHelpersException( "Single or server only." );
 			}
 
 			if( mymod.Session.IsExiting ) { return; }
@@ -38,7 +38,7 @@ namespace ResetMode.Logic {
 		public void BadExit() {
 			var mymod = ResetModeMod.Instance;
 			if( Main.netMode == 1 ) {
-				throw new HamstarException("Single or server only.");
+				throw new ModHelpersException("Single or server only.");
 			}
 
 			if( mymod.Session.IsExiting ) { return; }

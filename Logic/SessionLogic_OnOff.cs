@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.WorldHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.World;
 using ResetMode.NetProtocols;
 using System;
 using Terraria;
@@ -45,7 +45,7 @@ namespace ResetMode.Logic {
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
-				string worldId = WorldHelpers.GetUniqueId(true);
+				string worldId = WorldHelpers.GetUniqueIdForCurrentWorld(true);
 				LogHelpers.Alert( "Sets ALL session data to defaults, stops all TimeLimit \"reset\" commands (world id: " + worldId + ")" );
 			}
 

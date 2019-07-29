@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.WorldHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.World;
 using ResetMode.NetProtocols;
 using System;
 using Terraria;
@@ -14,7 +14,7 @@ namespace ResetMode.Logic {
 		}
 
 		public bool IsSessionedWorldNotOurs() {
-			return this.Data.CurrentSessionedWorldId != WorldHelpers.GetUniqueId(true);
+			return this.Data.CurrentSessionedWorldId != WorldHelpers.GetUniqueIdForCurrentWorld(true);
 		}
 
 		public bool HasWorldEverBeenPlayed( string worldId ) {
@@ -45,7 +45,7 @@ namespace ResetMode.Logic {
 			
 		public void AddWorldToSession() {
 			var mymod = ResetModeMod.Instance;
-			string worldId = WorldHelpers.GetUniqueId(true);
+			string worldId = WorldHelpers.GetUniqueIdForCurrentWorld(true);
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Alert( "Sets AllPlayedWorlds.Add(<world id>), CurrentSessionedWorldId=<world id>, AwaitingNextWorld=false (worldId: "+worldId+")" );

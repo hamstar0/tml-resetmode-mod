@@ -1,6 +1,4 @@
 ﻿using HamstarHelpers.Components.Errors;
-using HamstarHelpers.Components.Network;
-using HamstarHelpers.Helpers.DebugHelpers;
 using ResetMode.NetProtocols;
 using Terraria;
 using Terraria.ModLoader;
@@ -14,8 +12,7 @@ namespace ResetMode {
 		}
 
 		private void OnCurrentClientEnterWorld() {
-			PacketProtocolRequestToServer.QuickRequest<ModSettingsProtocol>( -1 );
-			PacketProtocol.QuickRequestToServer<SessionProtocol>( -1 );
+			SessionProtocol.SyncToMe();
 		}
 
 		private void OnServerConnect( Player player ) {
@@ -42,7 +39,7 @@ namespace ResetMode {
 		////////////////
 		
 		public void FinishLocalSync() {
-			if( Main.netMode == 2 ) { throw new HamstarException("Server not allowed."); }
+			if( Main.netMode == 2 ) { throw new ModHelpersException("Server not allowed."); }
 			if( !this.HasModSettings || !this.HasSessionData ) { return; }
 
 			if( this.IsSynced ) { return; }

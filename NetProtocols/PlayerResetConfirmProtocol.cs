@@ -1,12 +1,20 @@
-﻿using HamstarHelpers.Components.Network;
-using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.PlayerHelpers;
-using HamstarHelpers.Helpers.TmlHelpers;
+﻿using HamstarHelpers.Components.Protocols.Packet.Interfaces;
+using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.Players;
+using HamstarHelpers.Helpers.TModLoader;
 using Terraria;
 
 
 namespace ResetMode.NetProtocols {
 	class PlayerResetConfirmProtocol : PacketProtocolRequestToServer {
+		public static void QuickRequest() {
+			PacketProtocolRequestToServer.QuickRequestToServer<PlayerResetConfirmProtocol>( -1 );
+		}
+
+
+
+		////////////////
+
 		private PlayerResetConfirmProtocol() { }
 		
 		protected override void InitializeServerSendData( int toWho ) { }
@@ -21,7 +29,7 @@ namespace ResetMode.NetProtocols {
 				return true;
 			}
 
-			string uid = PlayerIdentityHelpers.GetProperUniqueId( player );
+			string uid = PlayerIdentityHelpers.GetUniqueId( player );
 			if( uid == null ) {
 				LogHelpers.Warn( "Missing player UID for player "+player.name+" ("+fromWho+")" );
 				return true;

@@ -1,7 +1,8 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.MiscHelpers;
-using HamstarHelpers.Helpers.PlayerHelpers;
-using HamstarHelpers.Helpers.TmlHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.DotNET;
+using HamstarHelpers.Helpers.Misc;
+using HamstarHelpers.Helpers.Players;
+using HamstarHelpers.Helpers.TModLoader;
 using HamstarHelpers.Services.Timers;
 using ResetMode.Data;
 using System;
@@ -52,10 +53,9 @@ namespace ResetMode.Logic {
 				return;
 			}
 
-			bool success;
+			var data = ModCustomDataFileHelpers.LoadJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly );
 
-			var data = DataFileHelpers.LoadJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, out success );
-			if( success ) {
+			if( data != null ) {
 				// Very specific failsafe:
 				if( data.IsRunning && !data.AwaitingNextWorld && data.CurrentSessionedWorldId == "" && data.AllPlayedWorlds.Count == 0 ) {
 					data.IsRunning = false;
@@ -66,7 +66,7 @@ namespace ResetMode.Logic {
 			}
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( "Success? "+success+": "+this.Data.ToString() );
+				LogHelpers.Alert( "Success? "+(data != null)+": "+this.Data.ToString() );
 			}
 		}
 
@@ -76,7 +76,7 @@ namespace ResetMode.Logic {
 				LogHelpers.Warn( "Clients cannot save config to file" );
 				return;
 			}
-			DataFileHelpers.SaveAsJson<ResetModeSessionData>( mymod, SessionLogic.DataFileNameOnly, this.Data );
+			ModCustomDataFileHelpers.SaveAsJson( mymod, SessionLogic.DataFileNameOnly, true, this.Data );
 		}
 		
 		////////////////
@@ -103,7 +103,7 @@ namespace ResetMode.Logic {
 		////////////////
 
 		public void LogRewardsPPSpending( Player player, float pp ) {
-			string pid = PlayerIdentityHelpers.GetProperUniqueId( player );
+			string pid = PlayerIdentityHelpers.GetUniqueId( player );
 
 			if( this.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
 				this.Data.PlayerPPSpendings[pid] += pp;

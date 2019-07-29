@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.WorldHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.World;
 using ResetMode.Data;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -25,7 +25,7 @@ namespace ResetMode {
 
 			if( sessData.IsRunning ) {
 				if( !sessData.AwaitingNextWorld ) {
-					string worldId = WorldHelpers.GetUniqueId(true);
+					string worldId = WorldHelpers.GetUniqueIdForCurrentWorld(true);
 
 					if( sessData.CurrentSessionedWorldId == "" ) {
 						LogHelpers.WarnOnce( "Invalid world session state - No world id (world id: "+worldId+")\n"

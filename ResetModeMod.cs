@@ -1,9 +1,10 @@
-using HamstarHelpers.Components.Config;
 using HamstarHelpers.Components.Errors;
-using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.DotNetHelpers;
-using HamstarHelpers.Services.DataDumper;
-using HamstarHelpers.Services.Promises;
+using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.DotNET;
+using HamstarHelpers.Helpers.DotNET.Reflection;
+using HamstarHelpers.Helpers.TModLoader.Mods;
+using HamstarHelpers.Services.Debug.DataDumper;
+using HamstarHelpers.Services.Hooks.LoadHooks;
 using ResetMode.Data;
 using ResetMode.Logic;
 using System;
@@ -13,24 +14,27 @@ using Terraria.ModLoader;
 
 namespace ResetMode {
 	partial class ResetModeMod : Mod {
-		public static ResetModeMod Instance { get; private set; }
 
 		internal readonly static object MyValidatorKey;
-		internal readonly static PromiseValidator WorldExitValidator;
+		internal readonly static CustomLoadHookValidator<object> WorldExitValidator;
+
+
+		////
+
+		public static ResetModeMod Instance { get; private set; }
 
 		////////////////
 
 		static ResetModeMod() {
 			ResetModeMod.MyValidatorKey = new object();
-			ResetModeMod.WorldExitValidator = new PromiseValidator( ResetModeMod.MyValidatorKey );
+			ResetModeMod.WorldExitValidator = new CustomLoadHookValidator<object>( ResetModeMod.MyValidatorKey );
 		}
 
 
 
 		////////////////
 
-		internal JsonConfig<ResetModeConfigData> ConfigJson;
-		public ResetModeConfigData Config => ConfigJson.Data;
+		public ResetModeConfig Config => this.GetConfig<ResetModeConfig>();
 		
 		public SessionLogic Session { get; internal set; }
 
@@ -41,23 +45,19 @@ namespace ResetMode {
 		////////////////
 
 		public ResetModeMod() {
-			this.ConfigJson = new JsonConfig<ResetModeConfigData>( ResetModeConfigData.ConfigFileName,
-				ConfigurationDataBase.RelativePath, new ResetModeConfigData() );
+			ResetModeMod.Instance = this;
+
 
 			this.Session = new SessionLogic();
 		}
 
 
 		public override void Load() {
-			ResetModeMod.Instance = this;
-
-			this.LoadConfigs();
-			
-			Promises.AddWorldLoadEachPromise( delegate {
+			LoadHooks.AddWorldLoadEachHook( delegate {
 				this.CurrentNetMode = Main.netMode;
 			} );
 
-			Promises.AddValidatedPromise( ResetModeMod.WorldExitValidator, () => {
+			CustomLoadHooks.AddHook( ResetModeMod.WorldExitValidator, (_) => {
 				this.CurrentNetMode = -1;
 				return true;
 			} );
@@ -73,50 +73,12 @@ namespace ResetMode {
 		public override void Unload() {
 			ResetModeMod.Instance = null;
 		}
-		
-		////////////////
-
-		private void LoadConfigs() {
-			if( !this.ConfigJson.LoadFile() ) {
-				LogHelpers.Alert( "Reset Mode missing/invalid config created anew." );
-				this.ConfigJson.SaveFile();
-			}
-
-			if( this.Config.CanUpdateVersion() ) {
-				this.Config.UpdateToLatestVersion();
-
-				ErrorLogger.Log( "Reset Mode updated to " + this.Version.ToString() );
-				this.ConfigJson.SaveFile();
-			}
-		}
 
 
 		////////////////
 
 		public override object Call( params object[] args ) {
-			if( args == null || args.Length == 0 ) { throw new HamstarException( "Undefined call type." ); }
-
-			string callType = args[0] as string;
-			if( callType == null ) {
-				LogHelpers.Alert( "Invalid call binding: " + args[0] );
-				return null;
-			}
-
-			var methodInfo = typeof( ResetModeAPI ).GetMethod( callType );
-			if( methodInfo == null ) {
-				LogHelpers.Alert( "Invalid call type " + callType + " with args:\n"
-					+ string.Join( ",\n", args.SafeSelect( a => a == null ? "null" : a.ToString() ) ) );
-				return null;
-			}
-
-			var newArgs = new object[args.Length - 1];
-			Array.Copy( args, 1, newArgs, 0, args.Length - 1 );
-
-			try {
-				return ReflectionHelpers.SafeCall( methodInfo, null, newArgs );
-			} catch( Exception e ) {
-				throw new HamstarException( "Bad API call.", e );
-			}
+			return ModBoilerplateHelpers.HandleModCall( typeof( ResetModeAPI ), args );
 		}
 	}
 }

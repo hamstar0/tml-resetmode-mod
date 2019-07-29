@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.PlayerHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.Players;
 using HamstarHelpers.Services.Timers;
 using Microsoft.Xna.Framework;
 using ResetMode.Logic;
@@ -55,15 +55,8 @@ namespace ResetMode {
 
 			var mymod = (ResetModeMod)this.mod;
 
-			if( Main.netMode == 0 ) {
-				if( !mymod.ConfigJson.LoadFile() ) {
-					mymod.ConfigJson.SaveFile();
-					LogHelpers.Alert( "Reset Mode config " + mymod.Version.ToString() + " created." );
-				}
-			}
-
 			if( mymod.Config.DebugModeInfo ) {
-				string uid = PlayerIdentityHelpers.GetProperUniqueId( player );
+				string uid = PlayerIdentityHelpers.GetUniqueId( player );
 
 				LogHelpers.Alert( player.name + " joined (" + uid + ")" );
 			}

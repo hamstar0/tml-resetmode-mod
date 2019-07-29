@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Services.Promises;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Services.Hooks.LoadHooks;
 using System;
 using Terraria;
 using Terraria.ModLoader;
@@ -9,7 +9,7 @@ using TimeLimit;
 namespace ResetMode.Logic {
 	partial class SessionLogic {
 		internal void OnModLoad() {
-			Promises.AddPostModLoadPromise( () => {
+			LoadHooks.AddPostModLoadHook( () => {
 				var hook = new CustomTimerAction( delegate () {
 					if( Main.netMode == 1 ) { return; }
 					this.ExpireCurrentWorldInSession( ResetModeMod.Instance );
@@ -22,7 +22,7 @@ namespace ResetMode.Logic {
 			} );
 
 
-			Promises.AddPostWorldLoadEachPromise( delegate {
+			LoadHooks.AddPostWorldLoadEachHook( delegate {
 				var mymod = ResetModeMod.Instance;
 
 				if( mymod.Config.AutoStartSession ) {
@@ -35,12 +35,12 @@ namespace ResetMode.Logic {
 			} );
 
 
-			Promises.AddWorldUnloadEachPromise( () => {
+			LoadHooks.AddWorldUnloadEachHook( () => {
 				this.IsWorldInPlay = false;
 			} );
 
 
-			Promises.AddPostWorldUnloadEachPromise( () => {
+			LoadHooks.AddPostWorldUnloadEachHook( () => {
 				var mymod = ResetModeMod.Instance;
 
 				if( mymod.Config.DebugModeInfo ) {
@@ -59,7 +59,7 @@ namespace ResetMode.Logic {
 					this.Save();
 				}
 
-				Promises.TriggerValidatedPromise( ResetModeMod.WorldExitValidator, ResetModeMod.MyValidatorKey );
+				CustomLoadHooks.TriggerHook( ResetModeMod.WorldExitValidator, ResetModeMod.MyValidatorKey );
 			} );
 		}
 

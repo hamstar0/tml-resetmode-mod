@@ -1,10 +1,18 @@
-﻿using HamstarHelpers.Components.Network;
-using HamstarHelpers.Helpers.TmlHelpers;
+﻿using HamstarHelpers.Components.Protocols.Packet.Interfaces;
+using HamstarHelpers.Helpers.TModLoader;
 using Terraria;
 
 
 namespace ResetMode.NetProtocols {
 	class PlayerResetProtocol : PacketProtocolRequestToClient {
+		public static void QuickRequest( int clientWho ) {
+			PacketProtocolRequestToClient.QuickRequest<PlayerResetProtocol>( clientWho, -1, -1 );
+		}
+
+
+
+		////////////////
+
 		private PlayerResetProtocol() { }
 
 		protected override void InitializeClientSendData() { }
