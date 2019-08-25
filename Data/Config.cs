@@ -30,20 +30,8 @@ namespace ResetMode.Data {
 		public bool ResetRewardsSpendings = true;
 		public bool ResetRewardsKills = false;
 
-		public KeyValuePair<string, string[]>[] OnWorldEngagedCalls = new KeyValuePair<string, string[]>[0];
+		public IList<KeyValuePair<string, string[]>> OnWorldEngagedCalls = new List<KeyValuePair<string, string[]>>();
 
-
-
-		////////////////
-
-
-		[OnDeserialized]
-		internal void OnDeserializedMethod( StreamingContext context ) {
-			if( this.OnWorldEngagedCalls != null ) {
-				return;
-			}
-			this.OnWorldEngagedCalls = new KeyValuePair<string, string[]>[0];
-		}
 
 
 		////////////////
