@@ -1,7 +1,5 @@
-using HamstarHelpers.Components.Errors;
+using HamstarHelpers.Classes.Errors;
 using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.DotNET;
-using HamstarHelpers.Helpers.DotNET.Reflection;
 using HamstarHelpers.Helpers.TModLoader.Mods;
 using HamstarHelpers.Services.Debug.DataDumper;
 using HamstarHelpers.Services.Hooks.LoadHooks;

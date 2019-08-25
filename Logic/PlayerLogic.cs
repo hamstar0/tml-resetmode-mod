@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using ResetMode.NetProtocols;
 using System;
 using Terraria;
-using Terraria.ModLoader;
 
 
 namespace ResetMode.Logic {

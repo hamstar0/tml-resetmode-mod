@@ -1,5 +1,4 @@
-﻿using HamstarHelpers.Components.UI;
-using HamstarHelpers.Components.UI.Elements;
+﻿using HamstarHelpers.Classes.UI.Theme;
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
 
@@ -28,13 +27,13 @@ namespace ResetMode {
 
 		////////////////
 
-		public override void ApplyButton( UITextPanelButton panel ) {
+		public override void ApplyButton<T>( UITextPanel<T> panel ) {
 			panel.BackgroundColor = this.ButtonBgColor;
 			panel.BorderColor = this.ButtonEdgeColor;
 			panel.TextColor = this.ButtonTextColor;
 		}
 
-		public override void ApplyButtonLit( UITextPanelButton panel ) {
+		public override void ApplyButtonLit<T>( UITextPanel<T> panel ) {
 			panel.BackgroundColor = this.ButtonBgLitColor;
 			panel.BorderColor = this.ButtonEdgeLitColor;
 			panel.TextColor = this.ButtonTextLitColor;

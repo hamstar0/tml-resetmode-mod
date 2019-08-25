@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="C:\Users\Spinach\Documents\My Games\Terraria\ModLoader\references\tModLoader.targets" />
   <PropertyGroup>
@@ -18,6 +18,9 @@
   <ItemGroup>
     <Reference Include="HamstarHelpers">
       <HintPath>..\..\Mod Helpers\v5 (tML11)\HamstarHelpers\bin\Release\net452\HamstarHelpers.dll</HintPath>
+    </Reference>
+    <Reference Include="TimeLimit">
+      <HintPath>..\..\Time Limit\TimeLimit\bin\Release\net452\TimeLimit.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

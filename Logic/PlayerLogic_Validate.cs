@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.Components.UI.Elements.Dialogs;
+﻿using HamstarHelpers.Classes.UI.Elements.Dialogs;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.Players;
 using ResetMode.NetProtocols;

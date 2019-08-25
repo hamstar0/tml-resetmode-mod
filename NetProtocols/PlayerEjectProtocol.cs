@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.Components.Protocols.Packet.Interfaces;
+﻿using HamstarHelpers.Classes.Protocols.Packet.Interfaces;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.World;
 using HamstarHelpers.Services.Timers;

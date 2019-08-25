@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.Components.Errors;
+﻿using HamstarHelpers.Classes.Errors;
 using ResetMode.NetProtocols;
 using Terraria;
 using Terraria.ModLoader;
