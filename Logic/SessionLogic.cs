@@ -105,11 +105,7 @@ namespace ResetMode.Logic {
 		public void LogRewardsPPSpending( Player player, float pp ) {
 			string pid = PlayerIdentityHelpers.GetUniqueId( player );
 
-			if( this.Data.PlayerPPSpendings.ContainsKey( pid ) ) {
-				this.Data.PlayerPPSpendings[pid] += pp;
-			} else {
-				this.Data.PlayerPPSpendings[pid] = pp;
-			}
+			this.Data.AddPlayerPPSpendingSync( pid, pp );
 		}
 
 		

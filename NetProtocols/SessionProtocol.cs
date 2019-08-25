@@ -104,8 +104,8 @@ namespace ResetMode.NetProtocols {
 				uid = PlayerIdentityHelpers.GetUniqueId( player );
 
 				this.NewData = mymod.Session.Data.Clone();
-				this.NewData.PlayersValidated = new HashSet<string>();
-				this.NewData.PlayerPPSpendings = new ConcurrentDictionary<string, float>();
+				this.NewData.PlayersValidated.Clear();
+				this.NewData.PlayerPPSpendings.Clear();
 			} catch( Exception e ) {
 				LogHelpers.Warn( "Error 1: " + e.ToString() );
 			}
@@ -119,8 +119,9 @@ namespace ResetMode.NetProtocols {
 			}
 
 			try {
-				if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( uid ) ) {
-					this.NewData.PlayerPPSpendings[ uid ] = mymod.Session.Data.PlayerPPSpendings[ uid ];
+				float sessVal;
+				if( mymod.Session.Data.TryGetPlayerPPSpendingSync( uid, out sessVal ) ) {
+					this.NewData.SetPlayerPPSpendingSync( uid, sessVal );
 				}
 			} catch( Exception e ) {
 				LogHelpers.Warn( "Error 3a: " + e.ToString() );

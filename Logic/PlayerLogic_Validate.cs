@@ -94,9 +94,8 @@ namespace ResetMode.Logic {
 			var uid = PlayerIdentityHelpers.GetUniqueId( player );
 
 			if( mymod.Config.ResetRewardsSpendings ) {
-				if( mymod.Session.Data.PlayerPPSpendings.ContainsKey( uid ) ) {
-					float ppSpent = mymod.Session.Data.PlayerPPSpendings[uid];
-
+				float ppSpent;
+				if( mymod.Session.Data.TryGetPlayerPPSpendingSync( uid, out ppSpent ) ) {
 					rewardsMod.Call( "AddPoints", player, ppSpent );
 
 					if( mymod.Config.DebugModeInfo ) {
@@ -109,7 +108,7 @@ namespace ResetMode.Logic {
 				}
 			}
 
-			mymod.Session.Data.PlayerPPSpendings[uid] = 0;
+			mymod.Session.Data.SetPlayerPPSpendingSync( uid, 0 );
 			if( Main.netMode != 1 ) {
 				mymod.Session.Save();
 			}

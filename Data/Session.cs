@@ -1,13 +1,17 @@
 ﻿using HamstarHelpers.Helpers.Debug;
 using Newtonsoft.Json;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 
 namespace ResetMode.Data {
 	public class ResetModeSessionData {
+		private readonly object MyLock = new object();
+		
+
+		////////////////
+
 		public HashSet<string> PlayersValidated = new HashSet<string>();
-		public ConcurrentDictionary<string, float> PlayerPPSpendings = new ConcurrentDictionary<string, float>();
+		public Dictionary<string, float> PlayerPPSpendings = new Dictionary<string, float>();
 
 		public HashSet<string> AllPlayedWorlds = new HashSet<string>();
 		public string CurrentSessionedWorldId = "";
@@ -18,7 +22,31 @@ namespace ResetMode.Data {
 
 
 		////////////////
-		
+
+		public bool TryGetPlayerPPSpendingSync( string key, out float value ) {
+			lock( this.MyLock ) {
+				return this.PlayerPPSpendings.TryGetValue( key, out value );
+			}
+		}
+
+		public void SetPlayerPPSpendingSync( string key, float value ) {
+			lock( this.MyLock ) {
+				this.PlayerPPSpendings[key] = value;
+			}
+		}
+
+		public void AddPlayerPPSpendingSync( string key, float value ) {
+			lock( this.MyLock ) {
+				if( this.PlayerPPSpendings.ContainsKey( key ) ) {
+					this.PlayerPPSpendings[key] += value;
+				} else {
+					this.PlayerPPSpendings[key] = value;
+				}
+			}
+		}
+
+		////////////////
+
 		internal void ResetAll() {
 			this.PlayersValidated.Clear();
 			this.AllPlayedWorlds.Clear();
