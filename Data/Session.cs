@@ -8,6 +8,7 @@ namespace ResetMode.Data {
 		private readonly object MyLock = new object();
 		
 
+
 		////////////////
 
 		public HashSet<string> PlayersValidated = new HashSet<string>();

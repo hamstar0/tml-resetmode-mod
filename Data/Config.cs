@@ -41,6 +41,16 @@ namespace ResetMode.Data {
 
 		////////////////
 
+		public override ModConfig Clone() {
+			var clone = (ResetModeConfig)base.Clone();
+
+			clone.OnWorldEngagedCalls = new List<KeyValuePair<string, string[]>>( this.OnWorldEngagedCalls );
+
+			return clone;
+		}
+
+		////////////////
+
 		public override string ToString() {
 			return JsonConvert.SerializeObject( this );
 		}
