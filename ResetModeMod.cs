@@ -32,7 +32,7 @@ namespace ResetMode {
 
 		////////////////
 
-		public ResetModeConfig Config => this.GetConfig<ResetModeConfig>();
+		public ResetModeConfig Config => ModContent.GetInstance<ResetModeConfig>();
 		
 		public SessionLogic Session { get; internal set; }
 

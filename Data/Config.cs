@@ -17,8 +17,10 @@ namespace ResetMode.Data {
 		[DefaultValue( false )]
 		public bool DebugModeRealTimeInfo = false;
 
+		[Range( 10, 60 * 60 * 24 * 7 * 52 )]
 		[DefaultValue( 60 * 45 )]
 		public int SecondsUntilResetInitially = 60 * 45;    // 45 minutes
+		[Range( 10, 60 * 60 * 24 * 7 * 52 )]
 		[DefaultValue( 60 * 30 )]
 		public int SecondsUntilResetSubsequently = 60 * 30; // 30 minutes
 
